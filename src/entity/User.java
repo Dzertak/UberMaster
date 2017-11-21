@@ -1,4 +1,6 @@
-package user;
+package entity;
+
+import entity.model.UserModel;
 
 public class User extends UserModel
 {

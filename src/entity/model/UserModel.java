@@ -1,7 +1,8 @@
-package user;
+package entity.model;
 
 import annotation.AttrType;
 import annotation.ObjectType;
+import entity.attr.UserAttr;
 
 @ObjectType(UserAttr.OBJTYPE)
 public class UserModel {

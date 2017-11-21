@@ -1,8 +1,10 @@
-package master;
+package entity;
+
+import entity.model.MasterModel;
 
 import java.util.Date;
 
-public class Master extends MasterModel{
+public class Master extends MasterModel {
 
 
     public String getProfession() {

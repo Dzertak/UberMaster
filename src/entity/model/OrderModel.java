@@ -1,8 +1,9 @@
-package order;
+package entity.model;
 
 import annotation.AttrType;
 import annotation.ObjectType;
-import master.Master;
+import entity.Master;
+import entity.attr.OrderAttr;
 
 import java.util.Date;
 

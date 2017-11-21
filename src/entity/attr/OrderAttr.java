@@ -1,4 +1,4 @@
-package order;
+package entity.attr;
 
 public interface OrderAttr {
     String OBJTYPE = "5";

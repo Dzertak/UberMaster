@@ -1,5 +1,7 @@
 package entity;
 
+import entity.model.BaseEntityModel;
+
 public class BaseEntity extends BaseEntityModel
 {
 	public String getName()

@@ -1,13 +1,12 @@
-package master;
+package entity.model;
 
 import annotation.AttrType;
 import annotation.ObjectType;
-import user.UserAttr;
-import user.UserModel;
+import entity.attr.MasterAttr;
 
 import java.util.Date;
 
-@ObjectType(MasterAttr.M_OBJTYPE)
+@ObjectType(MasterAttr.OBJTYPE)
 public class MasterModel extends UserModel {
 
 @AttrType(MasterAttr.PROFESSION)

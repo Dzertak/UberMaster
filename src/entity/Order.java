@@ -1,6 +1,6 @@
-package order;
+package entity;
 
-import master.Master;
+import entity.model.OrderModel;
 
 import java.util.Date;
 

@@ -1,9 +1,10 @@
-package entity;
+package entity.model;
 
 import annotation.AttrType;
+import entity.attr.BaseEntityAttr;
 
-public class BaseEntityModel
-{
+public class BaseEntityModel {
+
 	@AttrType(BaseEntityAttr.NAME_ATTR)
 	protected String name;
 

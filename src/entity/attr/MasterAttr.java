@@ -1,9 +1,7 @@
-package master;
-
-import user.UserAttr;
+package entity.attr;
 
 public interface MasterAttr extends UserAttr {
-    String M_OBJTYPE = "2";
+    String OBJTYPE = "2";
 
     String PROFESSION =  "6";
     String SKILLS = "7";
