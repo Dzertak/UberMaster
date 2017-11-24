@@ -14,6 +14,7 @@ public class PersistenceEntity {
     public long getObject_id() {
         return this.object_id;
     }
+
     public void setObject_id(long object_id) {
         this.object_id = object_id;
     }
