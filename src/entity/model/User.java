@@ -1,28 +1,29 @@
 package entity.model;
 
-import annotation.AttrType;
+import annotation.Attribute;
 import annotation.ObjectType;
 import entity.attr.UserAttr;
 
 @ObjectType(UserAttr.OBJTYPE)
-public class User {
+public class User extends BaseEntity
+{
 
     public interface Model extends UserAttr{
 
     }
-    @AttrType(Model.LOCATION)
+    @Attribute(Model.LOCATION)
     protected String location;
 
-    @AttrType(Model.DESCRIPTION)
+    @Attribute(Model.DESCRIPTION)
     protected String description;
 
-    @AttrType(Model.PHONE_NUMBER)
+    @Attribute(Model.PHONE_NUMBER)
     protected String phoneNumber;
 
-    @AttrType(Model.PASSWORD)
+    @Attribute(Model.PASSWORD)
     protected String password;
 
-    @AttrType(Model.PICTURE)
+    @Attribute(Model.PICTURE)
     protected String picture;
 
     public String getLocation() {
@@ -67,12 +68,13 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
-                "location='" + location + '\'' +
-                ", description='" + description + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", password='" + password + '\'' +
-                ", picture='" + picture + '\'' +
+        return "User{"
+                + super.toString()
+                + "\nlocation='" + location + '\'' +
+                ", \ndescription='" + description + '\'' +
+                ", \nphoneNumber='" + phoneNumber + '\'' +
+                ", \npassword='" + password + '\'' +
+                ", \npicture='" + picture + '\'' +
                 '}';
     }
 }

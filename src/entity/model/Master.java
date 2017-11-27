@@ -1,6 +1,6 @@
 package entity.model;
 
-import annotation.AttrType;
+import annotation.Attribute;
 import annotation.ObjectType;
 import entity.attr.MasterAttr;
 
@@ -12,28 +12,28 @@ public class Master extends User {
     public interface Model extends MasterAttr{
 
     }
-    @AttrType(Model.PROFESSION)
+    @Attribute(Model.PROFESSION)
     protected String profession;
 
-    @AttrType(Model.SKILLS)
+    @Attribute(Model.SKILLS)
     protected String skills;
 
-    @AttrType(Model.EXPERIENCE)
+    @Attribute(Model.EXPERIENCE)
     protected String experience;
 
-    @AttrType(Model.PAYMENT)
+    @Attribute(Model.PAYMENT)
     protected int payment;
 
-    @AttrType(Model.SMOKE)
+    @Attribute(Model.SMOKE)
     protected boolean smoke;
 
-    @AttrType(Model.TOOLS)
+    @Attribute(Model.TOOLS)
     protected String tools;
 
-    @AttrType(Model.ST_TIME)
+    @Attribute(Model.ST_TIME)
     protected Date start_time;
 
-    @AttrType(Model.END_TIME)
+    @Attribute(Model.END_TIME)
     protected Date end_time;
 
     public String getProfession() {
@@ -102,15 +102,16 @@ public class Master extends User {
 
     @Override
     public String toString() {
-        return "Master{" +
-                "profession='" + profession + '\'' +
-                ", skills='" + skills + '\'' +
-                ", experience='" + experience + '\'' +
-                ", payment=" + payment +
-                ", smoke=" + smoke +
-                ", tools='" + tools + '\'' +
-                ", start_time=" + start_time +
-                ", end_time=" + end_time +
+        return "Master{"
+                + super.toString()
+                + "\nprofession='" + profession + '\'' +
+                ", \nskills='" + skills + '\'' +
+                ", \nexperience='" + experience + '\'' +
+                ", \npayment=" + payment +
+                ", \nsmoke=" + smoke +
+                ", \ntools='" + tools + '\'' +
+                ", \nstart_time=" + start_time +
+                ", \nend_time=" + end_time +
                 '}';
     }
 }

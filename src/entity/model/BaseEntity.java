@@ -1,6 +1,6 @@
 package entity.model;
 
-import annotation.AttrType;
+import annotation.Attribute;
 import entity.attr.BaseEntityAttr;
 
 public class BaseEntity {
@@ -9,13 +9,13 @@ public class BaseEntity {
 
 	}
 
-	@AttrType(Model.NAME_ATTR)
+	@Attribute(Model.NAME_ATTR)
 	protected String name;
 
-	@AttrType(Model.DESCRIPTION)
+	@Attribute(Model.DESCRIPTION)
 	protected String description;
 
-	@AttrType(Model.OBJECT_ID)
+	@Attribute(Model.OBJECT_ID)
 	protected long object_id;
 
 	public String getName() {
@@ -45,9 +45,9 @@ public class BaseEntity {
 	@Override
 	public String toString() {
 		return "BaseEntity{" +
-				"name='" + name + '\'' +
-				", description='" + description + '\'' +
-				", object_id=" + object_id +
+				"\nname='" + name + '\'' +
+				",\ndescription='" + description + '\'' +
+				",\nobject_id=" + object_id +
 				'}';
 	}
 }

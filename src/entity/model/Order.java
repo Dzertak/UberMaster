@@ -1,6 +1,6 @@
 package entity.model;
 
-import annotation.AttrType;
+import annotation.Attribute;
 import annotation.ObjectType;
 import entity.attr.OrderAttr;
 
@@ -8,27 +8,27 @@ import java.util.Date;
 
 
 @ObjectType(OrderAttr.OBJTYPE)
-public class Order {
-
+public class Order extends BaseEntity
+{
     public interface Model extends OrderAttr{
 
     }
-    @AttrType(Model.SMALL_DESCRIPTION)
+    @Attribute(Model.SMALL_DESCRIPTION)
     protected String SmallDescription;
 
-    @AttrType(Model.BIG_DESCRIPTION)
+    @Attribute(Model.BIG_DESCRIPTION)
     protected String BigDescription;
 
-    @AttrType(Model.START_DATE)
+    @Attribute(Model.START_DATE)
     protected Date StartDate;
 
-    @AttrType(Model.DUE_DATE)
+    @Attribute(Model.DUE_DATE)
     protected Date DueDate;
 
-    @AttrType(Model.STATUS)
+    @Attribute(Model.STATUS)
     protected String Status;
 
-    @AttrType(Model.MASTER_REF)
+    @Attribute(Model.MASTER_REF)
     protected Master master;
 
     public String getSmallDescription() {
@@ -81,13 +81,14 @@ public class Order {
 
     @Override
     public String toString() {
-        return "Order{" +
-                "SmallDescription='" + SmallDescription + '\'' +
-                ", BigDescription='" + BigDescription + '\'' +
-                ", StartDate=" + StartDate +
-                ", DueDate=" + DueDate +
-                ", Status='" + Status + '\'' +
-                ", master=" + master +
+        return "Order{"
+                + super.toString()
+                + "\nSmallDescription='" + SmallDescription + '\'' +
+                ", \nBigDescription='" + BigDescription + '\'' +
+                ", \nStartDate=" + StartDate +
+                ", \nDueDate=" + DueDate +
+                ", \nStatus='" + Status + '\'' +
+                ", \nmaster=" + master +
                 '}';
     }
 }

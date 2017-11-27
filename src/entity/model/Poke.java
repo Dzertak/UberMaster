@@ -11,6 +11,8 @@ public class Poke extends User {
 
     @Override
     public String toString() {
-        return "Poke{}";
+        return "Poke{"
+                + super.toString()
+                + "}";
     }
 }

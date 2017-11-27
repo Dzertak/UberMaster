@@ -1,5 +1,6 @@
 package persistence;
 
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -8,8 +9,8 @@ public class PersistenceEntity {
     protected long parent_id;
     protected String description;
     protected String name;
-    protected Map attributes;
-    protected Map references;
+    protected Map<BigInteger, Object> attributes;
+    protected Map<BigInteger, Long> references;
 
     public long getObject_id() {
         return this.object_id;
