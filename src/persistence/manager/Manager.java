@@ -3,9 +3,16 @@ package persistence.manager;
 import entity.model.BaseEntity;
 import persistence.PersistenceEntity;
 
-public interface Manager
+import java.io.Closeable;
+
+public interface Manager extends Closeable
 {
+	String GET_ATTR_TYPES = "{call getAttrTypeIds(?, ?)}";
+	String GET_ATTR_COUNT = "{call getAttrTypeCount(?, ?)}";
+	String GET_ENTITY = "{call getEntity(?, ?)}";
+	String CONNECTION = "jdbc:oracle:thin:USER/PASS@localhost:1521:XE";
+
 	void createEntity(PersistenceEntity persistenceEntity);
 
-	PersistenceEntity getEntity(long id);
+	PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS);
 }

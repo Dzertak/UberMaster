@@ -4,6 +4,9 @@ import annotation.Attribute;
 import annotation.ObjectType;
 import entity.attr.UserAttr;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
+
 @ObjectType(UserAttr.OBJTYPE)
 public class User extends BaseEntity
 {
@@ -15,7 +18,7 @@ public class User extends BaseEntity
     protected String location;
 
     @Attribute(Model.DESCRIPTION)
-    protected String description;
+    protected String userDescription;
 
     @Attribute(Model.PHONE_NUMBER)
     protected String phoneNumber;
@@ -34,12 +37,12 @@ public class User extends BaseEntity
         this.location = location;
     }
 
-    public String getDescription() {
-        return description;
+    public String getUserDescription() {
+        return userDescription;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setUserDescription(String description) {
+        this.userDescription = description;
     }
 
     public String getPhoneNumber() {
@@ -66,12 +69,34 @@ public class User extends BaseEntity
         this.picture = picture;
     }
 
+    public void fillAttributeFields(HashMap<String, Object> hashMap)
+    {
+        Field sqcField[] = User.class.getDeclaredFields();
+        Attribute attrib;
+        int length = sqcField.length;
+        try
+        {
+            for (int i = 0; i < length; ++i)
+            {
+                attrib = sqcField[i].getAnnotation(Attribute.class);
+
+                if (attrib != null)
+                    sqcField[i].set(this, hashMap.get(attrib.value()));
+            }
+        }
+
+        catch (IllegalAccessException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
     @Override
     public String toString() {
         return "User{"
                 + super.toString()
                 + "\nlocation='" + location + '\'' +
-                ", \ndescription='" + description + '\'' +
+                ", \ndescription='" + userDescription + '\'' +
                 ", \nphoneNumber='" + phoneNumber + '\'' +
                 ", \npassword='" + password + '\'' +
                 ", \npicture='" + picture + '\'' +

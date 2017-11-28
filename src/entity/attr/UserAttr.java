@@ -4,9 +4,9 @@ public interface UserAttr
 {
     String OBJTYPE = "1";
 
-    String PHONE_NUMBER = "phoneNumber = 2";
-    String PASSWORD = "password = 3";
-    String DESCRIPTION = "description = 4";
-    String PICTURE = "picture = 5";
-    String LOCATION = "location = 6";
+    String PHONE_NUMBER = "1";
+    String PASSWORD = "2";
+    String DESCRIPTION = "3";
+    String PICTURE = "4";
+    String LOCATION = "5";
 }

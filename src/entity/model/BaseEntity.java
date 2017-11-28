@@ -3,7 +3,10 @@ package entity.model;
 import annotation.Attribute;
 import entity.attr.BaseEntityAttr;
 
-public class BaseEntity {
+import java.lang.reflect.Field;
+import java.util.HashMap;
+
+public abstract class BaseEntity {
 
 	public interface Model extends BaseEntityAttr{
 
@@ -41,6 +44,8 @@ public class BaseEntity {
 	public void setObject_id(long object_id) {
 		this.object_id = object_id;
 	}
+
+	public abstract void fillAttributeFields(HashMap<String, Object> hashMap);
 
 	@Override
 	public String toString() {

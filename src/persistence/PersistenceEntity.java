@@ -4,13 +4,20 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PersistenceEntity {
+public class PersistenceEntity
+{
     protected long object_id;
     protected long parent_id;
     protected String description;
     protected String name;
     protected Map<BigInteger, Object> attributes;
     protected Map<BigInteger, Long> references;
+
+    public PersistenceEntity()
+    {
+        attributes = new HashMap<>();
+        references = new HashMap<>();
+    }
 
     public long getObject_id() {
         return this.object_id;

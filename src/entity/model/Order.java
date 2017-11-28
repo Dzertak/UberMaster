@@ -2,9 +2,14 @@ package entity.model;
 
 import annotation.Attribute;
 import annotation.ObjectType;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import entity.attr.OrderAttr;
 
+import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 
 @ObjectType(OrderAttr.OBJTYPE)
@@ -77,6 +82,50 @@ public class Order extends BaseEntity
 
     public void setMaster(Master master) {
         this.master = master;
+    }
+
+    public void fillAttributeFields(HashMap<String, Object> hashMap)
+    {
+        Field sqcField[] = Order.class.getDeclaredFields();
+        Attribute attrib;
+        int length = sqcField.length;
+        try
+        {
+            for (int i = 0; i < length; ++i)
+            {
+                attrib = sqcField[i].getAnnotation(Attribute.class);
+
+                if (attrib != null)
+                {
+                    if
+                    (
+                        attrib.value().equals(Model.DUE_DATE)
+                            ||
+                        attrib.value().equals(Model.START_DATE)
+                    )
+                    {
+                        try
+                        {
+                            sqcField[i].set(this, new SimpleDateFormat("dd/MM/yyyy HH:mm").parse((String) hashMap.get(attrib.value())));
+                        }
+
+                        catch (ParseException exc)
+                        {
+                            exc.printStackTrace();
+                        }
+                    }
+
+                    //Сначала надо определиться что такое Master y Order
+                    else if (!attrib.value().equals(Model.MASTER_REF))
+                        sqcField[i].set(this, hashMap.get(attrib.value()));
+                }
+            }
+        }
+
+        catch (IllegalAccessException exc)
+        {
+            exc.printStackTrace();
+        }
     }
 
     @Override

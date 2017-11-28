@@ -4,7 +4,11 @@ import annotation.Attribute;
 import annotation.ObjectType;
 import entity.attr.MasterAttr;
 
+import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 
 @ObjectType(MasterAttr.OBJTYPE)
 public class Master extends User {
@@ -98,6 +102,58 @@ public class Master extends User {
 
     public void setEnd_time(Date end_time) {
         this.end_time = end_time;
+    }
+
+    public void fillAttributeFields(HashMap<String, Object> hashMap)
+    {
+        super.fillAttributeFields(hashMap);
+
+        Field sqcField[] = Master.class.getDeclaredFields();
+        Attribute attrib;
+        int length = sqcField.length;
+        try
+        {
+            for (int i = 0; i < length; ++i)
+            {
+                attrib = sqcField[i].getAnnotation(Attribute.class);
+                if (attrib != null)
+                {
+                    String attribValue = attrib.value();
+
+                    if
+                    (
+                        attribValue.equals(Model.END_TIME)
+                            ||
+                        attribValue.equals(Model.ST_TIME)
+                    )
+                    {
+                        try
+                        {
+                            sqcField[i].set(this, new SimpleDateFormat("dd/MM/yyyy HH:mm").parse((String) hashMap.get(attrib.value())));
+                        }
+
+                        catch (ParseException exc)
+                        {
+                            exc.printStackTrace();
+                        }
+                    }
+
+                    else if (attribValue.equals(Model.PAYMENT))
+                        sqcField[i].set(this, Integer.parseInt((String)hashMap.get(attrib.value())));
+
+                    else if (attribValue.equals(Model.SMOKE))
+                        sqcField[i].set(this, Boolean.parseBoolean((String)hashMap.get(attrib.value())));
+
+                    else
+                        sqcField[i].set(this, hashMap.get(attrib.value()));
+                }
+            }
+        }
+
+        catch (IllegalAccessException exc)
+        {
+            exc.printStackTrace();
+        }
     }
 
     @Override
