@@ -1,7 +1,7 @@
 package ubermaster.entity.model;
 
-import annotation.Attribute;
-import entity.attr.BaseEntityAttr;
+import ubermaster.annotation.Attribute;
+import ubermaster.entity.attr.BaseEntityAttr;
 
 import java.lang.reflect.Field;
 import java.sql.Date;

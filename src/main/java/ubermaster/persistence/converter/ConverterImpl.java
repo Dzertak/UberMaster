@@ -1,6 +1,6 @@
 package ubermaster.persistence.converter;
 
-import entity.model.*;
+import ubermaster.entity.model.*;
 import ubermaster.persistence.PersistenceEntity;
 
 import java.text.SimpleDateFormat;

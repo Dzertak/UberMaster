@@ -1,13 +1,13 @@
 package ubermaster.configuration;
 
+import oracle.jdbc.pool.OracleDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 import javax.annotation.Resource;
-import javax.sql.DataSource;
+import java.sql.SQLException;
 import java.util.Properties;
 
 @Configuration
@@ -25,13 +25,15 @@ public class DatasourcesConfig {
     private Environment env;
 
     @Bean
-    public DataSource dataSource() {
-        DriverManagerDataSource dataSource = new DriverManagerDataSource();
+    public OracleDataSource dataSource() throws SQLException {
+        OracleDataSource dataSource = new OracleDataSource();
 
-        dataSource.setDriverClassName(env.getRequiredProperty(PROP_DATABASE_DRIVER));
-        dataSource.setUrl(env.getRequiredProperty(PROP_DATABASE_URL));
-        dataSource.setUsername(env.getRequiredProperty(PROP_DATABASE_USERNAME));
         dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));
+        dataSource.setURL(env.getRequiredProperty(PROP_DATABASE_URL)
+                .replace("USER", env.getRequiredProperty(PROP_DATABASE_USERNAME))
+                .replace("PASS", env.getRequiredProperty(PROP_DATABASE_PASSWORD)));
+        dataSource.setUser(env.getRequiredProperty(PROP_DATABASE_USERNAME));
+        dataSource.setDriverType(env.getRequiredProperty(PROP_DATABASE_DRIVER));
 
         return dataSource;
     }

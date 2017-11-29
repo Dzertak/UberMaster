@@ -1,16 +1,15 @@
 package ubermaster.persistence.manager;
 
-import oracle.jdbc.pool.OracleDataSource;
-import ubermaster.annotation.ObjectType;
 import oracle.jdbc.OracleCallableStatement;
+import oracle.jdbc.pool.OracleDataSource;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.BaseEntity;
 import ubermaster.persistence.PersistenceEntity;
 import ubermaster.persistence.converter.ConverterImpl;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,15 +18,13 @@ import java.util.Iterator;
 
 public class ManagerImpl implements Manager
 {
+	@Autowired
+	private OracleDataSource dataSource;
+
 	private Connection connection;
 
-	public ManagerImpl(final String USER, final String PASSWD) throws SQLException, ClassNotFoundException
+	public ManagerImpl() throws SQLException, ClassNotFoundException
 	{
-
-		OracleDataSource dataSource= new OracleDataSource();
-
-		dataSource.setURL(CONNECTION.replace("USER", USER).replace("PASS", PASSWD));
-
 		connection = dataSource.getConnection();}
 
 	public void close()
