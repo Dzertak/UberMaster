@@ -12,9 +12,10 @@ import java.util.HashMap;
 @ObjectType(MasterAttr.OBJTYPE)
 public class Master extends User {
 
-    public interface Model extends MasterAttr{
+    public interface Model extends MasterAttr {
 
     }
+
     @Attribute(Model.PROFESSION)
     protected String profession;
 
@@ -103,34 +104,27 @@ public class Master extends User {
         this.end_time = end_time;
     }
 
-    public void fillAttributeFields(HashMap<String, Object> hashMap)
-    {
+    public void fillAttributeFields(HashMap<String, Object> hashMap) {
         super.fillAttributeFields(hashMap);
 
         Field sqcField[] = Master.class.getDeclaredFields();
         Attribute attrib;
         int length = sqcField.length;
-        try
-        {
-            for (int i = 0; i < length; ++i)
-            {
+        try {
+            for (int i = 0; i < length; ++i) {
                 attrib = sqcField[i].getAnnotation(Attribute.class);
 
                 if (attrib != null)
-                    setField(sqcField[i], (String)hashMap.get(attrib.value()), this);
+                    setField(sqcField[i], (String) hashMap.get(attrib.value()), this);
             }
-        }
-
-        catch (IllegalAccessException | ParseException exc)
-        {
+        } catch (IllegalAccessException | ParseException exc) {
             exc.printStackTrace();
         }
     }
 
     @Override
-    public HashMap getAllFields()
-    {
-        HashMap<String, Object> hashmap = (HashMap<String, Object>)super.getAllFields();
+    public HashMap getAllFields() {
+        HashMap<String, Object> hashmap = (HashMap<String, Object>) super.getAllFields();
 
         hashmap.put(Model.PROFESSION, profession);
         hashmap.put(Model.SKILLS, skills);

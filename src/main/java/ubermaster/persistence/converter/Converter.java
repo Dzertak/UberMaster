@@ -3,6 +3,7 @@ package ubermaster.persistence.converter;
 import ubermaster.entity.model.BaseEntity;
 import ubermaster.persistence.PersistenceEntity;
 
+
 public interface Converter {
     PersistenceEntity convertToEntity(BaseEntity baseEntity);
 
