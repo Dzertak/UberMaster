@@ -88,7 +88,7 @@ public class EntityTEST
 	@Test
 	public void insertMasterGetMasterTEST() throws ParseException
 	{
-		/*Master master = new Master();
+		Master master = new Master();
 		master.setName("MasterName");
 		master.setUserDescription("Master User Descr");
 		master.setObject_id(10);
@@ -106,7 +106,7 @@ public class EntityTEST
 		master.setSkills("I can everything");
 		master.setSmoke(false);
 
-		facade.createEntity(master, false);*/
+		facade.createEntity(master, false);
 		System.out.println(facade.getEntity(10, Master.class).toString());
 	}
 }
