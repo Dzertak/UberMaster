@@ -1,4 +1,4 @@
-package entity.attr;
+package ubermaster.entity.attr;
 
 public interface MasterAttr extends UserAttr {
     String OBJTYPE = "2";

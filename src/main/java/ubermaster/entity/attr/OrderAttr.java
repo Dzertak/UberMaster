@@ -1,4 +1,4 @@
-package entity.attr;
+package ubermaster.entity.attr;
 
 public interface OrderAttr {
     String OBJTYPE = "5";

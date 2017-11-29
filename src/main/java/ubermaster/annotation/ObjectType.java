@@ -1,4 +1,4 @@
-package annotation;
+package ubermaster.annotation;
 
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package entity.attr;
+package ubermaster.entity.attr;
 
 public interface BaseEntityAttr
 {
