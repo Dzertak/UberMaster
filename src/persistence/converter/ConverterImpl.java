@@ -5,6 +5,8 @@ import entity.model.*;
 import persistence.PersistenceEntity;
 
 import java.lang.reflect.Field;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -15,6 +17,12 @@ public class ConverterImpl implements Converter
     {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
 
+        // Сеттинг основных полей + вызов метода getAllField()
+        persistenceEntity.setName(baseEntity.getName());
+        persistenceEntity.setObject_id(baseEntity.getObject_id());
+        persistenceEntity.setDescription(baseEntity.getDescription());
+
+        persistenceEntity.setAttributes(baseEntity.getAllFields());
 
         return persistenceEntity;
     }
@@ -46,5 +54,24 @@ public class ConverterImpl implements Converter
         entity.setDescription(persistenceEntity.getDescription());
 
         return (T)entity;
+    }
+
+    public static String convertObjectToString(Object value)
+    {
+        final Class CLASS = value.getClass();
+
+        if (String.class.isAssignableFrom(CLASS))
+            return (String)value;
+
+        if (Date.class.isAssignableFrom(CLASS))
+            return new SimpleDateFormat("dd/MM/yyyy HH:mm").format(value);
+
+        if (Integer.class.isAssignableFrom(CLASS))
+            return Integer.toString((int)value);
+
+        if (Boolean.class.isAssignableFrom(CLASS))
+            return Boolean.toString((boolean)value);
+
+        return null;
     }
 }

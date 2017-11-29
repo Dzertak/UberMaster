@@ -8,6 +8,7 @@ import java.sql.Date;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Map;
 
 public abstract class BaseEntity {
 
@@ -50,34 +51,36 @@ public abstract class BaseEntity {
 
 	public abstract void fillAttributeFields(HashMap<String, Object> hashMap);
 
-	protected final void setField(Field field, String value, Object objField) throws IllegalAccessException, ParseException
+	protected final void setField(final Field FIELD, String value, Object objField) throws IllegalAccessException, ParseException
 	{
-		final Class CLASS = field.getType();
+		final Class CLASS = FIELD.getType();
 
 		if (String.class.isAssignableFrom(CLASS))
 		{
-			field.set(objField, value);
+			FIELD.set(objField, value);
 			return;
 		}
 
 		if (Date.class.isAssignableFrom(CLASS))
 		{
-			field.set(objField, new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(value));
+			FIELD.set(objField, new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(value));
 			return;
 		}
 
 		if (Integer.class.isAssignableFrom(CLASS))
 		{
-			field.set(objField, Integer.parseInt(value));
+			FIELD.set(objField, Integer.parseInt(value));
 			return;
 		}
 
 		if (Boolean.class.isAssignableFrom(CLASS))
 		{
-			field.set(objField, Boolean.parseBoolean(value));
+			FIELD.set(objField, Boolean.parseBoolean(value));
 			return;
 		}
 	}
+
+	public abstract HashMap getAllFields();
 
 	@Override
 	public String toString() {

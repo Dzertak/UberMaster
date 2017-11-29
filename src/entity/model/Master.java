@@ -9,6 +9,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 @ObjectType(MasterAttr.OBJTYPE)
 public class Master extends User {
@@ -126,6 +127,23 @@ public class Master extends User {
         {
             exc.printStackTrace();
         }
+    }
+
+    @Override
+    public HashMap getAllFields()
+    {
+        HashMap<String, Object> hashmap = (HashMap<String, Object>)super.getAllFields();
+
+        hashmap.put(Model.PROFESSION, profession);
+        hashmap.put(Model.SKILLS, skills);
+        hashmap.put(Model.END_TIME, end_time);
+        hashmap.put(Model.ST_TIME, start_time);
+        hashmap.put(Model.EXPERIENCE, experience);
+        hashmap.put(Model.SMOKE, smoke);
+        hashmap.put(Model.PAYMENT, payment);
+        hashmap.put(Model.TOOLS, tools);
+
+        return hashmap;
     }
 
     @Override

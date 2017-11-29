@@ -10,6 +10,8 @@ import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.BLOB;
 import persistence.PersistenceEntity;
+import persistence.converter.Converter;
+import persistence.converter.ConverterImpl;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -42,14 +44,13 @@ public class ManagerImpl implements Manager
 
 	public void createEntity(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS)
 	{
-		/*OracleCallableStatement calStat;
+		OracleCallableStatement calStat;
 		ResultSet resultSet;
 
 		try
 		{
 			HashMap<String, Object> hashMap = (HashMap<String, Object>) persistenceEntity.getAttributes();
 			String[] elements = new String[3 + (hashMap.size() << 1)];
-			int length = elements.length;
 			elements[0] = Long.toString(persistenceEntity.getObject_id());
 			elements[1] = CLASS.getAnnotation(ObjectType.class).value();
 			elements[2] = persistenceEntity.getName();
@@ -61,19 +62,9 @@ public class ManagerImpl implements Manager
 				String attrID = iterator.next();
 				elements[i] = attrID;
 				++i;
-				if (attrID.equals(Master.Model.SMOKE))
-					elements[i] = Boolean.toString((Boolean)hashMap.get(attrID));
-
-				// Или лучше маску использовать?
-				else if (attrID.equals(Master.Model.PAYMENT))
-					elements[i] = Integer.toString((int)hashMap.get(attrID));
-
-				else if ()
-
-				elements[i] = (String)hashMap.get(attrID);
+				elements[i] = ConverterImpl.convertObjectToString(hashMap.get(attrID));
 				++i;
 			}
-
 
 			ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor("ARRAY", connection);
 			ARRAY array = new ARRAY(descriptor, connection, elements);
@@ -86,7 +77,7 @@ public class ManagerImpl implements Manager
 		catch (SQLException exc)
 		{
 			exc.printStackTrace();
-		}*/
+		}
 	}
 
 
@@ -108,9 +99,11 @@ public class ManagerImpl implements Manager
 			while (resultSet.next())
 			{
 				String attr_id = resultSet.getString(2);
+				// There're params for BaseEntity
 				if (attr_id.equals("-1"))
 					persistenceEntity.setName(resultSet.getString(1));
 
+				// There're params for Attributes
 				else
 					attrMap.put(attr_id, resultSet.getString(1));
 			}

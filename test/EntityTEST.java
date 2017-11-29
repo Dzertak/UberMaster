@@ -7,7 +7,10 @@ import org.junit.Test;
 import persistence.facade.Facade;
 
 import java.io.IOException;
+import java.util.Date;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 public class EntityTEST
 {
@@ -40,13 +43,22 @@ public class EntityTEST
 	@Test
 	public void insertEntityTEST()
 	{
+		final long ID = 10;
+
 		Poke poke = new Poke();
+		poke.setLocation("Gracksland");
+		poke.setObject_id(ID);
 		poke.setName("Just Gogo");
 		poke.setPicture("Picture of Gogo");
 		poke.setPhoneNumber("0123456789");
 		poke.setPassword("gogoPASS");
 		poke.setUserDescription("I'ma gogo, and I'm from Gracksland");
 
+		System.out.println(poke.toString());
+		System.out.println();
+
 		facade.createEntity(poke, false);
+
+		System.out.println(facade.getEntity(ID, Poke.class));
 	}
 }

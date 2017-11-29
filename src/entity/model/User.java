@@ -3,9 +3,12 @@ package entity.model;
 import annotation.Attribute;
 import annotation.ObjectType;
 import entity.attr.UserAttr;
+import persistence.converter.ConverterImpl;
 
 import java.lang.reflect.Field;
+import java.sql.Date;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 @ObjectType(UserAttr.OBJTYPE)
@@ -92,6 +95,20 @@ public class User extends BaseEntity
         {
             exc.printStackTrace();
         }
+    }
+
+    @Override
+    public HashMap getAllFields()
+    {
+        HashMap<String, Object> hashmap = new HashMap<>();
+
+        hashmap.put(Model.DESCRIPTION, userDescription);
+        hashmap.put(Model.LOCATION, location);
+        hashmap.put(Model.PHONE_NUMBER, phoneNumber);
+        hashmap.put(Model.PASSWORD, password);
+        hashmap.put(Model.PICTURE, picture);
+
+        return hashmap;
     }
 
     @Override

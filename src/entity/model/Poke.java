@@ -39,6 +39,14 @@ public class Poke extends User {
     }
 
     @Override
+    public HashMap getAllFields()
+    {
+        HashMap<String, Object> hashmap = super.getAllFields();
+
+        return hashmap;
+    }
+
+    @Override
     public String toString() {
         return "Poke{"
                 + super.toString()

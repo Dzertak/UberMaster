@@ -84,6 +84,7 @@ public class Order extends BaseEntity
         this.master = master;
     }
 
+    @Override
     public void fillAttributeFields(HashMap<String, Object> hashMap)
     {
         Field sqcField[] = Order.class.getDeclaredFields();
@@ -107,6 +108,20 @@ public class Order extends BaseEntity
         {
             exc.printStackTrace();
         }
+    }
+
+    @Override
+    public HashMap getAllFields()
+    {
+        HashMap<String, Object> hashmap = new HashMap<>();
+
+        hashmap.put(Model.SMALL_DESCRIPTION, SmallDescription);
+        hashmap.put(Model.BIG_DESCRIPTION, BigDescription);
+        hashmap.put(Model.START_DATE, StartDate);
+        hashmap.put(Model.DUE_DATE, DueDate);
+        hashmap.put(Model.STATUS, Status);
+
+        return hashmap;
     }
 
     @Override

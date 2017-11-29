@@ -7,6 +7,7 @@ import entity.attr.AdminAttr;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.Map;
 
 @ObjectType(AdminAttr.OBJTYPE)
 public class Admin extends User {
@@ -37,6 +38,11 @@ public class Admin extends User {
         {
             exc.printStackTrace();
         }
+    }
+
+    public HashMap getAllFields()
+    {
+        return null;
     }
 
     @Override
