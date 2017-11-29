@@ -27,7 +27,8 @@ public class ManagerImpl implements Manager
 		OracleDataSource dataSource = new OracleDataSource();
 		dataSource.setURL(CONNECTION.replace("USER", USER).replace("PASS", PASSWD));
 
-		connection = dataSource.getConnection();}
+		connection = dataSource.getConnection();
+	}
 
 	public void close()
 	{
