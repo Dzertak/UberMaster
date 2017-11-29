@@ -15,23 +15,7 @@ public class ConverterImpl implements Converter
     {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
 
-        /*Field sqcField[] = baseEntity.getClass().getFields();
-        LinkedList<Object> lstAttr = new LinkedList<>();
-        int length = sqcField.length;
-        Attribute attrib;
-        try
-        {
-            for (int itera = 0; itera < length; ++itera)
-            {
-                attrib = sqcField[itera].getAnnotation(Attribute.class);
-                if (attrib != null)
-                    lstAttr.add(new (Long.parseLong(attrib.value()), sqcField[itera].get(baseEntity)));
-            }
-        }
 
-        catch (IllegalAccessException exc)
-        {               }
-*/
         return persistenceEntity;
     }
 

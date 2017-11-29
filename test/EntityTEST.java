@@ -26,7 +26,7 @@ public class EntityTEST
 	}
 
 	@Test
-	public void getDifferentEntiteisTEST()
+	public void getDifferentEntitiesTEST()
 	{
 		System.out.println(facade.getEntity(1, Poke.class));
 		System.out.println();
@@ -35,5 +35,18 @@ public class EntityTEST
 		System.out.println(facade.getEntity(3, Master.class));
 		System.out.println();
 		System.out.println(facade.getEntity(4, Order.class));
+	}
+
+	@Test
+	public void insertEntityTEST()
+	{
+		Poke poke = new Poke();
+		poke.setName("Just Gogo");
+		poke.setPicture("Picture of Gogo");
+		poke.setPhoneNumber("0123456789");
+		poke.setPassword("gogoPASS");
+		poke.setUserDescription("I'ma gogo, and I'm from Gracksland");
+
+		facade.createEntity(poke, false);
 	}
 }

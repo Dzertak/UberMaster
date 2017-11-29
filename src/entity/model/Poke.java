@@ -5,6 +5,7 @@ import annotation.ObjectType;
 import entity.attr.PokeAttr;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.util.HashMap;
 
 @ObjectType(PokeAttr.OBJTYPE)
@@ -27,11 +28,11 @@ public class Poke extends User {
                 attrib = sqcField[i].getAnnotation(Attribute.class);
 
                 if (attrib != null)
-                    sqcField[i].set(this, hashMap.get(attrib.value()));
+                    setField(sqcField[i], (String)hashMap.get(attrib.value()), this);
             }
         }
 
-        catch (IllegalAccessException exc)
+        catch (IllegalAccessException | ParseException exc)
         {
             exc.printStackTrace();
         }

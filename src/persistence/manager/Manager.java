@@ -12,7 +12,7 @@ public interface Manager extends Closeable
 	String GET_ENTITY = "{call getEntity(?, ?)}";
 	String CONNECTION = "jdbc:oracle:thin:USER/PASS@localhost:1521:XE";
 
-	void createEntity(PersistenceEntity persistenceEntity);
+	void createEntity(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS);
 
 	PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS);
 }

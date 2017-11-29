@@ -35,7 +35,7 @@ public class Facade
 	public void createEntity(BaseEntity baseEntity, boolean isUpdate)
 	{
 		PersistenceEntity persistenceEntity = converter.convertToEntity(baseEntity);
-		manager.createEntity(persistenceEntity);
+		manager.createEntity(persistenceEntity, baseEntity.getClass());
 	}
 
 	/**

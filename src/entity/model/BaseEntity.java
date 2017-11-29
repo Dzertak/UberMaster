@@ -4,6 +4,9 @@ import annotation.Attribute;
 import entity.attr.BaseEntityAttr;
 
 import java.lang.reflect.Field;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public abstract class BaseEntity {
@@ -46,6 +49,35 @@ public abstract class BaseEntity {
 	}
 
 	public abstract void fillAttributeFields(HashMap<String, Object> hashMap);
+
+	protected final void setField(Field field, String value, Object objField) throws IllegalAccessException, ParseException
+	{
+		final Class CLASS = field.getType();
+
+		if (String.class.isAssignableFrom(CLASS))
+		{
+			field.set(objField, value);
+			return;
+		}
+
+		if (Date.class.isAssignableFrom(CLASS))
+		{
+			field.set(objField, new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(value));
+			return;
+		}
+
+		if (Integer.class.isAssignableFrom(CLASS))
+		{
+			field.set(objField, Integer.parseInt(value));
+			return;
+		}
+
+		if (Boolean.class.isAssignableFrom(CLASS))
+		{
+			field.set(objField, Boolean.parseBoolean(value));
+			return;
+		}
+	}
 
 	@Override
 	public String toString() {

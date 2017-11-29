@@ -116,41 +116,13 @@ public class Master extends User {
             for (int i = 0; i < length; ++i)
             {
                 attrib = sqcField[i].getAnnotation(Attribute.class);
+
                 if (attrib != null)
-                {
-                    String attribValue = attrib.value();
-
-                    if
-                    (
-                        attribValue.equals(Model.END_TIME)
-                            ||
-                        attribValue.equals(Model.ST_TIME)
-                    )
-                    {
-                        try
-                        {
-                            sqcField[i].set(this, new SimpleDateFormat("dd/MM/yyyy HH:mm").parse((String) hashMap.get(attrib.value())));
-                        }
-
-                        catch (ParseException exc)
-                        {
-                            exc.printStackTrace();
-                        }
-                    }
-
-                    else if (attribValue.equals(Model.PAYMENT))
-                        sqcField[i].set(this, Integer.parseInt((String)hashMap.get(attrib.value())));
-
-                    else if (attribValue.equals(Model.SMOKE))
-                        sqcField[i].set(this, Boolean.parseBoolean((String)hashMap.get(attrib.value())));
-
-                    else
-                        sqcField[i].set(this, hashMap.get(attrib.value()));
-                }
+                    setField(sqcField[i], (String)hashMap.get(attrib.value()), this);
             }
         }
 
-        catch (IllegalAccessException exc)
+        catch (IllegalAccessException | ParseException exc)
         {
             exc.printStackTrace();
         }

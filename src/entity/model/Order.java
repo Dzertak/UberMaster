@@ -97,32 +97,13 @@ public class Order extends BaseEntity
 
                 if (attrib != null)
                 {
-                    if
-                    (
-                        attrib.value().equals(Model.DUE_DATE)
-                            ||
-                        attrib.value().equals(Model.START_DATE)
-                    )
-                    {
-                        try
-                        {
-                            sqcField[i].set(this, new SimpleDateFormat("dd/MM/yyyy HH:mm").parse((String) hashMap.get(attrib.value())));
-                        }
-
-                        catch (ParseException exc)
-                        {
-                            exc.printStackTrace();
-                        }
-                    }
-
-                    //Сначала надо определиться что такое Master y Order
-                    else if (!attrib.value().equals(Model.MASTER_REF))
-                        sqcField[i].set(this, hashMap.get(attrib.value()));
+                    if (!attrib.value().equals(Model.MASTER_REF))
+                        setField(sqcField[i], (String)hashMap.get(attrib.value()), this);
                 }
             }
         }
 
-        catch (IllegalAccessException exc)
+        catch (IllegalAccessException | ParseException exc)
         {
             exc.printStackTrace();
         }

@@ -5,6 +5,7 @@ import annotation.ObjectType;
 import entity.attr.AdminAttr;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.util.HashMap;
 
 @ObjectType(AdminAttr.OBJTYPE)
@@ -28,11 +29,11 @@ public class Admin extends User {
                 attrib = sqcField[i].getAnnotation(Attribute.class);
 
                 if (attrib != null)
-                    sqcField[i].set(this, hashMap.get(attrib.value()));
+                    setField(sqcField[i], (String)hashMap.get(attrib.value()), this);
             }
         }
 
-        catch (IllegalAccessException exc)
+        catch (IllegalAccessException | ParseException exc)
         {
             exc.printStackTrace();
         }
