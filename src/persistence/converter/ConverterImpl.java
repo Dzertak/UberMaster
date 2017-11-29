@@ -1,14 +1,10 @@
 package persistence.converter;
 
-import annotation.Attribute;
 import entity.model.*;
 import persistence.PersistenceEntity;
-
-import java.lang.reflect.Field;
-import java.sql.Date;
+import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 
 public class ConverterImpl implements Converter
@@ -17,7 +13,6 @@ public class ConverterImpl implements Converter
     {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
 
-        // Сеттинг основных полей + вызов метода getAllField()
         persistenceEntity.setName(baseEntity.getName());
         persistenceEntity.setObject_id(baseEntity.getObject_id());
         persistenceEntity.setDescription(baseEntity.getDescription());
