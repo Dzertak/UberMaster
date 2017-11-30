@@ -10,7 +10,7 @@ public class PersistenceEntity
     protected long parent_id;
     protected String description;
     protected String name;
-    protected Map<BigInteger, Object> attributes;
+    protected Map<String, Object> attributes;
     protected Map<BigInteger, Long> references;
 
     public PersistenceEntity()

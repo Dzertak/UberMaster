@@ -38,6 +38,7 @@ public class Poke extends User {
         }
     }
 
+
     @Override
     public HashMap getAllFields()
     {
