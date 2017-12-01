@@ -94,15 +94,13 @@ public class Order extends BaseEntity
             {
                 attrib = sqcField[i].getAnnotation(Attribute.class);
 
-                if (attrib != null)
-                {
-                    if (!attrib.value().equals(Model.MASTER_REF))
-                        setField(sqcField[i], (String)hashMap.get(attrib.value()), this);
-                }
+                //Потому что неизвестно что пока мастер такое
+                if (attrib != null && !attrib.value().equals(Model.MASTER_REF))
+                    sqcField[i].set(this, hashMap.get(attrib.value()));
             }
         }
 
-        catch (IllegalAccessException | ParseException exc)
+        catch (IllegalAccessException exc)
         {
             exc.printStackTrace();
         }

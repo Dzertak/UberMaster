@@ -103,20 +103,26 @@ public class Master extends User
         this.end_time = end_time;
     }
 
-    public void fillAttributeFields(HashMap<String, Object> hashMap) {
+    @Override
+    public void fillAttributeFields(HashMap<String, Object> hashMap)
+    {
         super.fillAttributeFields(hashMap);
-
         Field sqcField[] = Master.class.getDeclaredFields();
         Attribute attrib;
         int length = sqcField.length;
-        try {
-            for (int i = 0; i < length; ++i) {
+        try
+        {
+            for (int i = 0; i < length; ++i)
+            {
                 attrib = sqcField[i].getAnnotation(Attribute.class);
 
                 if (attrib != null)
-                    setField(sqcField[i], (String) hashMap.get(attrib.value()), this);
+                    sqcField[i].set(this, hashMap.get(attrib.value()));
             }
-        } catch (IllegalAccessException | ParseException exc) {
+        }
+
+        catch (IllegalAccessException exc)
+        {
             exc.printStackTrace();
         }
     }

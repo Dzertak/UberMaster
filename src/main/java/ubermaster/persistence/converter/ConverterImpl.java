@@ -1,9 +1,11 @@
 package ubermaster.persistence.converter;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.PersistenceEntity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,5 +73,19 @@ public class ConverterImpl implements Converter
             return Boolean.toString((boolean) value);
 
         return null;
+    }
+
+    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException
+    {
+        if (int.class.isAssignableFrom(CLASS))
+            return Integer.parseInt(VALUE);
+
+        if (boolean.class.isAssignableFrom(CLASS))
+            return Boolean.parseBoolean(VALUE);
+
+        if (Date.class.isAssignableFrom(CLASS))
+            return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
+
+        return VALUE;
     }
 }

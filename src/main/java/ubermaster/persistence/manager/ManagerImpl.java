@@ -1,10 +1,8 @@
 package ubermaster.persistence.manager;
 
 import oracle.jdbc.OracleCallableStatement;
-import oracle.jdbc.pool.OracleDataSource;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.BaseEntity;
@@ -14,6 +12,7 @@ import ubermaster.persistence.converter.ConverterImpl;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import static ubermaster.OracleConnector.getConnection;
@@ -21,24 +20,25 @@ import static ubermaster.OracleConnector.getConnection;
 @Component
 public class ManagerImpl implements Manager
 {
-    @Autowired
+    //@Autowired
     //private OracleDataSource dataSource;
 
     public void createEntity(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS)
     {
-        OracleCallableStatement calStat;
-        ResultSet resultSet;
+        /*OracleCallableStatement calStat;
+        ResultSet resultSet;*/
         Connection connection = getConnection();
 
         try
         {
             HashMap<String, Object> hashMap = (HashMap<String, Object>) persistenceEntity.getAttributes();
-            String[] elements = new String[3 + (hashMap.size() << 1)];
+            String[] elements = new String[4 + (hashMap.size() << 1)];
             elements[0] = Long.toString(persistenceEntity.getObject_id());
             elements[1] = CLASS.getAnnotation(ObjectType.class).value();
             elements[2] = persistenceEntity.getName();
+            elements[3] = persistenceEntity.getDescription();
 
-            int i = 3;
+            int i = 4;
             Iterator<String> iterator = hashMap.keySet().iterator();
             while (iterator.hasNext())
             {
@@ -74,7 +74,6 @@ public class ManagerImpl implements Manager
         PersistenceEntity persistenceEntity = new PersistenceEntity();
         try
         {
-            //connection = dataSource.getConnection();
             calStat = (OracleCallableStatement) connection.prepareCall(GET_ENTITY);
             calStat.setString(1, Long.toString(id));
             calStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
@@ -83,21 +82,31 @@ public class ManagerImpl implements Manager
 
             persistenceEntity.setObject_id(id);
             HashMap<String, Object> attrMap = new HashMap<>();
-            while (resultSet.next()) {
+            while (resultSet.next())
+            {
                 String attr_id = resultSet.getString(2);
-                // There're params for BaseEntity
-                if (attr_id.equals("-1"))
-                    persistenceEntity.setName(resultSet.getString(1));
 
-                    // There're params for Attributes
-                else
-                    attrMap.put(attr_id, resultSet.getString(1));
+                switch (attr_id)
+                {
+                    case "-1" :
+                        persistenceEntity.setName(resultSet.getString(1));
+                    break;
+
+                    case "-2" :
+                        persistenceEntity.setDescription(resultSet.getString(1));
+                    break;
+
+                    default :
+                        Class fieldType = BaseEntity.getFieldType(attr_id, CLASS);
+                        Object fieldObj = ConverterImpl.convertStringToObject(resultSet.getString(1), fieldType);
+                        attrMap.put(attr_id, fieldObj);
+                }
             }
 
             persistenceEntity.setAttributes(attrMap);
         }
 
-        catch (SQLException exc)
+        catch (SQLException | ParseException exc)
         {
             exc.printStackTrace();
         }

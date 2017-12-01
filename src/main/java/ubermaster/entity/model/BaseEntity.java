@@ -49,7 +49,7 @@ public abstract class BaseEntity
 
 	public abstract void fillAttributeFields(HashMap<String, Object> hashMap);
 
-	protected final void setField(final Field FIELD, String value, Object objField) throws IllegalAccessException, ParseException
+	/*protected final void setField(final Field FIELD, String value, Object objField) throws IllegalAccessException, ParseException
 	{
 		final Class CLASS = FIELD.getType();
 
@@ -76,6 +76,30 @@ public abstract class BaseEntity
 			FIELD.set(objField, Boolean.parseBoolean(value));
 			return;
 		}
+	}*/
+
+	public final static Class getFieldType(String attr_id, final Class<? extends BaseEntity> CLASS)
+	{
+		Class superClass = CLASS.getSuperclass();
+		if (superClass != null && !superClass.equals(BaseEntity.class))
+		{
+			Class fieldType = getFieldType(attr_id, superClass);
+
+			if (fieldType != null)
+				return fieldType;
+		}
+
+		Field sqcField[] = CLASS.getDeclaredFields();
+		int length = sqcField.length;
+		for (int i = 0; i < length; ++i)
+		{
+			Attribute attrib = sqcField[i].getAnnotation(Attribute.class);
+
+			if (attrib != null && attrib.value().equals(attr_id))
+				return sqcField[i].getType();
+		}
+
+		return null;
 	}
 
 	public abstract HashMap getAllFields();

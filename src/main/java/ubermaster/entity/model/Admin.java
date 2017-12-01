@@ -28,11 +28,11 @@ public class Admin extends User
                 attrib = sqcField[i].getAnnotation(Attribute.class);
 
                 if (attrib != null)
-                    setField(sqcField[i], (String)hashMap.get(attrib.value()), this);
+                    sqcField[i].set(this, hashMap.get(attrib.value()));
             }
         }
 
-        catch (IllegalAccessException | ParseException exc)
+        catch (IllegalAccessException exc)
         {
             exc.printStackTrace();
         }

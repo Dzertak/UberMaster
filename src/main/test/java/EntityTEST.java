@@ -31,8 +31,6 @@ public class EntityTEST
 	@Test
 	public void getDifferentEntitiesTEST()
 	{
-		facade.getEntity(1, Poke.class);
-
 		System.out.println(facade.getEntity(1, Poke.class));
 		System.out.println();
 		System.out.println(facade.getEntity(2, Poke.class));

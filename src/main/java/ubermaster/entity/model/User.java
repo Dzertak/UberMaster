@@ -69,6 +69,7 @@ public class User extends BaseEntity
         this.picture = picture;
     }
 
+    @Override
     public void fillAttributeFields(HashMap<String, Object> hashMap)
     {
         Field sqcField[] = User.class.getDeclaredFields();
@@ -81,13 +82,11 @@ public class User extends BaseEntity
                 attrib = sqcField[i].getAnnotation(Attribute.class);
 
                 if (attrib != null)
-                {
-                    setField(sqcField[i], (String)hashMap.get(attrib.value()), this);
-                }
+                    sqcField[i].set(this, hashMap.get(attrib.value()));
             }
         }
 
-        catch (IllegalAccessException | ParseException exc)
+        catch (IllegalAccessException exc)
         {
             exc.printStackTrace();
         }
