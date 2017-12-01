@@ -16,28 +16,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
+import static ubermaster.OracleConnector.getConnection;
 
 @Component
-public class ManagerImpl implements Manager {
-
+public class ManagerImpl implements Manager
+{
     @Autowired
-    private OracleDataSource dataSource;
+    //private OracleDataSource dataSource;
 
-    private Connection connection;
-
-    public void close() {
-        try {
-            connection.close();
-        } catch (SQLException exc) {
-            new SQLException(exc);
-        }
-    }
-
-    public void createEntity(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS) {
+    public void createEntity(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS)
+    {
         OracleCallableStatement calStat;
         ResultSet resultSet;
+        Connection connection = getConnection();
 
-        try {
+        try
+        {
             HashMap<String, Object> hashMap = (HashMap<String, Object>) persistenceEntity.getAttributes();
             String[] elements = new String[3 + (hashMap.size() << 1)];
             elements[0] = Long.toString(persistenceEntity.getObject_id());
@@ -46,7 +40,8 @@ public class ManagerImpl implements Manager {
 
             int i = 3;
             Iterator<String> iterator = hashMap.keySet().iterator();
-            while (iterator.hasNext()) {
+            while (iterator.hasNext())
+            {
                 String attrID = iterator.next();
                 elements[i] = attrID;
                 ++i;
@@ -54,7 +49,7 @@ public class ManagerImpl implements Manager {
                 ++i;
             }
 
-            connection = dataSource.getConnection();
+           // connection = dataSource.getConnection();
 
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor("ARRAY", connection);
             ARRAY array = new ARRAY(descriptor, connection, elements);
@@ -62,18 +57,24 @@ public class ManagerImpl implements Manager {
             OracleCallableStatement stmt = (OracleCallableStatement) connection.prepareCall("{call insertEntity(?)}");
             stmt.setARRAY(1, array);
             stmt.execute();
-        } catch (SQLException exc) {
+        }
+
+        catch (SQLException exc)
+        {
             exc.printStackTrace();
         }
     }
 
 
-    public PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS) {
+    public PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS)
+    {
+        Connection connection = getConnection();
         OracleCallableStatement calStat;
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
-        try {
-            connection = dataSource.getConnection();
+        try
+        {
+            //connection = dataSource.getConnection();
             calStat = (OracleCallableStatement) connection.prepareCall(GET_ENTITY);
             calStat.setString(1, Long.toString(id));
             calStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
@@ -94,7 +95,10 @@ public class ManagerImpl implements Manager {
             }
 
             persistenceEntity.setAttributes(attrMap);
-        } catch (SQLException exc) {
+        }
+
+        catch (SQLException exc)
+        {
             exc.printStackTrace();
         }
 

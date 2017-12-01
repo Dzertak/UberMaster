@@ -9,10 +9,10 @@ import java.text.ParseException;
 import java.util.HashMap;
 
 @ObjectType(PokeAttr.OBJTYPE)
-public class Poke extends User {
-    public interface Model extends PokeAttr{
-
-    }
+public class Poke extends User
+{
+    public interface Model extends PokeAttr
+    {                       }
 
     public void fillAttributeFields(HashMap<String, Object> hashMap)
     {
@@ -47,7 +47,8 @@ public class Poke extends User {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Poke{"
                 + super.toString()
                 + "}";

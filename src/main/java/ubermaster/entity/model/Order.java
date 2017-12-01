@@ -13,9 +13,9 @@ import java.util.HashMap;
 @ObjectType(OrderAttr.OBJTYPE)
 public class Order extends BaseEntity
 {
-    public interface Model extends OrderAttr{
+    public interface Model extends OrderAttr
+    {                   }
 
-    }
     @Attribute(Model.SMALL_DESCRIPTION)
     protected String SmallDescription;
 
@@ -123,7 +123,8 @@ public class Order extends BaseEntity
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Order{"
                 + super.toString()
                 + "\nSmallDescription='" + SmallDescription + '\'' +

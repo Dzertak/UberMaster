@@ -5,7 +5,8 @@ import ubermaster.persistence.PersistenceEntity;
 
 import java.io.Closeable;
 
-public interface Manager extends Closeable {
+public interface Manager
+{
     String GET_ATTR_TYPES = "{call getAttrTypeIds(?, ?)}";
     String GET_ATTR_COUNT = "{call getAttrTypeCount(?, ?)}";
     String GET_ENTITY = "{call getEntity(?, ?)}";

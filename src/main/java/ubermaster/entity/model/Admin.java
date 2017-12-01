@@ -9,11 +9,10 @@ import java.text.ParseException;
 import java.util.HashMap;
 
 @ObjectType(AdminAttr.OBJTYPE)
-public class Admin extends User {
-
-    public interface Model extends AdminAttr{
-
-    }
+public class Admin extends User
+{
+    public interface Model extends AdminAttr
+    {                       }
 
     public void fillAttributeFields(HashMap<String, Object> hashMap)
     {
@@ -45,7 +44,8 @@ public class Admin extends User {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Admin{"
                 + super.toString()
                 + "}";

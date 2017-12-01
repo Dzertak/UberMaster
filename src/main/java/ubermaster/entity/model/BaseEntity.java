@@ -9,11 +9,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
-public abstract class BaseEntity {
-
-	public interface Model extends BaseEntityAttr{
-
-	}
+public abstract class BaseEntity
+{
+	public interface Model extends BaseEntityAttr
+	{ 						}
 
 	@Attribute(Model.NAME_ATTR)
 	protected String name;
@@ -82,7 +81,8 @@ public abstract class BaseEntity {
 	public abstract HashMap getAllFields();
 
 	@Override
-	public String toString() {
+	public String toString()
+	{
 		return "BaseEntity{" +
 				"\nname='" + name + '\'' +
 				",\ndescription='" + description + '\'' +

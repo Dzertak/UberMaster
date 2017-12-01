@@ -10,11 +10,10 @@ import java.util.Date;
 import java.util.HashMap;
 
 @ObjectType(MasterAttr.OBJTYPE)
-public class Master extends User {
-
-    public interface Model extends MasterAttr {
-
-    }
+public class Master extends User
+{
+    public interface Model extends MasterAttr
+    {                       }
 
     @Attribute(Model.PROFESSION)
     protected String profession;

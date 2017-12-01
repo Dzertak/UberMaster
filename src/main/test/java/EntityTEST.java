@@ -1,12 +1,11 @@
-import entity.model.Master;
-import entity.model.Order;
-import entity.model.Poke;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import persistence.facade.Facade;
-
-import java.io.IOException;
+import ubermaster.OracleConnector;
+import ubermaster.entity.model.Master;
+import ubermaster.entity.model.Order;
+import ubermaster.entity.model.Poke;
+import ubermaster.persistence.facade.Facade;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,20 +15,24 @@ public class EntityTEST
 	private Facade facade;
 
 	@Before
-	public void start() throws SQLException, ClassNotFoundException
+	public void before() throws SQLException, ClassNotFoundException,
+			IllegalAccessException, InstantiationException
 	{
-		facade = new Facade("userPR", "PR");
+		OracleConnector.create();
+		facade = new Facade();
 	}
 
 	@After
-	public void end() throws IOException
+	public void after() throws SQLException
 	{
-		facade.dispose();
+		OracleConnector.close();
 	}
 
 	@Test
 	public void getDifferentEntitiesTEST()
 	{
+		facade.getEntity(1, Poke.class);
+
 		System.out.println(facade.getEntity(1, Poke.class));
 		System.out.println();
 		System.out.println(facade.getEntity(2, Poke.class));
@@ -42,7 +45,7 @@ public class EntityTEST
 	@Test
 	public void insertEntityTEST()
 	{
-		final long ID = 10;
+		final long ID = 11;
 
 		Poke poke = new Poke();
 		poke.setLocation("Gracksland");
@@ -62,7 +65,7 @@ public class EntityTEST
 	}
 
 	@Test
-	public void insertMasterTEST() throws ParseException
+	public void insertMasterGetMasterTEST() throws ParseException
 	{
 		Master master = new Master();
 		master.setName("MasterName");
@@ -83,30 +86,6 @@ public class EntityTEST
 		master.setSmoke(false);
 
 		facade.createEntity(master, false);
-	}
-
-	@Test
-	public void insertMasterGetMasterTEST() throws ParseException
-	{
-		/*Master master = new Master();
-		master.setName("MasterName");
-		master.setUserDescription("Master User Descr");
-		master.setObject_id(10);
-		master.setTools("Pipetka");
-		master.setStart_time(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("01/02/2003 04:05"));
-		master.setDescription("SomeDescr about MASTA");
-		master.setLocation("MasterLand");
-		master.setPassword("masterPASS, it's hard pass, right?");
-		master.setPhoneNumber("0777");
-		master.setPicture("PHOTO");
-		master.setEnd_time(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("06/07/2008 09:10"));
-		master.setExperience("11");
-		master.setPayment(120000);
-		master.setProfession("I'm master, what the stupid question?");
-		master.setSkills("I can everything");
-		master.setSmoke(false);
-
-		facade.createEntity(master, false);*/
 		System.out.println(facade.getEntity(10, Master.class).toString());
 	}
 }

@@ -1,6 +1,7 @@
 package ubermaster.entity.attr;
 
-public interface MasterAttr extends UserAttr {
+public interface MasterAttr extends UserAttr
+{
     String OBJTYPE = "2";
 
     String PROFESSION =  "6";

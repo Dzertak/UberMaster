@@ -11,10 +11,9 @@ import java.util.HashMap;
 @ObjectType(UserAttr.OBJTYPE)
 public class User extends BaseEntity
 {
+    public interface Model extends UserAttr
+    {                       }
 
-    public interface Model extends UserAttr{
-
-    }
     @Attribute(Model.LOCATION)
     protected String location;
 
@@ -109,7 +108,8 @@ public class User extends BaseEntity
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "User{"
                 + super.toString()
                 + "\nlocation='" + location + '\'' +

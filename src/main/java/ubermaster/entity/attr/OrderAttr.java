@@ -1,6 +1,7 @@
 package ubermaster.entity.attr;
 
-public interface OrderAttr {
+public interface OrderAttr
+{
     String OBJTYPE = "5";
 
     String MASTER_REF ="14";
