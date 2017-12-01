@@ -58,4 +58,9 @@ public class Facade
 
         return (T) converter.convertToModel(persistenceEntity, CLASS);
     }
+
+    public void deleteEntity(long id)
+    {
+        manager.deleteEntity(id);
+    }
 }

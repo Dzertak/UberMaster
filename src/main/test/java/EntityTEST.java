@@ -86,4 +86,10 @@ public class EntityTEST
 		facade.createEntity(master, false);
 		System.out.println(facade.getEntity(10, Master.class).toString());
 	}
+
+	@Test
+	public void deleteEntityTEST()
+	{
+		facade.deleteEntity(10);
+	}
 }

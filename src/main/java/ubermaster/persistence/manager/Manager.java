@@ -7,11 +7,12 @@ import java.io.Closeable;
 
 public interface Manager
 {
-    String GET_ATTR_TYPES = "{call getAttrTypeIds(?, ?)}";
-    String GET_ATTR_COUNT = "{call getAttrTypeCount(?, ?)}";
     String GET_ENTITY = "{call getEntity(?, ?)}";
+    String DELETE_ENTITY = "delete from Objects where object_id = ?";
 
     void createEntity(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS);
 
     PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS);
+
+    void deleteEntity(long id);
 }

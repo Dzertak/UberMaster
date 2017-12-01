@@ -10,6 +10,7 @@ import ubermaster.persistence.PersistenceEntity;
 import ubermaster.persistence.converter.ConverterImpl;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -112,5 +113,22 @@ public class ManagerImpl implements Manager
         }
 
         return persistenceEntity;
+    }
+
+    public void deleteEntity(long id)
+    {
+        Connection connection = getConnection();
+
+        try
+        {
+            PreparedStatement statement = connection.prepareStatement(DELETE_ENTITY);
+            statement.setString(1, Long.toString(id));
+            statement.execute();
+        }
+
+        catch (SQLException exc)
+        {
+            exc.printStackTrace();
+        }
     }
 }
