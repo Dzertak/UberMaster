@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import java.util.Locale;
 
 import javax.annotation.Resource;
 import java.sql.SQLException;
@@ -27,6 +28,7 @@ public class DatasourcesConfig {
 
     @Bean
     public OracleDataSource dataSource() throws SQLException {
+        Locale.setDefault(new Locale("en","EN"));
         OracleDataSource dataSource = new OracleDataSource();
 
         dataSource.setPassword(env.getRequiredProperty(PROP_DATABASE_PASSWORD));

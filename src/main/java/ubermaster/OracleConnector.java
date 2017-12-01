@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
+import java.util.Locale;
 
 public class OracleConnector
 {
@@ -13,13 +14,14 @@ public class OracleConnector
 		throws SQLException, ClassNotFoundException,
 		IllegalAccessException, InstantiationException
 	{
-		create("userPR", "PR");
+		create("userPR2", "PR2");
 	}
 
 	public static void create(final String USER, final String PASSWD)
 		throws SQLException, ClassNotFoundException,
 		IllegalAccessException, InstantiationException
 	{
+		Locale.setDefault(new Locale("es","ES"));
 		Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
 
 		String URL = "jdbc:oracle:thin:@//localhost:1521/XE";
