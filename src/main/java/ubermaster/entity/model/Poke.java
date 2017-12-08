@@ -1,44 +1,19 @@
 package ubermaster.entity.model;
 
-import ubermaster.annotation.Attribute;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.attr.PokeAttr;
 
-import java.lang.reflect.Field;
-import java.text.ParseException;
 import java.util.HashMap;
 
 @ObjectType(PokeAttr.OBJTYPE)
 public class Poke extends User
 {
+/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public interface Model extends PokeAttr
     {                       }
-
-    @Override
-    public void fillAttributeFields(HashMap<String, Object> hashMap)
-    {
-        super.fillAttributeFields(hashMap);
-
-        Field sqcField[] = Poke.class.getDeclaredFields();
-        Attribute attrib;
-        int length = sqcField.length;
-        try
-        {
-            for (int i = 0; i < length; ++i)
-            {
-                attrib = sqcField[i].getAnnotation(Attribute.class);
-
-                if (attrib != null)
-                    sqcField[i].set(this, hashMap.get(attrib.value()));
-            }
-        }
-
-        catch (IllegalAccessException exc)
-        {
-            exc.printStackTrace();
-        }
-    }
-
+/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     @Override
     public HashMap getAllFields()
     {

@@ -4,8 +4,6 @@ import ubermaster.annotation.Attribute;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.attr.OrderAttr;
 
-import java.lang.reflect.Field;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -13,9 +11,7 @@ import java.util.HashMap;
 @ObjectType(OrderAttr.OBJTYPE)
 public class Order extends BaseEntity
 {
-    public interface Model extends OrderAttr
-    {                   }
-
+/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     @Attribute(Model.SMALL_DESCRIPTION)
     protected String SmallDescription;
 
@@ -32,8 +28,14 @@ public class Order extends BaseEntity
     protected String Status;
 
     @Attribute(Model.MASTER_REF)
-    protected Master master;
+    protected long master;
 
+    protected String masterName;
+/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    public interface Model extends OrderAttr
+    {                   }
+/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public String getSmallDescription() {
         return SmallDescription;
     }
@@ -74,36 +76,22 @@ public class Order extends BaseEntity
         Status = status;
     }
 
-    public Master getMaster() {
+    public long getMaster() {
         return master;
     }
 
-    public void setMaster(Master master) {
+    public void setMaster(long master) {
         this.master = master;
     }
 
-    @Override
-    public void fillAttributeFields(HashMap<String, Object> hashMap)
+    public String getMasterName()
     {
-        Field sqcField[] = Order.class.getDeclaredFields();
-        Attribute attrib;
-        int length = sqcField.length;
-        try
-        {
-            for (int i = 0; i < length; ++i)
-            {
-                attrib = sqcField[i].getAnnotation(Attribute.class);
+        return masterName;
+    }
 
-                //Потому что неизвестно что пока мастер такое
-                if (attrib != null && !attrib.value().equals(Model.MASTER_REF))
-                    sqcField[i].set(this, hashMap.get(attrib.value()));
-            }
-        }
-
-        catch (IllegalAccessException exc)
-        {
-            exc.printStackTrace();
-        }
+    public void setMasterName(String masterName)
+    {
+        this.masterName = masterName;
     }
 
     @Override

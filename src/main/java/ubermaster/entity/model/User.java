@@ -4,16 +4,12 @@ import ubermaster.annotation.Attribute;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.attr.UserAttr;
 
-import java.lang.reflect.Field;
-import java.text.ParseException;
 import java.util.HashMap;
 
 @ObjectType(UserAttr.OBJTYPE)
 public class User extends BaseEntity
 {
-    public interface Model extends UserAttr
-    {                       }
-
+/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     @Attribute(Model.LOCATION)
     protected String location;
 
@@ -28,8 +24,13 @@ public class User extends BaseEntity
 
     @Attribute(Model.PICTURE)
     protected String picture;
-
-    public String getLocation() {
+/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    public interface Model extends UserAttr
+    {                       }
+/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    public String getLocation()
+    {
         return location;
     }
 
@@ -67,29 +68,6 @@ public class User extends BaseEntity
 
     public void setPicture(String picture) {
         this.picture = picture;
-    }
-
-    @Override
-    public void fillAttributeFields(HashMap<String, Object> hashMap)
-    {
-        Field sqcField[] = User.class.getDeclaredFields();
-        Attribute attrib;
-        int length = sqcField.length;
-        try
-        {
-            for (int i = 0; i < length; ++i)
-            {
-                attrib = sqcField[i].getAnnotation(Attribute.class);
-
-                if (attrib != null)
-                    sqcField[i].set(this, hashMap.get(attrib.value()));
-            }
-        }
-
-        catch (IllegalAccessException exc)
-        {
-            exc.printStackTrace();
-        }
     }
 
     @Override

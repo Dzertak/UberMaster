@@ -4,17 +4,13 @@ import ubermaster.annotation.Attribute;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.attr.MasterAttr;
 
-import java.lang.reflect.Field;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 
 @ObjectType(MasterAttr.OBJTYPE)
 public class Master extends User
 {
-    public interface Model extends MasterAttr
-    {                       }
-
+/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     @Attribute(Model.PROFESSION)
     protected String profession;
 
@@ -38,7 +34,11 @@ public class Master extends User
 
     @Attribute(Model.END_TIME)
     protected Date end_time;
-
+/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    public interface Model extends MasterAttr
+    {                       }
+/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public String getProfession() {
         return profession;
     }
@@ -104,31 +104,8 @@ public class Master extends User
     }
 
     @Override
-    public void fillAttributeFields(HashMap<String, Object> hashMap)
+    public HashMap getAllFields()
     {
-        super.fillAttributeFields(hashMap);
-        Field sqcField[] = Master.class.getDeclaredFields();
-        Attribute attrib;
-        int length = sqcField.length;
-        try
-        {
-            for (int i = 0; i < length; ++i)
-            {
-                attrib = sqcField[i].getAnnotation(Attribute.class);
-
-                if (attrib != null)
-                    sqcField[i].set(this, hashMap.get(attrib.value()));
-            }
-        }
-
-        catch (IllegalAccessException exc)
-        {
-            exc.printStackTrace();
-        }
-    }
-
-    @Override
-    public HashMap getAllFields() {
         HashMap<String, Object> hashmap = (HashMap<String, Object>) super.getAllFields();
 
         hashmap.put(Model.PROFESSION, profession);
@@ -144,7 +121,8 @@ public class Master extends User
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Master{"
                 + super.toString()
                 + "\nprofession='" + profession + '\'' +

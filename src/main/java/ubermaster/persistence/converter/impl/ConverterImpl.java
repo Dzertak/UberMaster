@@ -1,9 +1,9 @@
-package ubermaster.persistence.converter;
+package ubermaster.persistence.converter.impl;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.PersistenceEntity;
+import ubermaster.persistence.converter.Converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -14,6 +14,10 @@ import java.util.HashMap;
 @Component
 public class ConverterImpl implements Converter
 {
+/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public PersistenceEntity convertToEntity(BaseEntity baseEntity)
     {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
@@ -48,7 +52,7 @@ public class ConverterImpl implements Converter
 
         HashMap<String, Object> hashMap = (HashMap<String, Object>) persistenceEntity.getAttributes();
 
-        entity.fillAttributeFields(hashMap);
+        BaseEntity.fillAttributeFields(hashMap, entity);
         entity.setObject_id(persistenceEntity.getObject_id());
         entity.setName(persistenceEntity.getName());
         entity.setDescription(persistenceEntity.getDescription());
@@ -85,6 +89,9 @@ public class ConverterImpl implements Converter
 
         if (Date.class.isAssignableFrom(CLASS))
             return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
+
+        if (long.class.isAssignableFrom(CLASS))
+            return Long.parseLong(VALUE);
 
         return VALUE;
     }

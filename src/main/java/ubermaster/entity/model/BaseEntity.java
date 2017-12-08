@@ -4,16 +4,11 @@ import ubermaster.annotation.Attribute;
 import ubermaster.entity.attr.BaseEntityAttr;
 
 import java.lang.reflect.Field;
-import java.sql.Date;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 
 public abstract class BaseEntity
 {
-	public interface Model extends BaseEntityAttr
-	{ 						}
-
+/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 	@Attribute(Model.NAME_ATTR)
 	protected String name;
 
@@ -23,6 +18,76 @@ public abstract class BaseEntity
 	@Attribute(Model.OBJECT_ID)
 	protected long object_id;
 
+	private static BaseEntityController BASE_ENTITY_CONTROLLER;
+/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+	public interface Model extends BaseEntityAttr
+	{ 						}
+
+	private static class BaseEntityController
+	{
+	/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+	/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+		private BaseEntityController()
+		{						}
+	/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+	/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+		private Class getFieldType(String attr_id, final Class<? extends BaseEntity> CLASS)
+		{
+			Class superClass = CLASS.getSuperclass();
+			if (superClass != null && !superClass.equals(BaseEntity.class))
+			{
+				Class fieldType = getFieldType(attr_id, superClass);
+
+				if (fieldType != null)
+					return fieldType;
+			}
+
+			Field sqcField[] = CLASS.getDeclaredFields();
+			int length = sqcField.length;
+			for (int i = 0; i < length; ++i)
+			{
+				Attribute attrib = sqcField[i].getAnnotation(Attribute.class);
+
+				if (attrib != null && attrib.value().equals(attr_id))
+					return sqcField[i].getType();
+			}
+
+			return null;
+		}
+
+		private void fillAttributeFields
+		(
+			HashMap<String, Object> hashMap,
+			final Class<? extends BaseEntity> CLASS,
+			BaseEntity entity
+		)
+		{
+			Class superClass = CLASS.getSuperclass();
+			if (superClass != null && !superClass.equals(BaseEntity.class))
+				fillAttributeFields(hashMap, superClass, entity);
+
+			Field sqcField[] = CLASS.getDeclaredFields();
+			Attribute attrib;
+			int length = sqcField.length;
+			try
+			{
+				for (int i = 0; i < length; ++i)
+				{
+					attrib = sqcField[i].getAnnotation(Attribute.class);
+
+					if (attrib != null)
+						sqcField[i].set(entity, hashMap.get(attrib.value()));
+				}
+			}
+
+			catch (IllegalAccessException exc)
+			{
+				exc.printStackTrace();
+			}
+		}
+	}
+/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 	public String getName() {
 		return name;
 	}
@@ -47,61 +112,6 @@ public abstract class BaseEntity
 		this.object_id = object_id;
 	}
 
-	public abstract void fillAttributeFields(HashMap<String, Object> hashMap);
-
-	/*protected final void setField(final Field FIELD, String value, Object objField) throws IllegalAccessException, ParseException
-	{
-		final Class CLASS = FIELD.getType();
-
-		if (String.class.isAssignableFrom(CLASS))
-		{
-			FIELD.set(objField, value);
-			return;
-		}
-
-		if (Date.class.isAssignableFrom(CLASS))
-		{
-			FIELD.set(objField, new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(value));
-			return;
-		}
-
-		if (Integer.class.isAssignableFrom(CLASS))
-		{
-			FIELD.set(objField, Integer.parseInt(value));
-			return;
-		}
-
-		if (Boolean.class.isAssignableFrom(CLASS))
-		{
-			FIELD.set(objField, Boolean.parseBoolean(value));
-			return;
-		}
-	}*/
-
-	public final static Class getFieldType(String attr_id, final Class<? extends BaseEntity> CLASS)
-	{
-		Class superClass = CLASS.getSuperclass();
-		if (superClass != null && !superClass.equals(BaseEntity.class))
-		{
-			Class fieldType = getFieldType(attr_id, superClass);
-
-			if (fieldType != null)
-				return fieldType;
-		}
-
-		Field sqcField[] = CLASS.getDeclaredFields();
-		int length = sqcField.length;
-		for (int i = 0; i < length; ++i)
-		{
-			Attribute attrib = sqcField[i].getAnnotation(Attribute.class);
-
-			if (attrib != null && attrib.value().equals(attr_id))
-				return sqcField[i].getType();
-		}
-
-		return null;
-	}
-
 	public abstract HashMap getAllFields();
 
 	@Override
@@ -112,5 +122,21 @@ public abstract class BaseEntity
 				",\ndescription='" + description + '\'' +
 				",\nobject_id=" + object_id +
 				'}';
+	}
+
+	public static void fillAttributeFields(HashMap<String, Object> hashMap, BaseEntity entity)
+	{
+		if (BASE_ENTITY_CONTROLLER == null)
+			BASE_ENTITY_CONTROLLER = new BaseEntityController();
+
+		BASE_ENTITY_CONTROLLER.fillAttributeFields(hashMap, entity.getClass(), entity);
+	}
+
+	public static Class getFieldType(String attr_id, final Class<? extends BaseEntity> CLASS)
+	{
+		if (BASE_ENTITY_CONTROLLER == null)
+			BASE_ENTITY_CONTROLLER = new BaseEntityController();
+
+		return BASE_ENTITY_CONTROLLER.getFieldType(attr_id, CLASS);
 	}
 }
