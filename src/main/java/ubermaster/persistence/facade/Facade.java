@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.model.BaseEntity;
 import ubermaster.persistence.PersistenceEntity;
-import ubermaster.persistence.converter.impl.ConverterImpl;
-import ubermaster.persistence.manager.impl.ManagerImpl;
+import ubermaster.persistence.converter.ConverterImpl;
+import ubermaster.persistence.manager.ManagerImpl;
 
 import java.util.HashMap;
 
@@ -13,9 +13,7 @@ import java.util.HashMap;
  * @author Serpye
  */
 @Component
-public class Facade
-{
-/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+public class Facade {
     @Autowired
     private ConverterImpl converter;
 
@@ -23,14 +21,7 @@ public class Facade
     private ManagerImpl manager;
 
     private final HashMap<Long, PersistenceEntity> CACHE = new HashMap<>();
-/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-    public Facade()
-    {
-        manager = new ManagerImpl();
-        converter = new ConverterImpl();
-    }
-/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+
     /**
      * Method that inserts entity to database
      *
