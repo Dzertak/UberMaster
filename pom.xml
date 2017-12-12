@@ -108,8 +108,18 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
+            <!--test?-->
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.webjars.bower/angular -->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>angular</artifactId>
+            <version>1.6.7</version>
+        </dependency>
+
+
     </dependencies>
+
 
     <licenses>
         <license>
