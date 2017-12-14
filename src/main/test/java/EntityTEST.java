@@ -5,6 +5,7 @@ import ubermaster.OracleConnector;
 import ubermaster.entity.model.Master;
 import ubermaster.entity.model.Order;
 import ubermaster.entity.model.Poke;
+import ubermaster.entity.model.User;
 import ubermaster.persistence.facade.Facade;
 
 import java.sql.SQLException;
@@ -58,7 +59,7 @@ public class EntityTEST
 		System.out.println(poke.toString());
 		System.out.println();
 
-		facade.createEntity(poke, false);
+		facade.createEntity(poke);
 
 		System.out.println(facade.getEntity(ID, Poke.class));
 	}
@@ -84,7 +85,7 @@ public class EntityTEST
 		master.setSkills("I can everything");
 		master.setSmoke(false);
 
-		facade.createEntity(master, false);
+		facade.createEntity(master);
 		System.out.println(facade.getEntity(10, Master.class).toString());
 	}
 
@@ -93,6 +94,13 @@ public class EntityTEST
 	{
 		facade.deleteEntity(10);
 		facade.deleteEntity(11);
+	}
+
+	@Test
+	public void getEntityByTP()
+	{
+		User user = facade.getUser("380456111789", "easy_password3");
+		System.out.println(user);
 	}
 }
 

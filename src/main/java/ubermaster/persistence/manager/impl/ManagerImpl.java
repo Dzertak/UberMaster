@@ -7,7 +7,10 @@ import oracle.sql.ArrayDescriptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.annotation.ObjectType;
+import ubermaster.entity.model.Admin;
 import ubermaster.entity.model.BaseEntity;
+import ubermaster.entity.model.Master;
+import ubermaster.entity.model.Poke;
 import ubermaster.persistence.PersistenceEntity;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
@@ -127,7 +130,83 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
-            exc.printStackTrace();
+            //exc.printStackTrace();
+            return null;
+        }
+
+        return persistenceEntity;
+    }
+
+    public PersistenceEntity getUser(String phoneNumber, String password)
+    {
+        OracleCallableStatement calStat;
+        ResultSet resultSet;
+        PersistenceEntity persistenceEntity = new PersistenceEntity();
+        try
+        {
+            Connection connection = getConnection();//dataSource.getConnection();
+            calStat = (OracleCallableStatement) connection.prepareCall(GET_USER);
+            calStat.setString(1, phoneNumber);
+            calStat.setString(2, password);
+            calStat.registerOutParameter(3, oracle.jdbc.OracleTypes.CURSOR);
+            calStat.execute();
+            resultSet = calStat.getCursor(3);
+
+            HashMap<String, Object> attrMap = new HashMap<>();
+            Class<? extends BaseEntity> entityClassType = null;
+            final String MASTER_OT = Master.class.getAnnotation(ObjectType.class).value();
+            final String POKE_OT = Poke.class.getAnnotation(ObjectType.class).value();
+            while (resultSet.next())
+            {
+                String attr_id = resultSet.getString(2);
+
+                switch (attr_id)
+                {
+                    case ATTR_OBJECT_ID :
+                        persistenceEntity.setObject_id(Long.parseLong(resultSet.getString(1)));
+                    break;
+
+                    case ATTR_OBJECT_TYPE_ID :
+                        String objectTypeID = resultSet.getString(1);
+
+                        if (objectTypeID.equals(MASTER_OT))
+                            entityClassType = Master.class;
+
+                        else if (objectTypeID.equals(POKE_OT))
+                            entityClassType = Poke.class;
+
+                        else
+                            entityClassType = Admin.class;
+
+                        persistenceEntity.setClassType(entityClassType);
+                    break;
+
+                    case ATTR_NAME :
+                        persistenceEntity.setName(resultSet.getString(1));
+                    break;
+
+                    case ATTR_DESCR :
+                        persistenceEntity.setDescription(resultSet.getString(1));
+                    break;
+
+                    default:
+                        Class fieldType = BaseEntity.getFieldType(attr_id, entityClassType);
+                        Object fieldObj = ConverterImpl.convertStringToObject
+                                (
+                                    resultSet.getString(1),
+                                    fieldType
+                                );
+                        attrMap.put(attr_id, fieldObj);
+                }
+            }
+
+            persistenceEntity.setAttributes(attrMap);
+        }
+
+        catch (SQLException | ParseException exc)
+        {
+            //exc.printStackTrace();
+            return null;
         }
 
         return persistenceEntity;
@@ -148,5 +227,14 @@ public class ManagerImpl implements Manager
         {
             exc.printStackTrace();
         }
+    }
+
+    public void updateEntity
+    (
+        PersistenceEntity persistenceEntity,
+        final Class<? extends BaseEntity> CLASS
+    )
+    {
+
     }
 }
