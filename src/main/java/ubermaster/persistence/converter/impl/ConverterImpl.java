@@ -1,9 +1,11 @@
-package ubermaster.persistence.converter;
+package ubermaster.persistence.converter.impl;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.PersistenceEntity;
+import ubermaster.persistence.converter.Converter;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

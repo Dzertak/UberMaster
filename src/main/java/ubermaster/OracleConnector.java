@@ -21,7 +21,7 @@ public class OracleConnector
 		throws SQLException, ClassNotFoundException,
 		IllegalAccessException, InstantiationException
 	{
-		Locale.setDefault(new Locale("es","ES"));
+		Locale.setDefault(new Locale("en","EN"));
 		Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();
 
 		String URL = "jdbc:oracle:thin:@//localhost:1521/XE";

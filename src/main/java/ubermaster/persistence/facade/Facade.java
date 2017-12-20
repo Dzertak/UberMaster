@@ -2,17 +2,20 @@ package ubermaster.persistence.facade;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ubermaster.entity.model.BaseEntity;
+import ubermaster.entity.model.Poke;
 import ubermaster.entity.model.User;
 import ubermaster.persistence.PersistenceEntity;
-import ubermaster.persistence.converter.ConverterImpl;
-import ubermaster.persistence.manager.ManagerImpl;
+import ubermaster.persistence.converter.impl.ConverterImpl;
+import ubermaster.persistence.manager.impl.ManagerImpl;
 
 import java.util.HashMap;
 
 /**
  * @author Serpye
  */
+@Service
 @Component
 public class Facade {
     @Autowired
@@ -58,6 +61,22 @@ public class Facade {
         return converter.convertToModel(persistenceEntity, CLASS);
     }
 
+    public <T extends BaseEntity> T getPok
+            (
+                    long id
+            ) {
+        if (CACHE.containsKey(id))
+            return converter.convertToModel(CACHE.get(id), Poke.class);
+
+        PersistenceEntity persistenceEntity = manager.getEntity(id, Poke.class);
+
+        if (persistenceEntity == null)
+            return null;
+
+        CACHE.put(id, persistenceEntity);
+
+        return converter.convertToModel(persistenceEntity, Poke.class);
+    }
     /**
      * Method that gets user drom DB
      *

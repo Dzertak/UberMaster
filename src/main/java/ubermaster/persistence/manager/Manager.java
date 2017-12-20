@@ -1,8 +1,10 @@
 package ubermaster.persistence.manager;
 
+import org.springframework.stereotype.Service;
 import ubermaster.entity.model.BaseEntity;
 import ubermaster.persistence.PersistenceEntity;
 
+@Service
 public interface Manager
 {
 /*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
