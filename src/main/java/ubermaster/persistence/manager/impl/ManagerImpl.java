@@ -1,6 +1,7 @@
 package ubermaster.persistence.manager.impl;
 
 import oracle.jdbc.OracleCallableStatement;
+import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import org.apache.tomcat.jdbc.pool.DataSource;
@@ -25,12 +26,14 @@ public class ManagerImpl implements Manager {
     @Autowired
     private DataSource dataSource;
 
+
     public void createEntity
             (
                     PersistenceEntity persistenceEntity,
                     final Class<? extends BaseEntity> CLASS
             ) {
         try {
+
             HashMap<String, Object> hashMap =
                     (HashMap<String, Object>) persistenceEntity.getAttributes();
             String[] elements = new String[4 + (hashMap.size() << 1)];
@@ -50,16 +53,17 @@ public class ManagerImpl implements Manager {
             }
 
 
-            Connection connection = dataSource.getConnection();
-//            Connection connection = getConnection();
+            Connection connection = dataSource.getPool().getConnection();
+            OracleConnection oracleConnection = connection.unwrap(OracleConnection.class);
+
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
                     (
                             "ARRAY",
-                            connection
+                            oracleConnection
                     );
-            ARRAY array = new ARRAY(descriptor, connection, elements);
+            ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
 
-            OracleCallableStatement stmt = (OracleCallableStatement) connection.prepareCall
+            OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
                     (
                             INSERT_ENTITY
                     );
@@ -76,8 +80,9 @@ public class ManagerImpl implements Manager {
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
         try {
-            Connection connection = dataSource.getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_ENTITY);
+            Connection connection = dataSource.getPool().getConnection();
+            OracleConnection oracleConnection = connection.unwrap(OracleConnection.class);
+            calStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
             calStat.setString(1, Long.toString(id));
             calStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
             calStat.execute();
