@@ -19,14 +19,14 @@ public class EntityTEST
 	public void before() throws SQLException, ClassNotFoundException,
 			IllegalAccessException, InstantiationException
 	{
-		OracleConnector.create();
+		//OracleConnector.create();
 		facade = new Facade();
 	}
 
 	@After
 	public void after() throws SQLException
 	{
-		OracleConnector.close();
+		//OracleConnector.close();
 	}
 
 	@Test
