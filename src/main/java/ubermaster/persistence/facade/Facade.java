@@ -58,22 +58,6 @@ public class Facade {
         return converter.convertToModel(persistenceEntity, CLASS);
     }
 
-    public <T extends BaseEntity> T getPok
-            (
-                    long id
-            ) {
-        if (CACHE.containsKey(id))
-            return converter.convertToModel(CACHE.get(id), Poke.class);
-
-        PersistenceEntity persistenceEntity = manager.getEntity(id, Poke.class);
-
-        if (persistenceEntity == null)
-            return null;
-
-        CACHE.put(id, persistenceEntity);
-
-        return converter.convertToModel(persistenceEntity, Poke.class);
-    }
     /**
      * Method that gets user drom DB
      *

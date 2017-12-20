@@ -126,7 +126,7 @@ public class ManagerImpl implements Manager {
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
         try {
-            Connection connection = dataSource.getConnection();
+            Connection connection = dataSource.getPool().getConnection();
             calStat = (OracleCallableStatement) connection.prepareCall(GET_USER);
             calStat.setString(1, phoneNumber);
             calStat.setString(2, password);
@@ -190,7 +190,7 @@ public class ManagerImpl implements Manager {
 
     public void deleteEntity(long id) {
         try {
-            Connection connection = dataSource.getConnection();
+            Connection connection = dataSource.getPool().getConnection();
             PreparedStatement statement = connection.prepareStatement(DELETE_ENTITY);
             statement.setString(1, Long.toString(id));
             statement.execute();
