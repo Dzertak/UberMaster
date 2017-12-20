@@ -1,17 +1,14 @@
 package ubermaster.persistence.manager.impl;
 
 import oracle.jdbc.OracleCallableStatement;
-import oracle.jdbc.pool.OracleDataSource;
+import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
+import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.annotation.ObjectType;
-import ubermaster.entity.model.Admin;
-import ubermaster.entity.model.BaseEntity;
-import ubermaster.entity.model.Master;
-import ubermaster.entity.model.Poke;
-import ubermaster.persistence.PersistenceEntity;
+import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 
@@ -23,27 +20,22 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import static ubermaster.OracleConnector.getConnection;
 
 @Component
-public class ManagerImpl implements Manager
-{
-/*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:*/
+public class ManagerImpl implements Manager {
     @Autowired
-    private OracleDataSource dataSource;
-/*::|       CONSTRUCTOR       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:*/
-/*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:*/
-/*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:*/
+    private DataSource dataSource;
+
+
     public void createEntity
-    (
-        PersistenceEntity persistenceEntity,
-        final Class<? extends BaseEntity> CLASS
-    )
-    {
-        try
-        {
+            (
+                    PersistenceEntity persistenceEntity,
+                    final Class<? extends BaseEntity> CLASS
+            ) {
+        try {
+
             HashMap<String, Object> hashMap =
-                        (HashMap<String, Object>) persistenceEntity.getAttributes();
+                    (HashMap<String, Object>) persistenceEntity.getAttributes();
             String[] elements = new String[4 + (hashMap.size() << 1)];
             elements[0] = Long.toString(persistenceEntity.getObject_id());
             elements[1] = CLASS.getAnnotation(ObjectType.class).value();
@@ -52,8 +44,7 @@ public class ManagerImpl implements Manager
 
             int i = 4;
             Iterator<String> iterator = hashMap.keySet().iterator();
-            while (iterator.hasNext())
-            {
+            while (iterator.hasNext()) {
                 String attrID = iterator.next();
                 elements[i] = attrID;
                 ++i;
@@ -61,39 +52,37 @@ public class ManagerImpl implements Manager
                 ++i;
             }
 
-            //Connection connection = dataSource.getConnection();
-            Connection connection = getConnection();
-            ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
-                                                (
-                                                    "ARRAY",
-                                                    connection
-                                                );
-            ARRAY array = new ARRAY(descriptor, connection, elements);
 
-            OracleCallableStatement stmt = (OracleCallableStatement)connection.prepareCall
-                                            (
-                                                INSERT_ENTITY
-                                            );
+            Connection connection = dataSource.getPool().getConnection();
+            OracleConnection oracleConnection = connection.unwrap(OracleConnection.class);
+
+            ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
+                    (
+                            "ARRAY",
+                            oracleConnection
+                    );
+            ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
+
+            OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
+                    (
+                            INSERT_ENTITY
+                    );
             stmt.setARRAY(1, array);
             stmt.execute();
-        }
-
-        catch (SQLException exc)
-        {
+        } catch (SQLException exc) {
             exc.printStackTrace();
         }
     }
 
 
-    public PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS)
-    {
+    public PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS) {
         OracleCallableStatement calStat;
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
-        try
-        {
-            Connection connection = getConnection();//dataSource.getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_ENTITY);
+        try {
+            Connection connection = dataSource.getPool().getConnection();
+            OracleConnection oracleConnection = connection.unwrap(OracleConnection.class);
+            calStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
             calStat.setString(1, Long.toString(id));
             calStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
             calStat.execute();
@@ -104,47 +93,40 @@ public class ManagerImpl implements Manager
             while (resultSet.next()) {
                 String attr_id = resultSet.getString(2);
 
-                switch (attr_id)
-                {
-                    case ATTR_NAME :
+                switch (attr_id) {
+                    case ATTR_NAME:
                         persistenceEntity.setName(resultSet.getString(1));
                         break;
 
-                    case ATTR_DESCR :
+                    case ATTR_DESCR:
                         persistenceEntity.setDescription(resultSet.getString(1));
                         break;
 
                     default:
                         Class fieldType = BaseEntity.getFieldType(attr_id, CLASS);
                         Object fieldObj = ConverterImpl.convertStringToObject
-                                    (
+                                (
                                         resultSet.getString(1),
                                         fieldType
-                                    );
+                                );
                         attrMap.put(attr_id, fieldObj);
                 }
             }
 
             persistenceEntity.setAttributes(attrMap);
-        }
-
-        catch (SQLException | ParseException exc)
-        {
+        } catch (SQLException | ParseException exc) {
             //exc.printStackTrace();
             return null;
         }
-
         return persistenceEntity;
     }
 
-    public PersistenceEntity getUser(String phoneNumber, String password)
-    {
+    public PersistenceEntity getUser(String phoneNumber, String password) {
         OracleCallableStatement calStat;
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
-        try
-        {
-            Connection connection = getConnection();//dataSource.getConnection();
+        try {
+            Connection connection = dataSource.getConnection();
             calStat = (OracleCallableStatement) connection.prepareCall(GET_USER);
             calStat.setString(1, phoneNumber);
             calStat.setString(2, password);
@@ -156,17 +138,15 @@ public class ManagerImpl implements Manager
             Class<? extends BaseEntity> entityClassType = null;
             final String MASTER_OT = Master.class.getAnnotation(ObjectType.class).value();
             final String POKE_OT = Poke.class.getAnnotation(ObjectType.class).value();
-            while (resultSet.next())
-            {
+            while (resultSet.next()) {
                 String attr_id = resultSet.getString(2);
 
-                switch (attr_id)
-                {
-                    case ATTR_OBJECT_ID :
+                switch (attr_id) {
+                    case ATTR_OBJECT_ID:
                         persistenceEntity.setObject_id(Long.parseLong(resultSet.getString(1)));
-                    break;
+                        break;
 
-                    case ATTR_OBJECT_TYPE_ID :
+                    case ATTR_OBJECT_TYPE_ID:
                         String objectTypeID = resultSet.getString(1);
 
                         if (objectTypeID.equals(MASTER_OT))
@@ -179,62 +159,52 @@ public class ManagerImpl implements Manager
                             entityClassType = Admin.class;
 
                         persistenceEntity.setClassType(entityClassType);
-                    break;
+                        break;
 
-                    case ATTR_NAME :
+                    case ATTR_NAME:
                         persistenceEntity.setName(resultSet.getString(1));
-                    break;
+                        break;
 
-                    case ATTR_DESCR :
+                    case ATTR_DESCR:
                         persistenceEntity.setDescription(resultSet.getString(1));
-                    break;
+                        break;
 
                     default:
                         Class fieldType = BaseEntity.getFieldType(attr_id, entityClassType);
                         Object fieldObj = ConverterImpl.convertStringToObject
                                 (
-                                    resultSet.getString(1),
-                                    fieldType
+                                        resultSet.getString(1),
+                                        fieldType
                                 );
                         attrMap.put(attr_id, fieldObj);
                 }
             }
 
             persistenceEntity.setAttributes(attrMap);
-        }
-
-        catch (SQLException | ParseException exc)
-        {
+        } catch (SQLException | ParseException exc) {
             //exc.printStackTrace();
             return null;
         }
-
         return persistenceEntity;
     }
 
-    public void deleteEntity(long id)
-    {
-        Connection connection = getConnection();
-
-        try
-        {
+    public void deleteEntity(long id) {
+        try {
+            Connection connection = dataSource.getConnection();
             PreparedStatement statement = connection.prepareStatement(DELETE_ENTITY);
             statement.setString(1, Long.toString(id));
             statement.execute();
-        }
-
-        catch (SQLException exc)
-        {
+        } catch (SQLException exc) {
             exc.printStackTrace();
         }
     }
 
     public void updateEntity
-    (
-        PersistenceEntity persistenceEntity,
-        final Class<? extends BaseEntity> CLASS
-    )
-    {
+            (
+                    PersistenceEntity persistenceEntity,
+                    final Class<? extends BaseEntity> CLASS
+            ) {
 
     }
+
 }

@@ -4,17 +4,11 @@ import ubermaster.annotation.Attribute;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.attr.MasterAttr;
 
-import java.lang.reflect.Field;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 
 @ObjectType(MasterAttr.OBJTYPE)
-public class Master extends User
-{
-    public interface Model extends MasterAttr
-    {                       }
-
+public class Master extends User {
     @Attribute(Model.PROFESSION)
     protected String profession;
 
@@ -34,10 +28,13 @@ public class Master extends User
     protected String tools;
 
     @Attribute(Model.ST_TIME)
-    protected Date start_time;
+    protected Date startTime;
 
     @Attribute(Model.END_TIME)
-    protected Date end_time;
+    protected Date endTime;
+
+    public interface Model extends MasterAttr {
+    }
 
     public String getProfession() {
         return profession;
@@ -88,43 +85,19 @@ public class Master extends User
     }
 
     public Date getStart_time() {
-        return start_time;
+        return startTime;
     }
 
     public void setStart_time(Date start_time) {
-        this.start_time = start_time;
+        this.startTime = start_time;
     }
 
     public Date getEnd_time() {
-        return end_time;
+        return endTime;
     }
 
     public void setEnd_time(Date end_time) {
-        this.end_time = end_time;
-    }
-
-    @Override
-    public void fillAttributeFields(HashMap<String, Object> hashMap)
-    {
-        super.fillAttributeFields(hashMap);
-        Field sqcField[] = Master.class.getDeclaredFields();
-        Attribute attrib;
-        int length = sqcField.length;
-        try
-        {
-            for (int i = 0; i < length; ++i)
-            {
-                attrib = sqcField[i].getAnnotation(Attribute.class);
-
-                if (attrib != null)
-                    sqcField[i].set(this, hashMap.get(attrib.value()));
-            }
-        }
-
-        catch (IllegalAccessException exc)
-        {
-            exc.printStackTrace();
-        }
+        this.endTime = end_time;
     }
 
     @Override
@@ -133,8 +106,8 @@ public class Master extends User
 
         hashmap.put(Model.PROFESSION, profession);
         hashmap.put(Model.SKILLS, skills);
-        hashmap.put(Model.END_TIME, end_time);
-        hashmap.put(Model.ST_TIME, start_time);
+        hashmap.put(Model.END_TIME, endTime);
+        hashmap.put(Model.ST_TIME, startTime);
         hashmap.put(Model.EXPERIENCE, experience);
         hashmap.put(Model.SMOKE, smoke);
         hashmap.put(Model.PAYMENT, payment);
@@ -153,8 +126,8 @@ public class Master extends User
                 ", \npayment=" + payment +
                 ", \nsmoke=" + smoke +
                 ", \ntools='" + tools + '\'' +
-                ", \nstart_time=" + start_time +
-                ", \nend_time=" + end_time +
+                ", \nstart_time=" + startTime +
+                ", \nend_time=" + endTime +
                 '}';
     }
 }

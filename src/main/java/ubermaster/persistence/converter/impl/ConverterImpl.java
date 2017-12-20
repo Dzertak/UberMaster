@@ -1,10 +1,8 @@
 package ubermaster.persistence.converter.impl;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import ubermaster.entity.model.*;
-import ubermaster.persistence.PersistenceEntity;
+import ubermaster.entity.model.PersistenceEntity;
 import ubermaster.persistence.converter.Converter;
 
 import java.text.ParseException;
@@ -14,23 +12,19 @@ import java.util.HashMap;
 
 
 @Component
-public class ConverterImpl implements Converter
-{
-    public PersistenceEntity convertToEntity(BaseEntity baseEntity)
-    {
+public class ConverterImpl implements Converter {
+    public PersistenceEntity convertToEntity(BaseEntity baseEntity) {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
 
         persistenceEntity.setName(baseEntity.getName());
         persistenceEntity.setObject_id(baseEntity.getObject_id());
         persistenceEntity.setDescription(baseEntity.getDescription());
-
         persistenceEntity.setAttributes(baseEntity.getAllFields());
 
         return persistenceEntity;
     }
 
-    public <T extends BaseEntity> T convertToModel(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS)
-    {
+    public <T extends BaseEntity> T convertToModel(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS) {
         BaseEntity entity = null;
 
         if (Order.class.isAssignableFrom(CLASS))
@@ -50,7 +44,7 @@ public class ConverterImpl implements Converter
 
         HashMap<String, Object> hashMap = (HashMap<String, Object>) persistenceEntity.getAttributes();
 
-        entity.fillAttributeFields(hashMap);
+        BaseEntity.fillAttributeFields(hashMap, entity);
         entity.setObject_id(persistenceEntity.getObject_id());
         entity.setName(persistenceEntity.getName());
         entity.setDescription(persistenceEntity.getDescription());
@@ -58,13 +52,11 @@ public class ConverterImpl implements Converter
         return (T) entity;
     }
 
-    public <T extends BaseEntity> T convertToModel(PersistenceEntity persistenceEntity)
-    {
+    public <T extends BaseEntity> T convertToModel(PersistenceEntity persistenceEntity) {
         return convertToModel(persistenceEntity, persistenceEntity.getClassType());
     }
 
-    public static String convertObjectToString(Object value)
-    {
+    public static String convertObjectToString(Object value) {
         final Class CLASS = value.getClass();
 
         if (String.class.isAssignableFrom(CLASS))
@@ -82,8 +74,7 @@ public class ConverterImpl implements Converter
         return null;
     }
 
-    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException
-    {
+    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException {
         if (int.class.isAssignableFrom(CLASS))
             return Integer.parseInt(VALUE);
 
@@ -92,6 +83,9 @@ public class ConverterImpl implements Converter
 
         if (Date.class.isAssignableFrom(CLASS))
             return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
+
+        if (long.class.isAssignableFrom(CLASS))
+            return Long.parseLong(VALUE);
 
         return VALUE;
     }
