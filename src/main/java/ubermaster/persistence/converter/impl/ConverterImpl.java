@@ -56,6 +56,11 @@ public class ConverterImpl implements Converter
         return (T) entity;
     }
 
+    public <T extends BaseEntity> T convertToModel(PersistenceEntity persistenceEntity)
+    {
+        return convertToModel(persistenceEntity, persistenceEntity.getClassType());
+    }
+
     public static String convertObjectToString(Object value)
     {
         final Class CLASS = value.getClass();

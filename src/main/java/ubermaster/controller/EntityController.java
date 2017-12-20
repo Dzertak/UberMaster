@@ -30,7 +30,7 @@ public class EntityController<T extends BaseEntity> {
 
     @RequestMapping(value = "/addEntity", method = RequestMethod.POST, produces = "application/json")
     public void addUser(@RequestBody T entity) {
-        facade.createEntity(entity, false);
+        facade.createEntity(entity);
     }
 
     @RequestMapping(value = "/deleteEntity", method = RequestMethod.DELETE)

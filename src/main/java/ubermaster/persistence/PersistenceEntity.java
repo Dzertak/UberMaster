@@ -1,5 +1,7 @@
 package ubermaster.persistence;
 
+import ubermaster.entity.model.BaseEntity;
+
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,10 +15,22 @@ public class PersistenceEntity
     protected Map<String, Object> attributes;
     protected Map<BigInteger, Long> references;
 
+    protected Class<? extends BaseEntity> classType;
+
     public PersistenceEntity()
     {
         attributes = new HashMap<>();
         references = new HashMap<>();
+    }
+
+    public void setClassType(final Class<? extends BaseEntity> CLASS)
+    {
+        classType = CLASS;
+    }
+
+    public Class<? extends BaseEntity> getClassType()
+    {
+        return classType;
     }
 
     public long getObject_id() {
