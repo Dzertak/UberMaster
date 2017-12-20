@@ -6,137 +6,118 @@ import ubermaster.entity.attr.BaseEntityAttr;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
-public abstract class BaseEntity
-{
-/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-	@Attribute(Model.NAME_ATTR)
-	protected String name;
+public abstract class BaseEntity {
 
-	@Attribute(Model.DESCRIPTION)
-	protected String description;
+    @Attribute(Model.NAME_ATTR)
+    protected String name;
 
-	@Attribute(Model.OBJECT_ID)
-	protected long object_id;
+    @Attribute(Model.DESCRIPTION)
+    protected String description;
 
-	private static BaseEntityController BASE_ENTITY_CONTROLLER;
-/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-	public interface Model extends BaseEntityAttr
-	{ 						}
+    @Attribute(Model.OBJECT_ID)
+    protected long object_id;
 
-	private static class BaseEntityController
-	{
-	/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-	/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-		private BaseEntityController()
-		{						}
-	/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-	/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-		private Class getFieldType(String attr_id, final Class<? extends BaseEntity> CLASS)
-		{
-			Class superClass = CLASS.getSuperclass();
-			if (superClass != null && !superClass.equals(BaseEntity.class))
-			{
-				Class fieldType = getFieldType(attr_id, superClass);
+    private static BaseEntityController BASE_ENTITY_CONTROLLER;
 
-				if (fieldType != null)
-					return fieldType;
-			}
+    public interface Model extends BaseEntityAttr {
+    }
 
-			Field sqcField[] = CLASS.getDeclaredFields();
-			int length = sqcField.length;
-			for (int i = 0; i < length; ++i)
-			{
-				Attribute attrib = sqcField[i].getAnnotation(Attribute.class);
+    private static class BaseEntityController {
+        private BaseEntityController() {
+        }
 
-				if (attrib != null && attrib.value().equals(attr_id))
-					return sqcField[i].getType();
-			}
+        private Class getFieldType(String attr_id, final Class<? extends BaseEntity> CLASS) {
+            Class superClass = CLASS.getSuperclass();
+            if (superClass != null && !superClass.equals(BaseEntity.class)) {
+                Class fieldType = getFieldType(attr_id, superClass);
 
-			return null;
-		}
+                if (fieldType != null)
+                    return fieldType;
+            }
 
-		private void fillAttributeFields
-		(
-			HashMap<String, Object> hashMap,
-			final Class<? extends BaseEntity> CLASS,
-			BaseEntity entity
-		)
-		{
-			Class superClass = CLASS.getSuperclass();
-			if (superClass != null && !superClass.equals(BaseEntity.class))
-				fillAttributeFields(hashMap, superClass, entity);
+            Field sqcField[] = CLASS.getDeclaredFields();
+            int length = sqcField.length;
+            for (int i = 0; i < length; ++i) {
+                Attribute attrib = sqcField[i].getAnnotation(Attribute.class);
 
-			Field sqcField[] = CLASS.getDeclaredFields();
-			Attribute attrib;
-			int length = sqcField.length;
-			try
-			{
-				for (int i = 0; i < length; ++i)
-				{
-					attrib = sqcField[i].getAnnotation(Attribute.class);
+                if (attrib != null && attrib.value().equals(attr_id))
+                    return sqcField[i].getType();
+            }
+            return null;
+        }
 
-					if (attrib != null)
-						sqcField[i].set(entity, hashMap.get(attrib.value()));
-				}
-			}
+        private void fillAttributeFields
+                (
+                        HashMap<String, Object> hashMap,
+                        final Class<? extends BaseEntity> CLASS,
+                        BaseEntity entity
+                ) {
+            Class superClass = CLASS.getSuperclass();
+            if (superClass != null && !superClass.equals(BaseEntity.class))
+                fillAttributeFields(hashMap, superClass, entity);
 
-			catch (IllegalAccessException exc)
-			{
-				exc.printStackTrace();
-			}
-		}
-	}
-/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-	public String getName() {
-		return name;
-	}
+            Field sqcField[] = CLASS.getDeclaredFields();
+            Attribute attrib;
+            int length = sqcField.length;
+            try {
+                for (int i = 0; i < length; ++i) {
+                    attrib = sqcField[i].getAnnotation(Attribute.class);
 
-	public void setName(String name) {
-		this.name = name;
-	}
+                    if (attrib != null)
+                        sqcField[i].set(entity, hashMap.get(attrib.value()));
+                }
+            } catch (IllegalAccessException exc) {
+                exc.printStackTrace();
+            }
+        }
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public long getObject_id() {
-		return object_id;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setObject_id(long object_id) {
-		this.object_id = object_id;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public abstract HashMap getAllFields();
+    public long getObject_id() {
+        return object_id;
+    }
 
-	@Override
-	public String toString()
-	{
-		return "BaseEntity{" +
-				"\nname='" + name + '\'' +
-				",\ndescription='" + description + '\'' +
-				",\nobject_id=" + object_id +
-				'}';
-	}
+    public void setObject_id(long object_id) {
+        this.object_id = object_id;
+    }
 
-	public static void fillAttributeFields(HashMap<String, Object> hashMap, BaseEntity entity)
-	{
-		if (BASE_ENTITY_CONTROLLER == null)
-			BASE_ENTITY_CONTROLLER = new BaseEntityController();
+    public abstract HashMap getAllFields();
 
-		BASE_ENTITY_CONTROLLER.fillAttributeFields(hashMap, entity.getClass(), entity);
-	}
+    @Override
+    public String toString() {
+        return "BaseEntity{" +
+                "\nname='" + name + '\'' +
+                ",\ndescription='" + description + '\'' +
+                ",\nobject_id=" + object_id +
+                '}';
+    }
 
-	public static Class getFieldType(String attr_id, final Class<? extends BaseEntity> CLASS)
-	{
-		if (BASE_ENTITY_CONTROLLER == null)
-			BASE_ENTITY_CONTROLLER = new BaseEntityController();
+    public static void fillAttributeFields(HashMap<String, Object> hashMap, BaseEntity entity) {
+        if (BASE_ENTITY_CONTROLLER == null)
+            BASE_ENTITY_CONTROLLER = new BaseEntityController();
 
-		return BASE_ENTITY_CONTROLLER.getFieldType(attr_id, CLASS);
-	}
+        BASE_ENTITY_CONTROLLER.fillAttributeFields(hashMap, entity.getClass(), entity);
+    }
+
+    public static Class getFieldType(String attr_id, final Class<? extends BaseEntity> CLASS) {
+        if (BASE_ENTITY_CONTROLLER == null)
+            BASE_ENTITY_CONTROLLER = new BaseEntityController();
+
+        return BASE_ENTITY_CONTROLLER.getFieldType(attr_id, CLASS);
+    }
 }

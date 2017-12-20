@@ -7,9 +7,7 @@ import ubermaster.entity.attr.UserAttr;
 import java.util.HashMap;
 
 @ObjectType(UserAttr.OBJTYPE)
-public class User extends BaseEntity
-{
-/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+public class User extends BaseEntity {
     @Attribute(Model.LOCATION)
     protected String location;
 
@@ -24,13 +22,11 @@ public class User extends BaseEntity
 
     @Attribute(Model.PICTURE)
     protected String picture;
-/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-    public interface Model extends UserAttr
-    {                       }
-/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-    public String getLocation()
-    {
+
+    public interface Model extends UserAttr {
+    }
+
+    public String getLocation() {
         return location;
     }
 
@@ -71,8 +67,7 @@ public class User extends BaseEntity
     }
 
     @Override
-    public HashMap getAllFields()
-    {
+    public HashMap getAllFields() {
         HashMap<String, Object> hashmap = new HashMap<>();
 
         hashmap.put(Model.DESCRIPTION, userDescription);
@@ -85,8 +80,7 @@ public class User extends BaseEntity
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "User{"
                 + super.toString()
                 + "\nlocation='" + location + '\'' +

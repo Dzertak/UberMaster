@@ -9,9 +9,7 @@ import java.util.HashMap;
 
 
 @ObjectType(OrderAttr.OBJTYPE)
-public class Order extends BaseEntity
-{
-/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+public class Order extends BaseEntity {
     @Attribute(Model.SMALL_DESCRIPTION)
     protected String SmallDescription;
 
@@ -31,11 +29,10 @@ public class Order extends BaseEntity
     protected long master;
 
     protected String masterName;
-/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-    public interface Model extends OrderAttr
-    {                   }
-/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+
+    public interface Model extends OrderAttr {
+    }
+
     public String getSmallDescription() {
         return SmallDescription;
     }
@@ -84,19 +81,16 @@ public class Order extends BaseEntity
         this.master = master;
     }
 
-    public String getMasterName()
-    {
+    public String getMasterName() {
         return masterName;
     }
 
-    public void setMasterName(String masterName)
-    {
+    public void setMasterName(String masterName) {
         this.masterName = masterName;
     }
 
     @Override
-    public HashMap getAllFields()
-    {
+    public HashMap getAllFields() {
         HashMap<String, Object> hashmap = new HashMap<>();
 
         hashmap.put(Model.SMALL_DESCRIPTION, SmallDescription);
@@ -109,8 +103,7 @@ public class Order extends BaseEntity
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Order{"
                 + super.toString()
                 + "\nSmallDescription='" + SmallDescription + '\'' +

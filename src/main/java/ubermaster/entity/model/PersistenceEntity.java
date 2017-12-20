@@ -1,4 +1,4 @@
-package ubermaster.persistence;
+package ubermaster.entity.model;
 
 import ubermaster.entity.model.BaseEntity;
 
@@ -6,30 +6,25 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PersistenceEntity
-{
+public class PersistenceEntity {
     protected long object_id;
     protected long parent_id;
     protected String description;
     protected String name;
     protected Map<String, Object> attributes;
     protected Map<BigInteger, Long> references;
-
     protected Class<? extends BaseEntity> classType;
 
-    public PersistenceEntity()
-    {
+    public PersistenceEntity() {
         attributes = new HashMap<>();
         references = new HashMap<>();
     }
 
-    public void setClassType(final Class<? extends BaseEntity> CLASS)
-    {
+    public void setClassType(final Class<? extends BaseEntity> CLASS) {
         classType = CLASS;
     }
 
-    public Class<? extends BaseEntity> getClassType()
-    {
+    public Class<? extends BaseEntity> getClassType() {
         return classType;
     }
 

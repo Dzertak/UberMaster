@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 @ObjectType(MasterAttr.OBJTYPE)
-public class Master extends User
-{
-/*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+public class Master extends User {
     @Attribute(Model.PROFESSION)
     protected String profession;
 
@@ -30,15 +28,14 @@ public class Master extends User
     protected String tools;
 
     @Attribute(Model.ST_TIME)
-    protected Date start_time;
+    protected Date startTime;
 
     @Attribute(Model.END_TIME)
-    protected Date end_time;
-/*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-/*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-    public interface Model extends MasterAttr
-    {                       }
-/*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    protected Date endTime;
+
+    public interface Model extends MasterAttr {
+    }
+
     public String getProfession() {
         return profession;
     }
@@ -88,30 +85,29 @@ public class Master extends User
     }
 
     public Date getStart_time() {
-        return start_time;
+        return startTime;
     }
 
     public void setStart_time(Date start_time) {
-        this.start_time = start_time;
+        this.startTime = start_time;
     }
 
     public Date getEnd_time() {
-        return end_time;
+        return endTime;
     }
 
     public void setEnd_time(Date end_time) {
-        this.end_time = end_time;
+        this.endTime = end_time;
     }
 
     @Override
-    public HashMap getAllFields()
-    {
+    public HashMap getAllFields() {
         HashMap<String, Object> hashmap = (HashMap<String, Object>) super.getAllFields();
 
         hashmap.put(Model.PROFESSION, profession);
         hashmap.put(Model.SKILLS, skills);
-        hashmap.put(Model.END_TIME, end_time);
-        hashmap.put(Model.ST_TIME, start_time);
+        hashmap.put(Model.END_TIME, endTime);
+        hashmap.put(Model.ST_TIME, startTime);
         hashmap.put(Model.EXPERIENCE, experience);
         hashmap.put(Model.SMOKE, smoke);
         hashmap.put(Model.PAYMENT, payment);
@@ -121,8 +117,7 @@ public class Master extends User
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "Master{"
                 + super.toString()
                 + "\nprofession='" + profession + '\'' +
@@ -131,8 +126,8 @@ public class Master extends User
                 ", \npayment=" + payment +
                 ", \nsmoke=" + smoke +
                 ", \ntools='" + tools + '\'' +
-                ", \nstart_time=" + start_time +
-                ", \nend_time=" + end_time +
+                ", \nstart_time=" + startTime +
+                ", \nend_time=" + endTime +
                 '}';
     }
 }
