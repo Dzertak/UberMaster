@@ -40,7 +40,7 @@ public class EntityController<T extends BaseEntity> {
         return null;
     }
 
-    @RequestMapping(value = "/getEntity",
+    @RequestMapping(value = "/getUser",
             method = RequestMethod.GET,
             produces = "application/json")
     public User getUsersByPhone(@RequestParam("phone")
