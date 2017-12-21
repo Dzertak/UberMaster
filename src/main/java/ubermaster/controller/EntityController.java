@@ -50,6 +50,23 @@ public class EntityController<T extends BaseEntity> {
         return facade.getUser(phoneNumber, password);
     }
 
+    @RequestMapping(value = "/getTypedEntity",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    public BaseEntity[] getTypedEntity(@RequestParam("class") String type) throws ClassNotFoundException
+    {
+        Class<? extends BaseEntity> _class = (Class<? extends BaseEntity>)Class.forName("ubermaster.entity.model." + type);
+        return facade.getTypedEntities(_class);
+    }
+
+    @RequestMapping(value = "/getPokeOrders",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    public BaseEntity[] getPokeOrders(@RequestParam("id") long id) throws ClassNotFoundException
+    {
+        return facade.getPokeOrders(id);
+    }
+
     @RequestMapping(value = "/addEntity",
             method = RequestMethod.POST,
             produces = "application/json")

@@ -1,0 +1,19 @@
+create or replace procedure getPokeOrders(innerID in number, innerArray out arrayEntites)
+as
+	idsArray dbms_sql.number_table;
+	fileds arrayFiled := arrayFiled();
+begin
+	select object_id
+	bulk collect into idsArray
+	from Objects
+	where parent_id = innerID;
+
+	innerArray := arrayEntites();
+
+	for itera in 1..idsArray.last loop
+		innerArray.extend();
+		getEntities(idsArray(itera), fileds);
+		innerArray(itera) := fileds;
+	end loop;
+end;
+/

@@ -1,12 +1,12 @@
--- get Entity
 create or replace procedure getEntity(innerID in number, returnCursor out sys_refCursor)
 is
 	ObjName Objects.name%type;
 	ObjDescr Objects.description%type;
+	ObjTypeID Objects.object_type_id%type;
 begin
 	begin
-		select name, description
-		into ObjName, ObjDescr
+		select object_type_id, name, description
+		into ObjTypeID, ObjName, ObjDescr
 		from Objects
 		where object_id = innerID;
 	end;
@@ -35,13 +35,23 @@ begin
 						allObjTypes on allObjTypes.object_type_id = attrT.object_type_id
 			)
 			select
-					to_char(ObjName),
-					'-1'
+				to_char(innerID),
+				'-1'
+			from dual
+			union all
+			select
+				to_char(ObjTypeID),
+				'-2'
+			from dual
+			union all
+			select
+				ObjName,
+				'-3'
 			from dual
 			union all
 			select
 				ObjDescr,
-				'-2'
+				'-4'
 			from dual
 			union all
 			select

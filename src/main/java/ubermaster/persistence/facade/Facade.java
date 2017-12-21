@@ -3,6 +3,7 @@ package ubermaster.persistence.facade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.model.BaseEntity;
+import ubermaster.entity.model.Order;
 import ubermaster.entity.model.User;
 import ubermaster.entity.model.PersistenceEntity;
 import ubermaster.persistence.converter.impl.ConverterImpl;
@@ -136,5 +137,31 @@ public class Facade {
         persistenceEntity.setName(convertedPE.getName());
         persistenceEntity.setDescription(convertedPE.getDescription());
         persistenceEntity.setAttributes(convertedPE.getAttributes());
+    }
+
+    public <T extends BaseEntity> T[] getTypedEntities(Class<? extends BaseEntity> _class)
+    {
+        //--:   DB
+        PersistenceEntity sqcPE[] = manager.getTypedEntities(_class);
+        int length = sqcPE.length;
+        T sqcT[] = (T[])new BaseEntity[length];
+
+        for (int itera = 0; itera < length; ++itera)
+            sqcT[itera] = converter.convertToModel(sqcPE[itera], _class);
+
+        return sqcT;
+    }
+
+    public <T extends BaseEntity> T[] getPokeOrders(long id)
+    {
+        //--:   DB
+        PersistenceEntity sqcPE[] = manager.getPokeOrders(id);
+        int length = sqcPE.length;
+        T sqcT[] = (T[])new BaseEntity[length];
+
+        for (int itera = 0; itera < length; ++itera)
+            sqcT[itera] = converter.convertToModel(sqcPE[itera], Order.class);
+
+        return sqcT;
     }
 }
