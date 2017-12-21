@@ -1,10 +1,8 @@
 package ubermaster.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ubermaster.entity.model.BaseEntity;
-import ubermaster.entity.model.Poke;
+import ubermaster.entity.model.*;
 import ubermaster.persistence.facade.Facade;
 
 import java.util.List;
@@ -26,9 +24,30 @@ public class EntityController<T extends BaseEntity> {
     @RequestMapping(value = "/getEntity",
             method = RequestMethod.GET,
             produces = "application/json")
-    public T getUsersById(@RequestParam("id") long id,
-                          @RequestParam("CLASS") String entityClass) {
-        return facade.getEntity(id, Poke.class);
+    public T getUsersById(@RequestParam("id")
+                                  long id,
+                          @RequestParam("class")
+                                  String entityClass) {
+        if (entityClass.equals(Poke.class.getSimpleName())) {
+            return facade.getEntity(id, Poke.class);
+        }
+        if (entityClass.equals(Master.class.getSimpleName())) {
+            return facade.getEntity(id, Master.class);
+        }
+        if (entityClass.equals(Order.class.getSimpleName())) {
+            return facade.getEntity(id, Order.class);
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/getEntity",
+            method = RequestMethod.GET,
+            produces = "application/json")
+    public User getUsersByPhone(@RequestParam("phone")
+                                        String phoneNumber,
+                                @RequestParam("password")
+                                        String password) {
+        return facade.getUser(phoneNumber, password);
     }
 
     @RequestMapping(value = "/addEntity",
@@ -40,7 +59,8 @@ public class EntityController<T extends BaseEntity> {
 
     @RequestMapping(value = "/deleteEntity",
             method = RequestMethod.DELETE)
-    public T deleteUser(@RequestParam("id") long id) {
-        return null;
+    public void deleteUser(
+            @RequestParam("id") long id) {
+        facade.deleteEntity(id);
     }
 }

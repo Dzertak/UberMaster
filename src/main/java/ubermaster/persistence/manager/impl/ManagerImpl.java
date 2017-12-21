@@ -54,7 +54,6 @@ public class ManagerImpl implements Manager {
             }
 
 
-
             OracleConnection oracleConnection = getConnection();
 
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
@@ -94,6 +93,9 @@ public class ManagerImpl implements Manager {
                 String attr_id = resultSet.getString(2);
 
                 switch (attr_id) {
+                    case ATTR_OBJECT_ID:
+                    case ATTR_OBJECT_TYPE_ID:
+                        break;
                     case ATTR_NAME:
                         persistenceEntity.setName(resultSet.getString(1));
                         break;
