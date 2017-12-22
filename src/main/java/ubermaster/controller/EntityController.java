@@ -3,6 +3,7 @@ package ubermaster.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
+import ubermaster.entityGenerator.entity.EntityGenerator;
 import ubermaster.persistence.facade.Facade;
 
 @RestController
@@ -72,5 +73,13 @@ public class EntityController<T extends BaseEntity>
     public void deleteUser(
             @RequestParam("id") long id) {
         facade.deleteEntity(id);
+    }
+
+    @RequestMapping(value = "/generate")
+    public String generateEntities()
+    {
+        EntityGenerator.init();
+
+        return "DONE";
     }
 }
