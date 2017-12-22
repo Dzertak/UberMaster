@@ -5,21 +5,12 @@ import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.facade.Facade;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/entities")
-public class EntityController<T extends BaseEntity> {
-
+public class EntityController<T extends BaseEntity>
+{
     @Autowired
     private Facade facade;
-
-    @RequestMapping(value = "/",
-            method = RequestMethod.GET,
-            produces = "application/json")
-    public List<T> getAllUsers() {
-        return null;
-    }
 
     @RequestMapping(value = "/getEntity",
             method = RequestMethod.GET,
@@ -46,7 +37,8 @@ public class EntityController<T extends BaseEntity> {
     public User getUsersByPhone(@RequestParam("phone")
                                         String phoneNumber,
                                 @RequestParam("password")
-                                        String password) {
+                                        String password)
+    {
         return facade.getUser(phoneNumber, password);
     }
 
@@ -55,7 +47,8 @@ public class EntityController<T extends BaseEntity> {
             produces = "application/json")
     public BaseEntity[] getTypedEntity(@RequestParam("class") String type) throws ClassNotFoundException
     {
-        Class<? extends BaseEntity> _class = (Class<? extends BaseEntity>)Class.forName("ubermaster.entity.model." + type);
+        Class<? extends BaseEntity> _class = (Class<? extends BaseEntity>)
+                            Class.forName("ubermaster.entity.model." + type);
         return facade.getTypedEntities(_class);
     }
 

@@ -23,16 +23,24 @@ import java.util.Iterator;
 
 import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 
-
+/**
+ * @author Serpye 
+ * 
+ * The {@code ManagerImpl} _class is realization of {@code Manager} interface
+ * */
 @Component
-public class ManagerImpl implements Manager {
+public class ManagerImpl implements Manager
+{
+/*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     @Autowired
     private UberDataSource dataSource;
-
+/*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public void createEntity
     (
-            PersistenceEntity persistenceEntity,
-            final Class<? extends BaseEntity> CLASS
+        PersistenceEntity persistenceEntity,
+        Class<? extends BaseEntity> _class
     )
     {
         try
@@ -41,7 +49,7 @@ public class ManagerImpl implements Manager {
                     (HashMap<String, Object>) persistenceEntity.getAttributes();
             String[] elements = new String[4 + (hashMap.size() << 1)];
             elements[0] = Long.toString(persistenceEntity.getObject_id());
-            elements[1] = CLASS.getAnnotation(ObjectType.class).value();
+            elements[1] = _class.getAnnotation(ObjectType.class).value();
             elements[2] = persistenceEntity.getName();
             elements[3] = persistenceEntity.getDescription();
 
@@ -55,10 +63,8 @@ public class ManagerImpl implements Manager {
                 elements[i] = ConverterImpl.convertObjectToString(hashMap.get(attrID));
                 ++i;
             }
-
-
+            
             OracleConnection oracleConnection = getConnection();
-
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
                     (
                         "ARRAY",
@@ -72,13 +78,20 @@ public class ManagerImpl implements Manager {
                     );
             stmt.setARRAY(1, array);
             stmt.execute();
-        } catch (SQLException exc) {
+        } 
+        
+        catch (SQLException exc) 
+        {
             exc.printStackTrace();
         }
     }
 
 
-    public PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS)
+    public PersistenceEntity getEntity
+    (
+        long id, 
+        Class<? extends BaseEntity> _class
+    )
     {
         OracleCallableStatement calStat;
         ResultSet resultSet;
@@ -93,7 +106,7 @@ public class ManagerImpl implements Manager {
             resultSet = calStat.getCursor(2);
 
             persistenceEntity.setObject_id(id);
-            persistenceEntity.setClassType(CLASS);
+            persistenceEntity.setClassType(_class);
             HashMap<String, Object> attrMap = new HashMap<>();
             while (resultSet.next())
             {
@@ -107,19 +120,19 @@ public class ManagerImpl implements Manager {
 
                     case ATTR_NAME:
                         persistenceEntity.setName(resultSet.getString(1));
-                        break;
+                    break;
 
                     case ATTR_DESCR:
                         persistenceEntity.setDescription(resultSet.getString(1));
-                        break;
+                    break;
 
                     default:
-                        Class fieldType = BaseEntity.getFieldType(attr_id, CLASS);
+                        Class fieldType = BaseEntity.getFieldType(attr_id, _class);
                         Object fieldObj = ConverterImpl.convertStringToObject
-                                (
-                                    resultSet.getString(1),
-                                    fieldType
-                                );
+                            (
+                                resultSet.getString(1),
+                                fieldType
+                            );
                         attrMap.put(attr_id, fieldObj);
                 }
             }
@@ -141,18 +154,24 @@ public class ManagerImpl implements Manager {
         OracleCallableStatement calStat;
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
+
         try
         {
             OracleConnection oracleConnection = getConnection();
-            calStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_USER);
+            calStat = (OracleCallableStatement) oracleConnection
+                                            .prepareCall(GET_USER);
             calStat.setString(1, phoneNumber);
             calStat.setString(2, password);
-            calStat.registerOutParameter(3, oracle.jdbc.OracleTypes.CURSOR);
+            calStat.registerOutParameter
+                    (
+                        3,
+                        oracle.jdbc.OracleTypes.CURSOR
+                    );
             calStat.execute();
             resultSet = calStat.getCursor(3);
 
             HashMap<String, Object> attrMap = new HashMap<>();
-            Class<? extends BaseEntity> entityClassType = null;
+            Class<? extends BaseEntity> entity_classType = null;
             final String MASTER_OT = Master.class.getAnnotation(ObjectType.class).value();
             final String POKE_OT = Poke.class.getAnnotation(ObjectType.class).value();
             while (resultSet.next())
@@ -169,15 +188,15 @@ public class ManagerImpl implements Manager {
                         String objectTypeID = resultSet.getString(1);
 
                         if (objectTypeID.equals(MASTER_OT))
-                            entityClassType = Master.class;
+                            entity_classType = Master.class;
 
                         else if (objectTypeID.equals(POKE_OT))
-                            entityClassType = Poke.class;
+                            entity_classType = Poke.class;
 
                         else
-                            entityClassType = Admin.class;
+                            entity_classType = Admin.class;
 
-                        persistenceEntity.setClassType(entityClassType);
+                        persistenceEntity.setClassType(entity_classType);
                     break;
 
                     case ATTR_NAME:
@@ -189,7 +208,7 @@ public class ManagerImpl implements Manager {
                     break;
 
                     default:
-                        Class fieldType = BaseEntity.getFieldType(attr_id, entityClassType);
+                        Class fieldType = BaseEntity.getFieldType(attr_id, entity_classType);
                         Object fieldObj = ConverterImpl.convertStringToObject
                                 (
                                     resultSet.getString(1),
@@ -216,7 +235,8 @@ public class ManagerImpl implements Manager {
         try
         {
             OracleConnection oracleConnection = getConnection();
-            PreparedStatement statement = oracleConnection.prepareStatement(DELETE_ENTITY);
+            PreparedStatement statement = oracleConnection
+                                    .prepareStatement(DELETE_ENTITY);
             statement.setString(1, Long.toString(id));
             statement.execute();
         }
@@ -229,14 +249,17 @@ public class ManagerImpl implements Manager {
 
     public void updateEntity
     (
-            PersistenceEntity persistenceEntity,
-            final Class<? extends BaseEntity> CLASS
+        PersistenceEntity persistenceEntity,
+        Class<? extends BaseEntity> _class
     )
     {
 
     }
 
-    public PersistenceEntity[] getTypedEntities(Class<? extends BaseEntity> _class)
+    public PersistenceEntity[] getTypedEntities
+    (
+        Class<? extends BaseEntity> _class
+    )
     {
         String objectTypeID = _class.getAnnotation(ObjectType.class).value();
 
@@ -244,7 +267,7 @@ public class ManagerImpl implements Manager {
         PersistenceEntity sqcPE[];
         try
         {
-            OracleConnection connection = getConnection();//dataSource.getConnection();
+            OracleConnection connection = getConnection();
             calStat = (OracleCallableStatement) connection.prepareCall(GET_TYPED_ENTITIES);
 
             calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
@@ -276,18 +299,22 @@ public class ManagerImpl implements Manager {
                     {
                         case ATTR_OBJECT_ID :
                             persistenceEntity.setObject_id(Long.parseLong(value));
-                            break;
+                        break;
 
                         case ATTR_NAME :
                             persistenceEntity.setName(value);
-                            break;
+                        break;
 
                         case ATTR_DESCR :
                             persistenceEntity.setDescription(value);
-                            break;
+                        break;
 
                         default :
-                            Class fieldType = BaseEntity.getFieldType(attrID, _class);
+                            Class fieldType = BaseEntity.getFieldType
+                                    (
+                                        attrID,
+                                        _class
+                                    );
                             Object fieldObj = ConverterImpl.convertStringToObject
                                     (
                                             value,
@@ -304,7 +331,7 @@ public class ManagerImpl implements Manager {
 
         catch (SQLException | ParseException exc)
         {
-            //exc.printStackTrace();
+            exc.printStackTrace();
             return null;
         }
 
@@ -349,18 +376,22 @@ public class ManagerImpl implements Manager {
                     {
                         case ATTR_OBJECT_ID :
                             persistenceEntity.setObject_id(Long.parseLong(value));
-                            break;
+                        break;
 
                         case ATTR_NAME :
                             persistenceEntity.setName(value);
-                            break;
+                        break;
 
                         case ATTR_DESCR :
                             persistenceEntity.setDescription(value);
-                            break;
+                        break;
 
                         default :
-                            Class fieldType = BaseEntity.getFieldType(attrID, Order.class);
+                            Class fieldType = BaseEntity.getFieldType
+                                    (
+                                        attrID,
+                                        Order.class
+                                    );
                             Object fieldObj = ConverterImpl.convertStringToObject
                                     (
                                             value,
@@ -377,7 +408,7 @@ public class ManagerImpl implements Manager {
 
         catch (SQLException | ParseException exc)
         {
-            //exc.printStackTrace();
+            exc.printStackTrace();
             return null;
         }
 
