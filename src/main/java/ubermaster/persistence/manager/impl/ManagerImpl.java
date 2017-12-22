@@ -4,13 +4,13 @@ import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleConnection;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
-import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
+import ubermaster.persistence.manager.data.UberDataSource;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -20,12 +20,13 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
+
 
 @Component
 public class ManagerImpl implements Manager {
     @Autowired
-    private DataSource dataSource;
-
+    private UberDataSource dataSource;
 
     public void createEntity
             (
@@ -53,8 +54,8 @@ public class ManagerImpl implements Manager {
             }
 
 
-            Connection connection = dataSource.getPool().getConnection();
-            OracleConnection oracleConnection = connection.unwrap(OracleConnection.class);
+
+            OracleConnection oracleConnection = getConnection();
 
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
                     (
@@ -80,8 +81,7 @@ public class ManagerImpl implements Manager {
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
         try {
-            Connection connection = dataSource.getPool().getConnection();
-            OracleConnection oracleConnection = connection.unwrap(OracleConnection.class);
+            OracleConnection oracleConnection = getConnection();
             calStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
             calStat.setString(1, Long.toString(id));
             calStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
@@ -115,7 +115,7 @@ public class ManagerImpl implements Manager {
 
             persistenceEntity.setAttributes(attrMap);
         } catch (SQLException | ParseException exc) {
-            //exc.printStackTrace();
+            exc.printStackTrace();
             return null;
         }
         return persistenceEntity;
@@ -126,8 +126,8 @@ public class ManagerImpl implements Manager {
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
         try {
-            Connection connection = dataSource.getPool().getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_USER);
+            OracleConnection oracleConnection = getConnection();
+            calStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_USER);
             calStat.setString(1, phoneNumber);
             calStat.setString(2, password);
             calStat.registerOutParameter(3, oracle.jdbc.OracleTypes.CURSOR);
@@ -182,7 +182,7 @@ public class ManagerImpl implements Manager {
 
             persistenceEntity.setAttributes(attrMap);
         } catch (SQLException | ParseException exc) {
-            //exc.printStackTrace();
+            exc.printStackTrace();
             return null;
         }
         return persistenceEntity;
@@ -190,8 +190,8 @@ public class ManagerImpl implements Manager {
 
     public void deleteEntity(long id) {
         try {
-            Connection connection = dataSource.getPool().getConnection();
-            PreparedStatement statement = connection.prepareStatement(DELETE_ENTITY);
+            OracleConnection oracleConnection = getConnection();
+            PreparedStatement statement = oracleConnection.prepareStatement(DELETE_ENTITY);
             statement.setString(1, Long.toString(id));
             statement.execute();
         } catch (SQLException exc) {
