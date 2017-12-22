@@ -1,12 +1,18 @@
 package ubermaster.entity.model;
 
-import ubermaster.entity.model.BaseEntity;
-
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PersistenceEntity {
+/**
+ * @author Serpye
+ *
+ * @code PersistenceEntity class represents an entity, that
+ * is gotten from data base
+ * */
+public class PersistenceEntity
+{
+/*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     protected long object_id;
     protected long parent_id;
     protected String description;
@@ -14,12 +20,14 @@ public class PersistenceEntity {
     protected Map<String, Object> attributes;
     protected Map<BigInteger, Long> references;
     protected Class<? extends BaseEntity> classType;
-
-    public PersistenceEntity() {
+/*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    public PersistenceEntity()
+    {
         attributes = new HashMap<>();
         references = new HashMap<>();
     }
-
+/*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public void setClassType(final Class<? extends BaseEntity> CLASS) {
         classType = CLASS;
     }

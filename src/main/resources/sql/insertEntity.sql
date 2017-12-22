@@ -7,15 +7,15 @@ as
 	obTyID Objects.object_type_id%type;
 	name Objects.name%type;
 	descr Objects.description%type;
-	
+
 	attrID Attributes.attr_id%type;
 	attrValue Attributes.value%type;
-	
+
 	lstMaxID Lists.list_value_id%type;
 	lstID Lists.list_value_id%type;
-	
+
 	i binary_integer;
-begin	
+begin
 	i := innerArray.first();
 	obID := to_number(innerArray(i));
 	i := innerArray.next(i);
@@ -24,10 +24,10 @@ begin
 	name := innerArray(i);
 	i := innerArray.next(i);
 	descr := innerArray(i);
-	
+
 	--INSERT OBJECTS
 	begin
-		insert into Objects ( object_id, parent_id, object_type_id, name, description) 
+		insert into Objects ( object_id, parent_id, object_type_id, name, description)
 				values (obID, null, obTyID, name, descr);
 	end;
 
@@ -37,51 +37,77 @@ begin
 		into lstMaxID
 		from Lists;
 	end;
-		
+
 	--INSERT ATTRIBUTES
 	i := innerArray.next(i);
 	while i is not null loop
 		attrID := to_number(innerArray(i));
 		i := innerArray.next(i);
 		attrValue := to_char(innerArray(i));
-		i := innerArray.next(i);
-		
+
+		if (attrID is null) then
+			exit;
+		end if;
+
+		--defining is that parent_id(Poke) of Order
+		if (attrID = -19) then
+			begin
+				update Objects
+					set parent_id = to_number(attrValue, '9999999999999')
+					where object_id = obID;
+
+					goto rrr;
+			end;
+		end if;
+
+		--	defining is that master reference
+		if (attrID = 14) then
+			begin
+				insert into ObjReference (attr_id, refer_id, object_id)
+						values (attrID, to_number(attrValue, '999999999'), obID);
+
+					goto rrr;
+			end;
+		end if;
+
 		-- defining of presenting of value or not
 		if (attrID in (5, 10, 19)) then
 			begin
-				select list_value_id 
+				select list_value_id
 				into lstID
 				from Lists lst join AttrType attrT on lst.attr_id = attrT.attr_id
-				where value = attrValue;
-				EXCEPTION WHEN NO_DATA_FOUND then
-					lstID := null;
+				where lower(value) = lower(attrValue);
+				/*EXCEPTION WHEN NO_DATA_FOUND then
+					lstID := null;*/
 			end;
 		end if;
-		
-		-- if lst location  
-		if (attrID in (5, 10, 19)) then		
+
+		-- if lst location
+		if (attrID in (5, 10, 19)) then
 			-- if such value is not presenting
-			if (lstID is null) then				
-				insert into Lists (attr_id, list_value_id, value) 
+			if (lstID is null) then
+				insert into Lists (attr_id, list_value_id, value)
 						values (attrID, lstMaxID, attrValue);
-						
-				insert into Attributes (attr_id, object_id, value, date_value, list_value_id) 
+
+				insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
 					values (attrID, obID, null, null, lstMaxID);
-				
+
 				lstMaxID := lstMaxID + 1;
 			else
-				insert into Attributes (attr_id, object_id, value, date_value, list_value_id) 
+				insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
 					values (attrID, obID, null, null, lstID);
-			end if; 
+			end if;
 		else
 			if (attrID in (12, 13, 17, 18)) then
-				insert into Attributes (attr_id, object_id, value, date_value, list_value_id) 
-				values (attrID, obID, null, to_date(attrValue, 'DD/MM/YYYY hh24:mi'), null);		
+				insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
+				values (attrID, obID, null, to_date(attrValue, 'DD/MM/YYYY hh24:mi'), null);
 			else
-				insert into Attributes (attr_id, object_id, value, date_value, list_value_id) 
-				values (attrID, obID, attrValue, null, null);		
+				insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
+				values (attrID, obID, attrValue, null, null);
 			end if;
 		end if;
+		<<RRR>>
+		i := innerArray.next(i);
 	end loop;
 end;
 /

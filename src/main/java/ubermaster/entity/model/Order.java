@@ -26,7 +26,7 @@ public class Order extends BaseEntity {
     protected String Status;
 
     @Attribute(Model.MASTER_REF)
-    protected long master;
+    protected long master = -1;
 
     protected String masterName;
 

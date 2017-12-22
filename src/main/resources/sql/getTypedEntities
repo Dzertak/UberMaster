@@ -1,0 +1,114 @@
+CREATE OR REPLACE TYPE type_attributes AS OBJECT
+(
+	attrID varchar(4000),
+	value varchar(4000)
+)
+/
+
+create or replace type arrayFiled as table of type_attributes;
+/
+
+create or replace type arrayEntites as table of arrayFiled;
+/
+
+create or replace procedure getEntities(innerID in number, innerArray out arrayFiled)
+is
+	ObjName Objects.name%type;
+	ObjDescr Objects.description%type;
+	ObjTypeID Objects.object_type_id%type;
+
+	retArray arrayFiled := arrayFiled();
+begin
+	begin
+		select object_type_id, name, description
+		into ObjTypeID, ObjName, ObjDescr
+		from Objects
+		where object_id = innerID;
+	end;
+
+		with result as
+			(
+				select
+						attr_id
+				from
+						AttrType attrT join
+						(
+							select
+									object_type_id
+							from ObjType
+							start with object_type_id =
+							(
+								select
+										object_type_id
+								from
+										Objects
+								where object_id = innerId
+							)
+							connect by prior parent_id = object_type_id
+						)
+						allObjTypes on allObjTypes.object_type_id = attrT.object_type_id
+			)
+			select type_attributes(aid, val)
+			bulk collect into retArray
+			from
+			(
+			select
+				to_char(innerID) val,
+				'-1' aid
+			from dual
+			union all
+			select
+				ObjName val,
+				'-3' aid
+			from dual
+			union all
+			select
+				ObjDescr val,
+				'-4' aid
+			from dual
+			union all
+			select
+				case when value is not null then value
+				else case when date_value is not null then to_char(date_value, 'DD/MM/YY hh24:mi')
+					else
+						(
+							select lst.value
+							from Lists lst
+							where attr.list_value_id = lst.list_value_id
+						)
+					end
+				end val,
+				to_char(attr.attr_id) aid
+			from Attributes attr, result
+			where attr.attr_id in result.attr_id and attr.object_id = innerId
+			union all
+			select
+				to_char(objRef.object_id) val,
+				to_char(objRef.attr_id) aid
+			from ObjReference objRef, result
+			where objRef.attr_id in result.attr_id and objRef.object_id = innerId
+			);
+
+			innerArray := retArray;
+end;
+/
+
+create or replace procedure getTypedEntities(innerObjTypeID in number, innerArray out arrayEntites)
+as
+	idsArray dbms_sql.number_table;
+	fileds arrayFiled := arrayFiled();
+begin
+	select object_id
+	bulk collect into idsArray
+	from Objects
+	where object_type_id = innerObjTypeID;
+
+	innerArray := arrayEntites();
+
+	for itera in 1..idsArray.last loop
+		innerArray.extend();
+		getEntities(idsArray(itera), fileds);
+		innerArray(itera) := fileds;
+	end loop;
+end;
+/

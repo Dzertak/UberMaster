@@ -3,8 +3,12 @@ package ubermaster.persistence.manager;
 import ubermaster.entity.model.BaseEntity;
 import ubermaster.entity.model.PersistenceEntity;
 
-public interface Manager {
+public interface Manager
+{
+/*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     String GET_ENTITY = "{call getEntity(?, ?)}";
+    String GET_TYPED_ENTITIES = "{call getTypedEntities(?, ?)}";
+    String GET_POKE_ORDERS = "{call getPokeOrders(?, ?)}";
     String GET_USER = "{call getUser(?, ?, ?)}";
     String DELETE_ENTITY = "delete from Objects where object_id = ?";
     String INSERT_ENTITY = "{call insertEntity(?)}";
@@ -14,11 +18,43 @@ public interface Manager {
     String ATTR_NAME = "-3";
     String ATTR_DESCR = "-4";
 
-    void createEntity(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS);
+    String ARRAY_ENTITIES = "ARRAYENTITES";
+    String ARRAY_STRING = "ARRAY";
+/*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    /**
+     * Inserts an instance of {@code BaseEntity} child class into data base
+     *
+     * @param persistenceEntity — an entity
+     *
+     * @param _class — a type of instance
+     * */
+    void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
 
-    PersistenceEntity getEntity(long id, final Class<? extends BaseEntity> CLASS);
+    /**
+     * Get an entity from data base by entity id
+     *
+     * @param id — entity id
+     *
+     * @param _class — a class type of entity
+     *
+     * @return an instance of {@code PersistenceEntity} class
+     * */
+    PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class);
 
+    /**
+     * Deletes entity from data base by entity id
+     *
+     * @param id — entity id
+     * */
     void deleteEntity(long id);
 
-    void updateEntity(PersistenceEntity persistenceEntity, final Class<? extends BaseEntity> CLASS);
+    /**
+     * Updates entity in data base
+     *
+     * @param persistenceEntity — an entity
+     *
+     * @param _class — a type of instance
+     * */
+    void updateEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
 }

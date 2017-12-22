@@ -1,0 +1,9 @@
+http://localhost:8090/entities/getEntity?id=1&class=Poke
+http://localhost:8090/entities/getEntity?id=19&class=Master
+http://localhost:8090/entities/getEntity?id=37&class=Order
+http://localhost:8090/entities/getUser?phone=753119477325&password=9kmDM77InARDap6IHsDXKy1c
+http://localhost:8090/entities/getUser?phone=975779889902&password=s608Bmz25InxF8dQ
+http://localhost:8090/entities/getTypedEntity?class=Poke
+http://localhost:8090/entities/getTypedEntity?class=Master
+http://localhost:8090/entities/getTypedEntity?class=Order
+http://localhost:8090/entities/getPokeOrders?id=4

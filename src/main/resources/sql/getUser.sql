@@ -1,4 +1,3 @@
---get Entity by telephone and password
 create or replace procedure getUser(telephone in varchar2, passwd in varchar2, returnCursor out sys_refCursor)
 is
 	objID Objects.object_id%type;
