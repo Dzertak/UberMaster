@@ -6,6 +6,9 @@ import ubermaster.entity.model.*;
 import ubermaster.entityGenerator.entity.EntityGenerator;
 import ubermaster.persistence.facade.Facade;
 
+import java.util.Date;
+import java.util.Random;
+
 @RestController
 @RequestMapping("/entities")
 public class EntityController<T extends BaseEntity>
@@ -75,10 +78,21 @@ public class EntityController<T extends BaseEntity>
         facade.deleteEntity(id);
     }
 
+    /**
+     * Method is used for creating gene entities
+     * */
     @RequestMapping(value = "/generate")
     public String generateEntities()
     {
-        EntityGenerator.init();
+        EntityGenerator generator = new EntityGenerator
+                (
+                    new Random(0),
+                    0.5f,
+                    20,
+                    10,
+                    10
+                );
+        generator.init();
 
         return "DONE";
     }

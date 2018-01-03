@@ -30,6 +30,8 @@ public interface _SQL
 	String ATTR_START_DATE = "17";
 	String ATTR_DUE_DATE = "18";
 	String ATTR_STATUS = "19";
+	String ATTR_BLOCKED = "20";
+	String ATTR_ORDER_PROFESSION = "21";
 
 	String DATE = "01/01/18 ";
 

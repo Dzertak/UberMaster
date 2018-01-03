@@ -57,36 +57,27 @@ public class EntityGenerator implements SQC_DATA, _SQL
 	}
 /*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|		F / P		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-	public static void init()
+	public void init()
 	{
-		Random random = new Random(0);
-		EntityGenerator generator = new EntityGenerator
-				(
-					random,
-					0.5f,
-					20,
-					10,
-					10
-				);
-		generator.generate();
+		generate();
 
-		//System.out.println("===============================================");
-		Entity[] pokes = generator.getPokes();
-		/*for (Entity poke : pokes)
-			System.out.println(poke + "\n");*/
+		System.out.println("===============================================");
+		Entity[] pokes = getPokes();
+		for (Entity poke : pokes)
+			System.out.println(poke + "\n");
 
-		//System.out.println("===============================================");
+		System.out.println("===============================================");
 
-		Entity[] masters = generator.getMasters();
-		/*for (Entity master : masters)
-			System.out.println(master + "\n");*/
+		Entity[] masters = getMasters();
+		for (Entity master : masters)
+			System.out.println(master + "\n");
 
-		//System.out.println("===============================================");
+		System.out.println("===============================================");
 
 
-		Entity[] orders = generator.getOrders();
-		/*for (Entity order : orders)
-			System.out.println(order + "\n");*/
+		Entity[] orders = getOrders();
+		for (Entity order : orders)
+			System.out.println(order + "\n");
 
 
 		SQL_Manager.deleteAllEntities();
@@ -95,7 +86,7 @@ public class EntityGenerator implements SQC_DATA, _SQL
 		SQL_Manager.insertEntity(orders);
 	}
 
-	public void generate()
+	private void generate()
 	{
 		final int LEN_SQC_POKE = SQC_POKES.length;
 		for (int i = 0; i < LEN_SQC_POKE; ++i)
@@ -121,17 +112,17 @@ public class EntityGenerator implements SQC_DATA, _SQL
 
 	}
 
-	public Entity[] getPokes()
+	private Entity[] getPokes()
 	{
 		return SQC_POKES;
 	}
 
-	public Entity[] getOrders()
+	private Entity[] getOrders()
 	{
 		return SQC_ORDERS;
 	}
 
-	public Entity[] getMasters()
+	private Entity[] getMasters()
 	{
 		return SQC_MASTER;
 	}
@@ -219,6 +210,10 @@ public class EntityGenerator implements SQC_DATA, _SQL
 		//--:	PICTURE
 		final String PICTURE = "www.PIcTuRe" + ID + ".com";
 		controller.addParam(ATTR_PICTURE, PICTURE);
+
+		//--:	IS BLOCKED
+		final boolean isBlocked = RANDOM.nextBoolean();
+		controller.addParam(ATTR_BLOCKED, Boolean.toString(isBlocked));
 	}
 
 	private Entity generatePoke()
@@ -356,11 +351,12 @@ public class EntityGenerator implements SQC_DATA, _SQL
 
 	//--:	STATUS
 		byte status = (byte)RANDOM.nextInt(3);
+
+	//--:	MASTER REF
+		final String MASTER_PROFESSION = SQC_PROFESSION[INX_NAME >> 1];
+		controller.addParam(ATTR_ORDER_PROFESSION, MASTER_PROFESSION);
 		if (status != 0)
 		{
-		//--:	MASTER REF
-			final String MASTER_PROFESSION = SQC_PROFESSION[INX_NAME >> 1];
-
 			LinkedList<String> LST_MASTER_REF = new LinkedList<>();
 			final int LEN_SQC_MASTER = SQC_MASTER.length;
 			for (int i = 0; i < LEN_SQC_MASTER; ++i)
