@@ -414,4 +414,81 @@ public class ManagerImpl implements Manager
 
         return sqcPE;
     }
+
+    public PersistenceEntity[] getOrdersByProfession(String profession)
+    {
+        OracleCallableStatement calStat;
+        PersistenceEntity sqcPE[];
+        try
+        {
+            OracleConnection connection = getConnection();//dataSource.getConnection();
+            calStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
+
+            calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
+
+            calStat.setString(1, profession);
+            calStat.execute();
+
+            //--:   Entities cycle
+            Object sqcEntity[] = (Object[]) calStat.getARRAY(2).getArray();
+            int lengthEntity = sqcEntity.length;
+            sqcPE = new PersistenceEntity[lengthEntity];
+            for (int iteraEntity = 0; iteraEntity < lengthEntity; ++iteraEntity)
+            {
+                PersistenceEntity persistenceEntity = new PersistenceEntity();
+                persistenceEntity.setClassType(Order.class);
+                HashMap<String, Object> attrMap = new HashMap<>();
+
+                Object sqcField[] = (Object[]) ((ARRAY)sqcEntity[iteraEntity]).getArray();
+                int lengthField = sqcField.length;
+                //--:   Field cycle
+                for (int iteraField = 0; iteraField < lengthField; ++iteraField)
+                {
+                    Object sqcAttr_Val[] = ((STRUCT)sqcField[iteraField]).getAttributes();
+
+                    String attrID = (String)sqcAttr_Val[0];
+                    String value = (String)sqcAttr_Val[1];
+
+                    switch (attrID)
+                    {
+                        case ATTR_OBJECT_ID :
+                            persistenceEntity.setObject_id(Long.parseLong(value));
+                            break;
+
+                        case ATTR_NAME :
+                            persistenceEntity.setName(value);
+                            break;
+
+                        case ATTR_DESCR :
+                            persistenceEntity.setDescription(value);
+                            break;
+
+                        default :
+                            Class fieldType = BaseEntity.getFieldType
+                                    (
+                                            attrID,
+                                            Order.class
+                                    );
+                            Object fieldObj = ConverterImpl.convertStringToObject
+                                    (
+                                            value,
+                                            fieldType
+                                    );
+                            attrMap.put(attrID, fieldObj);
+                    }
+                }
+
+                persistenceEntity.setAttributes(attrMap);
+                sqcPE[iteraEntity] = persistenceEntity;
+            }
+        }
+
+        catch (SQLException | ParseException exc)
+        {
+            exc.printStackTrace();
+            return null;
+        }
+
+        return sqcPE;
+    }
 }

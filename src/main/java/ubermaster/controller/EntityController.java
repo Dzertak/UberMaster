@@ -64,6 +64,20 @@ public class EntityController<T extends BaseEntity>
         return facade.getPokeOrders(id);
     }
 
+    @RequestMapping
+    (
+        value = "/getOrdersByProfession",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
+    public BaseEntity[] getOrdersByProfession
+    (
+        @RequestParam("profession") String profession
+    )   throws ClassNotFoundException
+    {
+        return facade.getOrdersByProfession(profession);
+    }
+
     @RequestMapping(value = "/addEntity",
             method = RequestMethod.POST,
             produces = "application/json")
