@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 @ObjectType(MasterAttr.OBJTYPE)
-public class Master extends User {
+public class Master extends BlockedUser {
     @Attribute(Model.PROFESSION)
     protected String profession;
 
