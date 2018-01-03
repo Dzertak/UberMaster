@@ -43,6 +43,7 @@ public class ManagerImpl implements Manager
         Class<? extends BaseEntity> _class
     )
     {
+        OracleConnection oracleConnection = null;
         try
         {
             HashMap<String, Object> hashMap =
@@ -64,7 +65,7 @@ public class ManagerImpl implements Manager
                 ++i;
             }
             
-            OracleConnection oracleConnection = getConnection();
+            oracleConnection = getConnection();
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
                     (
                         "ARRAY",
@@ -84,6 +85,19 @@ public class ManagerImpl implements Manager
         {
             exc.printStackTrace();
         }
+
+        finally
+        {
+            try
+            {
+                oracleConnection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                exc.printStackTrace();
+            }
+        }
     }
 
 
@@ -95,10 +109,11 @@ public class ManagerImpl implements Manager
     {
         OracleCallableStatement calStat;
         ResultSet resultSet;
+        OracleConnection oracleConnection = null;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
         try
         {
-            OracleConnection oracleConnection = getConnection();
+            oracleConnection = getConnection();
             calStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
             calStat.setString(1, Long.toString(id));
             calStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
@@ -146,6 +161,19 @@ public class ManagerImpl implements Manager
             return null;
         }
 
+        finally
+        {
+            try
+            {
+                oracleConnection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                exc.printStackTrace();
+            }
+        }
+
         return persistenceEntity;
     }
 
@@ -154,10 +182,10 @@ public class ManagerImpl implements Manager
         OracleCallableStatement calStat;
         ResultSet resultSet;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
-
+        OracleConnection oracleConnection = null;
         try
         {
-            OracleConnection oracleConnection = getConnection();
+            oracleConnection = getConnection();
             calStat = (OracleCallableStatement) oracleConnection
                                             .prepareCall(GET_USER);
             calStat.setString(1, phoneNumber);
@@ -227,14 +255,28 @@ public class ManagerImpl implements Manager
             return null;
         }
 
+        finally
+        {
+            try
+            {
+                oracleConnection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                exc.printStackTrace();
+            }
+        }
+
         return persistenceEntity;
     }
 
     public void deleteEntity(long id)
     {
+        OracleConnection oracleConnection = null;
         try
         {
-            OracleConnection oracleConnection = getConnection();
+            oracleConnection = getConnection();
             PreparedStatement statement = oracleConnection
                                     .prepareStatement(DELETE_ENTITY);
             statement.setString(1, Long.toString(id));
@@ -244,6 +286,19 @@ public class ManagerImpl implements Manager
         catch (SQLException exc)
         {
             exc.printStackTrace();
+        }
+
+        finally
+        {
+            try
+            {
+                oracleConnection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                exc.printStackTrace();
+            }
         }
     }
 
@@ -262,12 +317,12 @@ public class ManagerImpl implements Manager
     )
     {
         String objectTypeID = _class.getAnnotation(ObjectType.class).value();
-
+        OracleConnection connection = null;
         OracleCallableStatement calStat;
         PersistenceEntity sqcPE[];
         try
         {
-            OracleConnection connection = getConnection();
+            connection = getConnection();
             calStat = (OracleCallableStatement) connection.prepareCall(GET_TYPED_ENTITIES);
 
             calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
@@ -335,16 +390,30 @@ public class ManagerImpl implements Manager
             return null;
         }
 
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                exc.printStackTrace();
+            }
+        }
+
         return sqcPE;
     }
 
     public PersistenceEntity[] getPokeOrders(long id)
     {
         OracleCallableStatement calStat;
+        OracleConnection connection = null;
         PersistenceEntity sqcPE[];
         try
         {
-            OracleConnection connection = getConnection();//dataSource.getConnection();
+            connection = getConnection();//dataSource.getConnection();
             calStat = (OracleCallableStatement) connection.prepareCall(GET_POKE_ORDERS);
 
             calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
@@ -412,6 +481,19 @@ public class ManagerImpl implements Manager
             return null;
         }
 
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                exc.printStackTrace();
+            }
+        }
+
         return sqcPE;
     }
 
@@ -419,9 +501,10 @@ public class ManagerImpl implements Manager
     {
         OracleCallableStatement calStat;
         PersistenceEntity sqcPE[];
+        OracleConnection connection = null;
         try
         {
-            OracleConnection connection = getConnection();//dataSource.getConnection();
+            connection = getConnection();//dataSource.getConnection();
             calStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
 
             calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
@@ -487,6 +570,19 @@ public class ManagerImpl implements Manager
         {
             exc.printStackTrace();
             return null;
+        }
+
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                exc.printStackTrace();
+            }
         }
 
         return sqcPE;
