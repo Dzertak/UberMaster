@@ -68,7 +68,7 @@ public class Facade
      */
     public <T extends User> T getUser(String phoneNumber, String password)
     {
-        //--:   Checking for presenting entity in the CACHE
+    //--:   Checking for presenting entity in the CACHE
         final byte NOT_FOUND = 0;
         final byte PHONE_NUMBER_EQUALS = 1;
         final byte PASS_EQUALS = 2;
@@ -159,8 +159,12 @@ public class Facade
      */
     public <T extends BaseEntity> T[] getTypedEntities(Class<? extends BaseEntity> _class)
     {
-        //--:   DB
+    //--:   DB
         PersistenceEntity sqcPE[] = manager.getTypedEntities(_class);
+
+        if (sqcPE == null)
+            return null;
+
         int length = sqcPE.length;
         T sqcT[] = (T[])new BaseEntity[length];
 
@@ -179,8 +183,12 @@ public class Facade
      */
     public <T extends BaseEntity> T[] getPokeOrders(long id)
     {
-        //--:   DB
+    //--:   DB
         PersistenceEntity sqcPE[] = manager.getPokeOrders(id);
+
+        if (sqcPE == null)
+            return null;
+
         int length = sqcPE.length;
         T sqcT[] = (T[])new BaseEntity[length];
 
@@ -194,6 +202,10 @@ public class Facade
     {
         //--:   DB
         PersistenceEntity sqcPE[] = manager.getOrdersByProfession(profession);
+
+        if (sqcPE == null)
+            return null;
+
         int length = sqcPE.length;
         T sqcT[] = (T[])new BaseEntity[length];
 
