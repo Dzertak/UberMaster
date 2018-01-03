@@ -1,5 +1,6 @@
 package ubermaster.entity.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ubermaster.annotation.Attribute;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.attr.OrderAttr;
@@ -89,6 +90,7 @@ public class Order extends BaseEntity {
         this.masterName = masterName;
     }
 
+    @JsonIgnore
     @Override
     public HashMap getAllFields() {
         HashMap<String, Object> hashmap = new HashMap<>();
