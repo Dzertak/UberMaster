@@ -40,15 +40,30 @@ public class EntityController<T extends BaseEntity>
         return null;
     }
 
-    @RequestMapping(value = "/getUser",
-            method = RequestMethod.GET,
-            produces = "application/json")
-    public User getUsersByPhone(@RequestParam("phone")
-                                        String phoneNumber,
-                                @RequestParam("password")
-                                        String password)
+    @RequestMapping
+    (
+        value = "/getUserByPhonePass",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
+    public User getUsersByPhoneAndPass
+    (
+        @RequestParam("phone") String phoneNumber,
+        @RequestParam("password") String password
+    )
     {
         return facade.getUser(phoneNumber, password);
+    }
+
+    @RequestMapping
+    (
+        value = "/getUserByPhone",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
+    public User getUsersByPhone(@RequestParam("phone") String phoneNumber)
+    {
+        return facade.getUserByPhone(phoneNumber);
     }
 
     @RequestMapping(value = "/getTypedEntity",

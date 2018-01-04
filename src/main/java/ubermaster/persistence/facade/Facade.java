@@ -60,7 +60,7 @@ public class Facade
     }
 
     /**
-     * Method that gets user drom DB
+     * Method that gets user from DB
      *
      * @param phoneNumber — phone number of user
      * @param password    — user password
@@ -103,6 +103,22 @@ public class Facade
 
         PersistenceEntity persistenceEntity =
                 manager.getUser(phoneNumber, password);
+
+        if (persistenceEntity == null)
+            return null;
+
+        return converter.convertToModel(persistenceEntity);
+    }
+
+    /**
+     * Method that gets user from DB by phone
+     *
+     * @param phoneNumber — phone number of user
+     * @return entity that can be Poke or Master
+     */
+    public <T extends User> T getUserByPhone(String phoneNumber)
+    {
+        PersistenceEntity persistenceEntity = manager.getUserByPhone(phoneNumber);
 
         if (persistenceEntity == null)
             return null;
