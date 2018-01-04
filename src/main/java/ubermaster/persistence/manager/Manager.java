@@ -10,6 +10,7 @@ public interface Manager
     String GET_TYPED_ENTITIES = "{call getTypedEntities(?, ?)}";
     String GET_POKE_ORDERS = "{call getPokeOrders(?, ?)}";
     String GET_USER = "{call getUser(?, ?, ?)}";
+    String GET_USER_BY_PHONE = "{call getUserByPhone(?, ?)}";
     String DELETE_ENTITY = "delete from Objects where object_id = ?";
     String INSERT_ENTITY = "{call insertEntity(?)}";
     String GET_ORDER_BY_PROFESSION = "call getOrdersByProfession(?, ?)";

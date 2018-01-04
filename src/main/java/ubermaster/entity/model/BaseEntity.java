@@ -5,9 +5,13 @@ import ubermaster.entity.attr.BaseEntityAttr;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class BaseEntity
 {
+    private static Logger log = Logger.getLogger(BaseEntity.class.getName());
+
     @Attribute(Model.NAME_ATTR)
     protected String name;
 
@@ -109,6 +113,7 @@ public abstract class BaseEntity
 
             catch (IllegalAccessException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }

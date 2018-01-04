@@ -6,13 +6,18 @@ import ubermaster.entity.model.*;
 import ubermaster.entityGenerator.entity.EntityGenerator;
 import ubermaster.persistence.facade.Facade;
 
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/entities")
 public class EntityController<T extends BaseEntity>
 {
+    private static Logger log = Logger.getLogger(EntityController.class.getName());
+
     @Autowired
     private Facade facade;
 
@@ -35,31 +40,53 @@ public class EntityController<T extends BaseEntity>
         return null;
     }
 
-    @RequestMapping(value = "/getUser",
-            method = RequestMethod.GET,
-            produces = "application/json")
-    public User getUsersByPhone(@RequestParam("phone")
-                                        String phoneNumber,
-                                @RequestParam("password")
-                                        String password)
+    @RequestMapping
+    (
+        value = "/getUserByPhonePass",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
+    public User getUsersByPhoneAndPass
+    (
+        @RequestParam("phone") String phoneNumber,
+        @RequestParam("password") String password
+    )
     {
         return facade.getUser(phoneNumber, password);
+    }
+
+    @RequestMapping
+    (
+        value = "/getUserByPhone",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
+    public User getUsersByPhone(@RequestParam("phone") String phoneNumber)
+    {
+        return facade.getUserByPhone(phoneNumber);
     }
 
     @RequestMapping(value = "/getTypedEntity",
             method = RequestMethod.GET,
             produces = "application/json")
-    public BaseEntity[] getTypedEntity(@RequestParam("class") String type) throws ClassNotFoundException
+    public BaseEntity[] getTypedEntity(@RequestParam("class") String type)
+            throws ClassNotFoundException
     {
-        Class<? extends BaseEntity> _class = (Class<? extends BaseEntity>)
-                            Class.forName("ubermaster.entity.model." + type);
-        return facade.getTypedEntities(_class);
+       try {
+           Class<? extends BaseEntity> _class = (Class<? extends BaseEntity>)
+                   Class.forName("ubermaster.entity.model." + type);
+           return facade.getTypedEntities(_class);
+       } catch(ClassNotFoundException ex) {
+           log.log(Level.SEVERE,ex.getMessage(),ex);
+           throw new ClassNotFoundException(ex.getMessage());
+       }
     }
 
     @RequestMapping(value = "/getPokeOrders",
             method = RequestMethod.GET,
             produces = "application/json")
-    public BaseEntity[] getPokeOrders(@RequestParam("id") long id) throws ClassNotFoundException
+    public BaseEntity[] getPokeOrders(@RequestParam("id") long id)
+            throws ClassNotFoundException
     {
         return facade.getPokeOrders(id);
     }

@@ -20,6 +20,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 
@@ -32,6 +34,7 @@ import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 public class ManagerImpl implements Manager
 {
 /*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    private static Logger log = Logger.getLogger(ManagerImpl.class.getName());
     @Autowired
     private UberDataSource dataSource;
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
@@ -83,6 +86,7 @@ public class ManagerImpl implements Manager
         
         catch (SQLException exc) 
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
         }
 
@@ -95,6 +99,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -157,6 +162,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -170,6 +176,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -251,6 +258,101 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
+            exc.printStackTrace();
+            return null;
+        }
+
+        finally
+        {
+            try
+            {
+                oracleConnection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
+                exc.printStackTrace();
+            }
+        }
+
+        return persistenceEntity;
+    }
+
+    public PersistenceEntity getUserByPhone(String phoneNumber)
+    {
+        OracleCallableStatement calStat;
+        ResultSet resultSet;
+        PersistenceEntity persistenceEntity = new PersistenceEntity();
+        OracleConnection oracleConnection = null;
+        try
+        {
+            oracleConnection = getConnection();
+            calStat = (OracleCallableStatement) oracleConnection
+                    .prepareCall(GET_USER_BY_PHONE);
+            calStat.setString(1, phoneNumber);
+            calStat.registerOutParameter
+                    (
+                            2,
+                            oracle.jdbc.OracleTypes.CURSOR
+                    );
+            calStat.execute();
+            resultSet = calStat.getCursor(2);
+
+            HashMap<String, Object> attrMap = new HashMap<>();
+            Class<? extends BaseEntity> entity_classType = null;
+            final String MASTER_OT = Master.class.getAnnotation(ObjectType.class).value();
+            final String POKE_OT = Poke.class.getAnnotation(ObjectType.class).value();
+            while (resultSet.next())
+            {
+                String attr_id = resultSet.getString(2);
+
+                switch (attr_id)
+                {
+                    case ATTR_OBJECT_ID:
+                        persistenceEntity.setObject_id(Long.parseLong(resultSet.getString(1)));
+                        break;
+
+                    case ATTR_OBJECT_TYPE_ID:
+                        String objectTypeID = resultSet.getString(1);
+
+                        if (objectTypeID.equals(MASTER_OT))
+                            entity_classType = Master.class;
+
+                        else if (objectTypeID.equals(POKE_OT))
+                            entity_classType = Poke.class;
+
+                        else
+                            entity_classType = Admin.class;
+
+                        persistenceEntity.setClassType(entity_classType);
+                        break;
+
+                    case ATTR_NAME:
+                        persistenceEntity.setName(resultSet.getString(1));
+                        break;
+
+                    case ATTR_DESCR:
+                        persistenceEntity.setDescription(resultSet.getString(1));
+                        break;
+
+                    default:
+                        Class fieldType = BaseEntity.getFieldType(attr_id, entity_classType);
+                        Object fieldObj = ConverterImpl.convertStringToObject
+                                (
+                                        resultSet.getString(1),
+                                        fieldType
+                                );
+                        attrMap.put(attr_id, fieldObj);
+                }
+            }
+
+            persistenceEntity.setAttributes(attrMap);
+        }
+
+        catch (SQLException | ParseException exc)
+        {
             exc.printStackTrace();
             return null;
         }
@@ -285,6 +387,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
         }
 
@@ -297,6 +400,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -386,6 +490,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -399,6 +504,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -477,6 +583,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -490,6 +597,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -568,6 +676,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -581,6 +690,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
