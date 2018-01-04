@@ -6,7 +6,7 @@ import ubermaster.entity.attr.PokeAttr;
 import java.util.HashMap;
 
 @ObjectType(PokeAttr.OBJTYPE)
-public class Poke extends User {
+public class Poke extends BlockedUser {
     public interface Model extends PokeAttr {
     }
 

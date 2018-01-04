@@ -10,5 +10,6 @@ public interface OrderAttr
     String START_DATE = "17";
     String DUE_DATE = "18";
     String STATUS = "19";
+    String MASTER_PROFESSION = "21";
 }
 

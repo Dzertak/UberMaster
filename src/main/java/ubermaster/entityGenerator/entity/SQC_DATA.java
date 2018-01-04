@@ -28,20 +28,29 @@ public interface SQC_DATA
 
 	String SQC_PROFESSION[] =
 	{
-		"Программист", "WEB-дизайнер", "Автомеханик", "Адвокат",
-		"Аналитик", "Сантехник", "Электрик", "Менеждер по компьютерной технике"
+		"Locksmith", "Plumber", "Electrician", "Cleaner",
+		"Computer foreman", "Handyman"
 	};
 
 	String SQC_ORDER_NAME[] =
 	{
-		"Программа по построению графика биржи", "Приложение, что будет считать зависимость расстояния от скорости",
-		"Дизайн web-приложения", "Прописать стили web-приложения",
-		"Что-то не то с авто", "Нужна помощь с авто",
-		"Консультация по адвоката по правовым делам", "Проблема с апеляцией в суде",
-		"Когда можно подбирать МосБиржу?", "Хотел бы продать акции Уралкалия в рамках делистинга. Какая процедура и как это осуществить.?",
-		"Прорвало трубу в унитазе", "Засорилась мойка, нужна помощь",
-		"Нужно поменять счётчик электричества", "электронагреватель не работает",
-		"Что лучше HP или ASUS", "Есть ли смысл брать IPhone?"
+		"Installation a gas cooker.",
+		"Repairing of rosette",
+
+		"Installation of water and sewage pipes",
+		"Water and sewer cleaning",
+
+		"Replacement of electrical wiring",
+		"Installation of two-rate counters",
+
+		"Cleaning the yard from snow",
+		"Daily cleaning",
+
+		"Installing antivirus software",
+		"Laptop repairing",
+
+		"Garbage collection",
+		"Unloading of trucks"
 	};
 
 	String SQC_STATUS[] =
@@ -49,7 +58,7 @@ public interface SQC_DATA
 		"New", "In processing", "Completed"
 	};
 
-	int ATTR_POKE_SIZE = 7;
-	int ATTR_MASTER_SIZE = 15;
-	int ATTR_ORDER_SIZE = 9;
+	int ATTR_POKE_SIZE = 8;
+	int ATTR_MASTER_SIZE = 16;
+	int ATTR_ORDER_SIZE = 10;
 }

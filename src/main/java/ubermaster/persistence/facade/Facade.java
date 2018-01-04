@@ -2,10 +2,7 @@ package ubermaster.persistence.facade;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ubermaster.entity.model.BaseEntity;
-import ubermaster.entity.model.Order;
-import ubermaster.entity.model.PersistenceEntity;
-import ubermaster.entity.model.User;
+import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
@@ -45,8 +42,8 @@ public class Facade
      */
     public <T extends BaseEntity> T getEntity
     (
-        long id,
-        final Class<? extends BaseEntity> CLASS
+            long id,
+            final Class<? extends BaseEntity> CLASS
     )
     {
         if (CACHE.containsKey(id))
@@ -105,7 +102,7 @@ public class Facade
         }
 
         PersistenceEntity persistenceEntity =
-                    manager.getUser(phoneNumber, password);
+                manager.getUser(phoneNumber, password);
 
         if (persistenceEntity == null)
             return null;
@@ -146,7 +143,7 @@ public class Facade
     private void updateCache(PersistenceEntity convertedPE)
     {
         PersistenceEntity persistenceEntity =
-                            CACHE.get(convertedPE.getObject_id());
+                CACHE.get(convertedPE.getObject_id());
 
         persistenceEntity.setName(convertedPE.getName());
         persistenceEntity.setDescription(convertedPE.getDescription());
@@ -164,6 +161,10 @@ public class Facade
     {
     //--:   DB
         PersistenceEntity sqcPE[] = manager.getTypedEntities(_class);
+
+        if (sqcPE == null)
+            return null;
+
         int length = sqcPE.length;
         T sqcT[] = (T[])new BaseEntity[length];
 
@@ -184,6 +185,27 @@ public class Facade
     {
     //--:   DB
         PersistenceEntity sqcPE[] = manager.getPokeOrders(id);
+
+        if (sqcPE == null)
+            return null;
+
+        int length = sqcPE.length;
+        T sqcT[] = (T[])new BaseEntity[length];
+
+        for (int itera = 0; itera < length; ++itera)
+            sqcT[itera] = converter.convertToModel(sqcPE[itera], Order.class);
+
+        return sqcT;
+    }
+
+    public <T extends BaseEntity> T[] getOrdersByProfession(String profession)
+    {
+        //--:   DB
+        PersistenceEntity sqcPE[] = manager.getOrdersByProfession(profession);
+
+        if (sqcPE == null)
+            return null;
+
         int length = sqcPE.length;
         T sqcT[] = (T[])new BaseEntity[length];
 

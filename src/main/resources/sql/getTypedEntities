@@ -83,7 +83,7 @@ begin
 			where attr.attr_id in result.attr_id and attr.object_id = innerId
 			union all
 			select
-				to_char(objRef.object_id) val,
+				to_char(objRef.refer_id) val,
 				to_char(objRef.attr_id) aid
 			from ObjReference objRef, result
 			where objRef.attr_id in result.attr_id and objRef.object_id = innerId

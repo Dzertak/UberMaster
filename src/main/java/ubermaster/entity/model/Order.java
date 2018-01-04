@@ -1,5 +1,6 @@
 package ubermaster.entity.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ubermaster.annotation.Attribute;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.attr.OrderAttr;
@@ -30,7 +31,20 @@ public class Order extends BaseEntity {
 
     protected String masterName;
 
+    @Attribute(Model.MASTER_PROFESSION)
+    protected String masterProfession;
+
     public interface Model extends OrderAttr {
+    }
+
+    public String getMasterProfession()
+    {
+        return masterProfession;
+    }
+
+    public void setMasterProfession(String masterProfession)
+    {
+        this.masterProfession = masterProfession;
     }
 
     public String getSmallDescription() {
@@ -89,6 +103,7 @@ public class Order extends BaseEntity {
         this.masterName = masterName;
     }
 
+    @JsonIgnore
     @Override
     public HashMap getAllFields() {
         HashMap<String, Object> hashmap = new HashMap<>();
@@ -98,6 +113,7 @@ public class Order extends BaseEntity {
         hashmap.put(Model.START_DATE, StartDate);
         hashmap.put(Model.DUE_DATE, DueDate);
         hashmap.put(Model.STATUS, Status);
+        hashmap.put(Model.MASTER_PROFESSION, masterProfession);
 
         return hashmap;
     }
@@ -112,6 +128,7 @@ public class Order extends BaseEntity {
                 ", \nDueDate=" + DueDate +
                 ", \nStatus='" + Status + '\'' +
                 ", \nmaster=" + master +
+                ", \nmaster profession : " + masterProfession +
                 '}';
     }
 }

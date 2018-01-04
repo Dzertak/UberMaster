@@ -12,6 +12,7 @@ public interface Manager
     String GET_USER = "{call getUser(?, ?, ?)}";
     String DELETE_ENTITY = "delete from Objects where object_id = ?";
     String INSERT_ENTITY = "{call insertEntity(?)}";
+    String GET_ORDER_BY_PROFESSION = "call getOrdersByProfession(?, ?)";
 
     String ATTR_OBJECT_ID = "-1";
     String ATTR_OBJECT_TYPE_ID = "-2";

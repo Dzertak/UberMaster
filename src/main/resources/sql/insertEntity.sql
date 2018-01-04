@@ -71,19 +71,30 @@ begin
 		end if;
 
 		-- defining of presenting of value or not
-		if (attrID in (5, 10, 19)) then
-			begin
-				select list_value_id
-				into lstID
-				from Lists lst join AttrType attrT on lst.attr_id = attrT.attr_id
-				where lower(value) = lower(attrValue);
-				/*EXCEPTION WHEN NO_DATA_FOUND then
-					lstID := null;*/
-			end;
+		if (attrID in (5, 6, 10, 19, 20, 21)) then
+			if (obTyID = 5) then
+				begin
+					select max(list_value_id)
+					into lstID
+					from Lists lst join AttrType attrT on lst.attr_id = attrT.attr_id
+					where lower(value) = lower(attrValue);
+					/*EXCEPTION WHEN NO_DATA_FOUND then
+						lstID := null;*/
+				end;
+			else
+				begin
+					select min(list_value_id)
+					into lstID
+					from Lists lst join AttrType attrT on lst.attr_id = attrT.attr_id
+					where lower(value) = lower(attrValue);
+					/*EXCEPTION WHEN NO_DATA_FOUND then
+						lstID := null;*/
+				end;
+			end if;
 		end if;
 
 		-- if lst location
-		if (attrID in (5, 10, 19)) then
+		if (attrID in (5, 6, 10, 19, 20, 21)) then
 			-- if such value is not presenting
 			if (lstID is null) then
 				insert into Lists (attr_id, list_value_id, value)

@@ -1,5 +1,6 @@
 package ubermaster.entity.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import ubermaster.annotation.Attribute;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.attr.UserAttr;
@@ -23,7 +24,19 @@ public class User extends BaseEntity {
     @Attribute(Model.PICTURE)
     protected String picture;
 
+    protected Class<? extends BaseEntity> classType;
+
     public interface Model extends UserAttr {
+    }
+
+    public void setClassType(Class<? extends BaseEntity> classType)
+    {
+        this.classType = classType;
+    }
+
+    public Class<? extends BaseEntity> getClassType()
+    {
+        return classType;
     }
 
     public String getLocation() {
@@ -66,6 +79,7 @@ public class User extends BaseEntity {
         this.picture = picture;
     }
 
+    @JsonIgnore
     @Override
     public HashMap getAllFields() {
         HashMap<String, Object> hashmap = new HashMap<>();
