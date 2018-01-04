@@ -46,16 +46,28 @@ public class ConverterImpl implements Converter
             entity = new Order();
 
         else if (Master.class.isAssignableFrom(CLASS))
+        {
             entity = new Master();
+            ((User)entity).setClassType(Master.class);
+        }
 
         else if (Poke.class.isAssignableFrom(CLASS))
+        {
             entity = new Poke();
+            ((User)entity).setClassType(Poke.class);
+        }
 
         else if (User.class.isAssignableFrom(CLASS))
+        {
             entity = new User();
+            ((User)entity).setClassType(User.class);
+        }
 
         else if (Admin.class.isAssignableFrom(CLASS))
+        {
             entity = new Admin();
+            ((User)entity).setClassType(Admin.class);
+        }
 
         HashMap<String, Object> hashMap =
                 (HashMap<String, Object>) persistenceEntity.getAttributes();
