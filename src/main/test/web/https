@@ -6,4 +6,4 @@ http://localhost:8090/entities/getUser?phone=975779889902&password=s608Bmz25InxF
 http://localhost:8090/entities/getTypedEntity?class=Poke
 http://localhost:8090/entities/getTypedEntity?class=Master
 http://localhost:8090/entities/getTypedEntity?class=Order
-http://localhost:8090/entities/getPokeOrders?id=4
+http://localhost:8090/entities/getPokeOrders?id=2
