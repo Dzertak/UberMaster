@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 public class ConverterImpl implements Converter
 {
 /*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    private static Logger log = Logger.getLogger(ConverterImpl.class.getName());
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
@@ -111,8 +112,13 @@ public class ConverterImpl implements Converter
         if (boolean.class.isAssignableFrom(CLASS))
             return Boolean.parseBoolean(VALUE);
 
-        if (Date.class.isAssignableFrom(CLASS))
-            return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
+        try {
+            if (Date.class.isAssignableFrom(CLASS))
+                return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
+        } catch(ParseException ex) {
+            log.log(Level.SEVERE, ex.getMessage(), ex);
+            throw new ParseException(ex.getMessage(), ex.getErrorOffset());
+        }
 
         if (long.class.isAssignableFrom(CLASS))
             return Long.parseLong(VALUE);

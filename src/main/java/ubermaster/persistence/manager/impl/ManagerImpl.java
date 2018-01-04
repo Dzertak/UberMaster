@@ -20,6 +20,8 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 
@@ -32,6 +34,7 @@ import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 public class ManagerImpl implements Manager
 {
 /*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    private static Logger log = Logger.getLogger(ManagerImpl.class.getName());
     @Autowired
     private UberDataSource dataSource;
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
@@ -83,6 +86,7 @@ public class ManagerImpl implements Manager
         
         catch (SQLException exc) 
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
         }
 
@@ -95,6 +99,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -157,6 +162,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -170,6 +176,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -251,6 +258,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -264,6 +272,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -285,6 +294,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
         }
 
@@ -297,6 +307,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -386,6 +397,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -399,6 +411,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -477,6 +490,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -490,6 +504,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }
@@ -568,6 +583,7 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
+            log.log(Level.SEVERE, exc.getMessage(), exc);
             exc.printStackTrace();
             return null;
         }
@@ -581,6 +597,7 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
+                log.log(Level.SEVERE, exc.getMessage(), exc);
                 exc.printStackTrace();
             }
         }

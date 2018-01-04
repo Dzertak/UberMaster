@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<errors>
+    <error id="SER-1">
+        <errormessage>Field "Phone" must be filled</errormessage>
+    </error>
+    <error id="SER-2">
+        <errormessage>Field "Password" must be filled</errormessage>
+    </error>
+</errors>
