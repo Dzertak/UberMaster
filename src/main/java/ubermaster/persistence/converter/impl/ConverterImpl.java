@@ -8,6 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *  @author Serpye
@@ -23,6 +25,7 @@ public class ConverterImpl implements Converter
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+
     public PersistenceEntity convertToEntity(BaseEntity baseEntity)
     {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
@@ -89,8 +92,7 @@ public class ConverterImpl implements Converter
         return null;
     }
 
-    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException
-    {
+    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException {
         if (int.class.isAssignableFrom(CLASS))
             return Integer.parseInt(VALUE);
 
@@ -104,5 +106,6 @@ public class ConverterImpl implements Converter
             return Long.parseLong(VALUE);
 
         return VALUE;
+
     }
 }

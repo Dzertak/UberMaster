@@ -7,11 +7,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import ubermaster.entityGenerator.entity.EntityGenerator;
+
+import java.util.Locale;
 
 @SpringBootApplication
 @EnableAutoConfiguration
 public class Application {
     public static void main(String[] args) {
+        Locale.setDefault(new Locale("en","EN"));
         SpringApplication.run(Application.class,args);
     }
 
