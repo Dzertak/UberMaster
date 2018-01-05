@@ -34,7 +34,6 @@ public class LoginController<T extends User> {
             throw new ServletException("There is no such user");
         }
 
-//        return jwtGenerator.generate(new JWTUser(user));
         return user;
     }
 }

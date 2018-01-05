@@ -40,11 +40,6 @@ public class AuthenticationController {
     private JwtUserDetailsServiceImpl userDetailsService;
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
-    public User getUserByPhone (String phone) {
-        return facade.getUserByPhone(phone);
-    }
-
-
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
 
         System.out.println(authenticationRequest.getUsername() +" " + authenticationRequest.getPassword());
