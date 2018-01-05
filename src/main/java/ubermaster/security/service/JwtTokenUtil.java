@@ -42,7 +42,6 @@ public class JwtTokenUtil {
         return expiration.before(timeProvider.now());
     }
 
-
     public String generateToken(JwtUser jwtUser) {
         final Date createdDate = timeProvider.now();
         final Date expirationDate = calculateExpirationDate(createdDate);
@@ -52,14 +51,13 @@ public class JwtTokenUtil {
                 .setIssuedAt(createdDate)
                 .setExpiration(expirationDate)
                 .setId(String.valueOf(jwtUser.getId()));
-        claims.put("role", jwtUser.getAuthorities().toString());
+        claims.put("role", jwtUser.getAuthorities().iterator().next().toString());
 
         return Jwts.builder()
                 .setClaims(claims)
-                .signWith(SignatureAlgorithm.HS512, secret)
+                .signWith(SignatureAlgorithm.HS256, secret)
                 .compact();
     }
-
 
     public Boolean canTokenBeRefreshed(String token) {
         return !isTokenExpired(token);

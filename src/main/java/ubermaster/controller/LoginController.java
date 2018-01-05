@@ -27,13 +27,11 @@ public class LoginController<T extends User> {
 
         String phoneNumber = loginUser.getPhoneNumber();
         String password = loginUser.getPassword();
-
         T user = facade.getUser(phoneNumber, password);
 
         if (user == null) {
             throw new ServletException("There is no such user");
         }
-
         return user;
     }
 }

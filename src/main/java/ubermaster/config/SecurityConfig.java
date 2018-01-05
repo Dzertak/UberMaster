@@ -9,8 +9,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ubermaster.security.JwtAuthenticationEntryPoint;
 import ubermaster.security.JwtAuthenticationTokenFilter;
@@ -23,16 +25,14 @@ import ubermaster.security.service.JwtUserDetailsServiceImpl;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private JwtAuthenticationEntryPoint unauthorizedHandler;
-
+    private UserDetailsService userDetailsService;
     @Autowired
-    private JwtUserDetailsServiceImpl userDetailsService;
+    private AuthenticationEntryPoint unauthorizedHandler;
 
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
         authenticationManagerBuilder
-                .userDetailsService(this.userDetailsService)
-                .passwordEncoder(passwordEncoder());
+                .userDetailsService(this.userDetailsService);
     }
 
     @Bean
@@ -52,10 +52,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 // don't create session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//.and().authorizeRequests().anyRequest().permitAll();
+                .and()
                 .authorizeRequests()
-                .antMatchers("/entities/**", "/refresh").permitAll()//.authenticated()
-                .antMatchers("/login", "/auth").permitAll();
+                .antMatchers("/entities/**", "/refresh").authenticated()
+                .antMatchers("/authe","/login").permitAll();
 
         // Custom JWT based security filter
         httpSecurity

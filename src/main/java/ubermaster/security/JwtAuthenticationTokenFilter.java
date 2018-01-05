@@ -10,7 +10,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
+import ubermaster.entity.security.JwtUser;
 import ubermaster.security.service.JwtTokenUtil;
+import ubermaster.security.service.JwtUserDetailsServiceImpl;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,7 +27,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private JwtUserDetailsServiceImpl userDetailsService;
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
@@ -35,34 +37,29 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
         final String requestHeader = request.getHeader(this.tokenHeader);
-
         String username = null;
         String authToken = null;
+
         if (requestHeader != null && requestHeader.startsWith(TOKEN_PREFIX)) {
             authToken = requestHeader.substring(10);
             try {
                 username = jwtTokenUtil.getUsernameFromToken(authToken);
             } catch (IllegalArgumentException e) {
-                logger.error("an error occured during getting username from token", e);
+                throw new RuntimeException("an error occured during getting username from token");
             } catch (ExpiredJwtException e) {
-                logger.warn("the token is expired and not valid anymore", e);
+                throw new RuntimeException("the token is expired and not valid anymore");
             }
-        } else {
-            logger.warn("couldn't find bearer string, will ignore the header");
         }
 
-        logger.info("checking authentication for user " + username);
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            JwtUser jwtUser = this.userDetailsService.loadUserByUsername(username);
 
-            if (jwtTokenUtil.validateToken(authToken, userDetails)) {
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            if (jwtTokenUtil.validateToken(authToken, jwtUser)) {
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(jwtUser, null, jwtUser.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                logger.info("authenticated user " + username + ", setting security context");
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         }
-
         chain.doFilter(request, response);
     }
 }

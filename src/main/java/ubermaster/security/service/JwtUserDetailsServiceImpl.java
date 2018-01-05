@@ -22,7 +22,7 @@ public class JwtUserDetailsServiceImpl<T extends User> implements UserDetailsSer
         T user = facade.getUserByPhone(phoneNumber);
 
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("No user found with phone number: " + phoneNumber));
+            throw new UsernameNotFoundException("No user found with phone number: " + phoneNumber);
         } else {
             return new JwtUser<>(user);
         }

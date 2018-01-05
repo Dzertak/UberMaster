@@ -14,7 +14,7 @@ import java.util.Collection;
 public class JwtUser<T extends User> implements UserDetails {
 
     private Long id;
-    private String username;
+    private String phone;
     private String password;
     private Collection<? extends GrantedAuthority> authorities;
     private boolean enabled;
@@ -26,7 +26,7 @@ public class JwtUser<T extends User> implements UserDetails {
             boolean enabled
     ) {
         this.id = id;
-        this.username = username;
+        this.phone = username;
         this.password = password;
         this.authorities = authorities ;
         this.enabled = enabled;
@@ -34,7 +34,7 @@ public class JwtUser<T extends User> implements UserDetails {
 
     public JwtUser(T user) {
         this.id = user.getObject_id();
-        this.username = user.getPhoneNumber();
+        this.phone = user.getPhoneNumber();
         this.password = user.getPassword();
         this.authorities = (AuthorityUtils.commaSeparatedStringToAuthorityList(user.getClassType().getSimpleName().toUpperCase()));
     }
@@ -46,7 +46,7 @@ public class JwtUser<T extends User> implements UserDetails {
 
     @Override
     public String getUsername() {
-        return username;
+        return phone;
     }
 
     @JsonIgnore
