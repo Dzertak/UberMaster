@@ -42,21 +42,6 @@ public class EntityController<T extends BaseEntity>
 
     @RequestMapping
     (
-        value = "/getUserByPhonePass",
-        method = RequestMethod.GET,
-        produces = "application/json"
-    )
-    public User getUsersByPhoneAndPass
-    (
-        @RequestParam("phone") String phoneNumber,
-        @RequestParam("password") String password
-    )
-    {
-        return facade.getUser(phoneNumber, password);
-    }
-
-    @RequestMapping
-    (
         value = "/getUserByPhone",
         method = RequestMethod.GET,
         produces = "application/json"
