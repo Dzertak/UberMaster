@@ -1,4 +1,4 @@
-package ubermaster.security.Service;
+package ubermaster.security.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -8,14 +8,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.security.JwtUser;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import static ubermaster.security.SecurityConstants.EXPIRATION_TIME;
 import static ubermaster.security.SecurityConstants.SECRET;
 
 @Component
-public class JwtTokenUtil implements Serializable {
+public class JwtTokenUtil {
     @Autowired
     private TimeProvider timeProvider;
     private String secret = SECRET;

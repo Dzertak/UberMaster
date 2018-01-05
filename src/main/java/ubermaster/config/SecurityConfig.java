@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ubermaster.security.JwtAuthenticationEntryPoint;
 import ubermaster.security.JwtAuthenticationTokenFilter;
-import ubermaster.security.Service.JwtUserDetailsServiceImpl;
+import ubermaster.security.service.JwtUserDetailsServiceImpl;
 
 
 @Configuration

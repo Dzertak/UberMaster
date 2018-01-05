@@ -11,13 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import ubermaster.entity.model.User;
 import ubermaster.entity.security.JwtAuthenticationRequest;
 import ubermaster.entity.security.JwtAuthenticationResponse;
 import ubermaster.entity.security.JwtUser;
 import ubermaster.persistence.facade.Facade;
-import ubermaster.security.Service.JwtTokenUtil;
-import ubermaster.security.Service.JwtUserDetailsServiceImpl;
+import ubermaster.security.service.JwtTokenUtil;
+import ubermaster.security.service.JwtUserDetailsServiceImpl;
 
 import javax.servlet.http.HttpServletRequest;
 
