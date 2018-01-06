@@ -1,5 +1,6 @@
 package ubermaster.controller;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
@@ -9,14 +10,12 @@ import ubermaster.persistence.facade.Facade;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @RestController
 @RequestMapping("/entities")
 public class EntityController<T extends BaseEntity>
 {
-    private static Logger log = Logger.getLogger(EntityController.class.getName());
+    private static final Logger log = Logger.getLogger(EntityController.class);
 
     @Autowired
     private Facade facade;
@@ -42,21 +41,6 @@ public class EntityController<T extends BaseEntity>
 
     @RequestMapping
     (
-        value = "/getUserByPhonePass",
-        method = RequestMethod.GET,
-        produces = "application/json"
-    )
-    public User getUsersByPhoneAndPass
-    (
-        @RequestParam("phone") String phoneNumber,
-        @RequestParam("password") String password
-    )
-    {
-        return facade.getUser(phoneNumber, password);
-    }
-
-    @RequestMapping
-    (
         value = "/getUserByPhone",
         method = RequestMethod.GET,
         produces = "application/json"
@@ -77,7 +61,7 @@ public class EntityController<T extends BaseEntity>
                    Class.forName("ubermaster.entity.model." + type);
            return facade.getTypedEntities(_class);
        } catch(ClassNotFoundException ex) {
-           log.log(Level.SEVERE,ex.getMessage(),ex);
+           log.error(ex.getMessage(),ex);
            throw new ClassNotFoundException(ex.getMessage());
        }
     }
@@ -86,7 +70,6 @@ public class EntityController<T extends BaseEntity>
             method = RequestMethod.GET,
             produces = "application/json")
     public BaseEntity[] getPokeOrders(@RequestParam("id") long id)
-            throws ClassNotFoundException
     {
         return facade.getPokeOrders(id);
     }
@@ -100,7 +83,7 @@ public class EntityController<T extends BaseEntity>
     public BaseEntity[] getOrdersByProfession
     (
         @RequestParam("profession") String profession
-    )   throws ClassNotFoundException
+    )
     {
         return facade.getOrdersByProfession(profession);
     }

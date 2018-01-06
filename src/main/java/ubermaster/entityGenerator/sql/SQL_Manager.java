@@ -3,13 +3,12 @@ package ubermaster.entityGenerator.sql;
 import oracle.jdbc.OracleCallableStatement;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
+import org.apache.log4j.Logger;
 import ubermaster.entityGenerator.entity.Entity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 
@@ -51,8 +50,8 @@ public final class SQL_Manager implements _SQL
 
 		catch (SQLException exc)
 		{
-			log.log(Level.SEVERE, exc.getMessage(), exc);
-			exc.printStackTrace();
+			log.error(exc.getMessage(), exc);
+			//exc.printStackTrace();
 		}
 	}
 
@@ -68,8 +67,8 @@ public final class SQL_Manager implements _SQL
 
 		catch (SQLException exc)
 		{
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-			exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+			//exc.printStackTrace();
 		}
 	}
 
@@ -84,8 +83,8 @@ public final class SQL_Manager implements _SQL
 
 		catch (SQLException exc)
 		{
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-			exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+			//exc.printStackTrace();
 		}
 	}
 }

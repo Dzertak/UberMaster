@@ -6,6 +6,7 @@ import oracle.jdbc.OracleTypes;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.annotation.ObjectType;
@@ -20,8 +21,6 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 
@@ -86,8 +85,8 @@ public class ManagerImpl implements Manager
         
         catch (SQLException exc) 
         {
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
         }
 
         finally
@@ -99,8 +98,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                log.log(Level.SEVERE, exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }
@@ -162,8 +161,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -176,8 +175,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                log.log(Level.SEVERE, exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
 
@@ -258,8 +257,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -272,8 +271,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                log.log(Level.SEVERE, exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
 
@@ -353,7 +352,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -366,7 +366,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
 
@@ -387,8 +388,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException exc)
         {
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
         }
 
         finally
@@ -400,8 +401,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                log.log(Level.SEVERE, exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }
@@ -490,8 +491,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -504,8 +505,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                log.log(Level.SEVERE, exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
 
@@ -583,8 +584,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -597,8 +598,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                log.log(Level.SEVERE, exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
 
@@ -676,8 +677,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException | ParseException exc)
         {
-            log.log(Level.SEVERE, exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -690,8 +691,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                log.log(Level.SEVERE, exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
 
