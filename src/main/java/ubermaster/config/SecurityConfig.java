@@ -19,9 +19,9 @@ import ubermaster.security.JwtAuthenticationTokenFilter;
 import ubermaster.security.service.JwtUserDetailsServiceImpl;
 
 
-@Configuration
-@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableWebSecurity
+@Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/entities/**", "/refresh").authenticated()
-                .antMatchers("/authe","/login").permitAll();
+                .antMatchers("/authe","/login","/register").permitAll();
 
         // Custom JWT based security filter
         httpSecurity

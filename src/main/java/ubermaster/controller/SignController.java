@@ -11,17 +11,17 @@ import ubermaster.persistence.facade.Facade;
 import javax.servlet.ServletException;
 
 @RestController
-@RequestMapping("/login")
-public class LoginController<T extends User> {
+@RequestMapping
+public class SignController<T extends User> {
 
     @Autowired
     private Facade facade;
 
-    @RequestMapping(
+    @RequestMapping(value = "/login",
             method = RequestMethod.POST,
             produces = "application/json")
-    public T getUsersByPhone(@RequestBody T loginUser) throws ServletException {
-        if (loginUser.getPhoneNumber() == null || loginUser.getPassword() == null) {
+    public T logInUser(@RequestBody T loginUser) throws ServletException {
+        if (loginUser == null || loginUser.getPhoneNumber() == null || loginUser.getPassword() == null) {
             throw new ServletException("Please fill in username and password");
         }
 
@@ -33,5 +33,21 @@ public class LoginController<T extends User> {
             throw new ServletException("There is no such user");
         }
         return user;
+    }
+
+    @RequestMapping(value = "/register",
+            method = RequestMethod.POST,
+            produces = "application/json")
+    public void registerUser(@RequestBody T loginUser) throws ServletException {
+        if (loginUser != null && loginUser.getPhoneNumber() != null && loginUser.getPassword() != null) {
+            String phoneNumber = loginUser.getPhoneNumber();
+
+            if (facade.getUserByPhone(phoneNumber) == null) {
+                facade.createEntity(loginUser);
+            } else {
+                throw new ServletException("There is user with such phone number");
+            }
+        }
+        throw new ServletException("Wrong request!");
     }
 }

@@ -40,7 +40,6 @@ public class AuthenticationController {
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
     public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
-
         if (authenticationRequest == null || authenticationRequest.getPhoneNumber() == null || authenticationRequest.getPassword() == null) {
             return ResponseEntity.badRequest().body("Wrong request!");
         }
