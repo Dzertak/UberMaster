@@ -21,10 +21,13 @@ public class JwtTokenUtil {
     private Long expiration = EXPIRATION_TIME;
 
     private Claims parseToken(String token) {
+
         Claims body = Jwts.parser()
                 .setSigningKey(secret)
-                .parseClaimsJws(token)
+                .parseClaimsJws(token.substring(10))
                 .getBody();
+
+
 
         return body;
     }
