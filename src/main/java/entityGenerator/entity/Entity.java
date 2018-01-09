@@ -1,4 +1,4 @@
-package ubermaster.entityGenerator.entity;
+package entityGenerator.entity;
 
 /**
  * @author Serpye

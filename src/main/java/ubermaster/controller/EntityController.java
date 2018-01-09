@@ -2,11 +2,11 @@ package ubermaster.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import scriptsInitializer.ScriptInitializer;
 import ubermaster.entity.model.*;
-import ubermaster.entityGenerator.entity.EntityGenerator;
+import entityGenerator.entity.EntityGenerator;
 import ubermaster.persistence.facade.Facade;
 
-import java.util.Date;
 import java.util.Random;
 
 @RestController
@@ -123,6 +123,17 @@ public class EntityController<T extends BaseEntity>
                 );
         generator.init();
 
+        return "DONE";
+    }
+
+    /**
+     * Method is used for creating DB scripts
+     * */
+    @RequestMapping(value = "/dbscripts")
+    public String databaseScripts()
+    {
+        ScriptInitializer scriptInitializer = new ScriptInitializer();
+        scriptInitializer.init();
         return "DONE";
     }
 }

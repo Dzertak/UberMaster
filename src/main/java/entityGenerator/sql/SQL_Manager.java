@@ -1,9 +1,9 @@
-package ubermaster.entityGenerator.sql;
+package entityGenerator.sql;
 
 import oracle.jdbc.OracleCallableStatement;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
-import ubermaster.entityGenerator.entity.Entity;
+import entityGenerator.entity.Entity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
