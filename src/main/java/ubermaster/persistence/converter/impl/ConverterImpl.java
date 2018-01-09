@@ -1,5 +1,6 @@
 package ubermaster.persistence.converter.impl;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.Converter;
@@ -8,8 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *  @author Serpye
@@ -116,7 +115,7 @@ public class ConverterImpl implements Converter
             if (Date.class.isAssignableFrom(CLASS))
                 return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
         } catch(ParseException ex) {
-            log.log(Level.SEVERE, ex.getMessage(), ex);
+            log.error(ex.getMessage(), ex);
             throw new ParseException(ex.getMessage(), ex.getErrorOffset());
         }
 

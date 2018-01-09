@@ -18,6 +18,7 @@ public class User extends BaseEntity {
     @Attribute(Model.PHONE_NUMBER)
     protected String phoneNumber;
 
+    @JsonIgnore
     @Attribute(Model.PASSWORD)
     protected String password;
 

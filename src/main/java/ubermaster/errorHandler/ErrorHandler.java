@@ -1,5 +1,6 @@
 package ubermaster.errorHandler;
 
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -11,8 +12,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ErrorHandler {
     private static final String FILEPATH = System.getProperty("user.dir")+
@@ -20,7 +19,7 @@ public class ErrorHandler {
 
     private static Logger log = Logger.getLogger(ErrorHandler.class.getName());
 
-    public Exception createError(String errorCode) {
+    public Exception createError(String errorCode) throws Exception {
         Exception exception = null;
         try {
             final File xmlFile = new File(FILEPATH);
@@ -42,12 +41,11 @@ public class ErrorHandler {
                     }
                 }
             }
+            return exception;
         } catch (ParserConfigurationException | SAXException
                 | IOException ex) {
-            log.log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        finally {
-            return exception;
+            log.error(ex.getMessage(), ex);
+            throw new Exception(ex.getMessage());
         }
     }
 }
