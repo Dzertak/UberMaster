@@ -102,7 +102,7 @@ public class Facade
         }
 
         PersistenceEntity persistenceEntity =
-                manager.getUser(phoneNumber, password);
+                manager.getUserByPhonePass(phoneNumber, password);
 
         if (persistenceEntity == null)
             return null;
@@ -134,36 +134,6 @@ public class Facade
     public void deleteEntity(long id)
     {
         manager.deleteEntity(id);
-    }
-
-    /**
-     * Method that updates entity in database
-     *
-     * @param entity — The entity, what needs to update
-     */
-    public void updateEntity(BaseEntity entity)
-    {
-        //CACHE.replace(entity.getObject_id(), converter.convertToEntity(entity));
-        //CACHE.put(entity.getObject_id(), converter.convertToEntity(entity));
-        PersistenceEntity convertedPE = converter.convertToEntity(entity);
-        updateCache(convertedPE);
-
-        manager.updateEntity(convertedPE, entity.getClass());
-    }
-
-    /**
-     * Method updates entity data in CACHE
-     *
-     * @param convertedPE — Persistence Entity that needs to update
-     */
-    private void updateCache(PersistenceEntity convertedPE)
-    {
-        PersistenceEntity persistenceEntity =
-                CACHE.get(convertedPE.getObject_id());
-
-        persistenceEntity.setName(convertedPE.getName());
-        persistenceEntity.setDescription(convertedPE.getDescription());
-        persistenceEntity.setAttributes(convertedPE.getAttributes());
     }
 
     /**

@@ -1,4 +1,4 @@
-package entityGenerator.sql;
+package ubermaster.entityGenerator.sql;
 
 /**
  * @author Serpye

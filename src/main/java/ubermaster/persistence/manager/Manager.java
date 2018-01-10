@@ -31,7 +31,7 @@ public interface Manager
      *
      * @param _class — a type of instance
      * */
-    void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
+    //void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
 
     /**
      * Get an entity from data base by entity id
@@ -42,14 +42,14 @@ public interface Manager
      *
      * @return an instance of {@code PersistenceEntity} class
      * */
-    PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class);
+   //PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class);
 
     /**
      * Deletes entity from data base by entity id
      *
      * @param id — entity id
      * */
-    void deleteEntity(long id);
+   // void deleteEntity(long id);
 
     /**
      * Updates entity in data base
@@ -58,5 +58,5 @@ public interface Manager
      *
      * @param _class — a type of instance
      * */
-    void updateEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
+    //void updateEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
 }

@@ -1,7 +1,7 @@
-package entityGenerator.entity;
+package ubermaster.entityGenerator.entity;
 
-import entityGenerator.sql.SQL_Manager;
-import entityGenerator.sql._SQL;
+import ubermaster.entityGenerator.sql.SQL_Manager;
+import ubermaster.entityGenerator.sql._SQL;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
