@@ -1,5 +1,6 @@
 package ubermaster.entity.model;
 
+import org.apache.log4j.Logger;
 import ubermaster.annotation.Attribute;
 import ubermaster.entity.attr.BaseEntityAttr;
 
@@ -8,6 +9,8 @@ import java.util.HashMap;
 
 public abstract class BaseEntity
 {
+    private static Logger log = Logger.getLogger(BaseEntity.class.getName());
+
     @Attribute(Model.NAME_ATTR)
     protected String name;
 
@@ -109,7 +112,8 @@ public abstract class BaseEntity
 
             catch (IllegalAccessException exc)
             {
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }

@@ -1,9 +1,10 @@
-package entityGenerator.sql;
+package ubermaster.entityGenerator.sql;
 
 import oracle.jdbc.OracleCallableStatement;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
-import entityGenerator.entity.Entity;
+import org.apache.log4j.Logger;
+import ubermaster.entityGenerator.entity.Entity;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +18,7 @@ import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 public final class SQL_Manager implements _SQL
 {
 /*::|		FIELD		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    private static Logger log = Logger.getLogger(SQL_Manager.class.getName());
 /*::|		CONSTRUCTOR		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 	private SQL_Manager(){}
 /*::|		SUB_CLASS		:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
@@ -48,7 +50,8 @@ public final class SQL_Manager implements _SQL
 
 		catch (SQLException exc)
 		{
-			exc.printStackTrace();
+			log.error(exc.getMessage(), exc);
+			//exc.printStackTrace();
 		}
 	}
 
@@ -64,7 +67,8 @@ public final class SQL_Manager implements _SQL
 
 		catch (SQLException exc)
 		{
-			exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+			//exc.printStackTrace();
 		}
 	}
 
@@ -79,7 +83,8 @@ public final class SQL_Manager implements _SQL
 
 		catch (SQLException exc)
 		{
-			exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+			//exc.printStackTrace();
 		}
 	}
 }

@@ -1,5 +1,6 @@
 package ubermaster.persistence.converter.impl;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.Converter;
@@ -20,9 +21,11 @@ import java.util.HashMap;
 public class ConverterImpl implements Converter
 {
 /*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    private static Logger log = Logger.getLogger(ConverterImpl.class.getName());
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+
     public PersistenceEntity convertToEntity(BaseEntity baseEntity)
     {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
@@ -101,20 +104,25 @@ public class ConverterImpl implements Converter
         return null;
     }
 
-    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException
-    {
+    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException {
         if (int.class.isAssignableFrom(CLASS))
             return Integer.parseInt(VALUE);
 
         if (boolean.class.isAssignableFrom(CLASS))
             return Boolean.parseBoolean(VALUE);
 
-        if (Date.class.isAssignableFrom(CLASS))
-            return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
+        try {
+            if (Date.class.isAssignableFrom(CLASS))
+                return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
+        } catch(ParseException ex) {
+            log.error(ex.getMessage(), ex);
+            throw new ParseException(ex.getMessage(), ex.getErrorOffset());
+        }
 
         if (long.class.isAssignableFrom(CLASS))
             return Long.parseLong(VALUE);
 
         return VALUE;
+
     }
 }
