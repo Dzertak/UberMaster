@@ -228,4 +228,20 @@ public class EntityController<T extends BaseEntity>
 
 		return "DONE";
 	}
+
+	@RequestMapping
+	(
+		value = "/updateOrder",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updateOrder
+	(
+		@RequestBody Order order
+	)
+	{
+		facade.updateEntity(order);
+
+		return "DONE";
+	}
 }
