@@ -1,0 +1,11 @@
+{
+  "name":"SR",
+  "description":"SRDESCR",
+  "object_id":0,"location":"Primorskyy",
+  "userDescription":"SRUSERDESCR",
+  "phoneNumber":"99999999",
+  "password":"SRpass1",
+  "picture":"SRpic1",
+  "classType":"Poke",
+  "isUserBlocked":"false"
+}

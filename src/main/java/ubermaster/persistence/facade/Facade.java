@@ -7,6 +7,8 @@ import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -219,12 +221,61 @@ public class Facade
     }
 
     /**
-     * if mid == -1 then master will deleted
+     * Method sets order status
      *
-     * else if mid == -2 then master will not changed
+     * @param id — an order id
+     * @param mid — a master id
+     *             if mid == -1 then master will deleted
+     *             else if mid == -2 then master will still same
+     * @param status — new status of order
      * */
     public void setOrderStatus(long id, long mid, String status)
     {
-        manager.updateEntity(id, Order.Model.STATUS, status, Order.Model.MASTER_REF, mid);
+        manager.updateEntity
+            (
+                id,
+                Order.Model.STATUS,
+                status,
+                Order.Model.MASTER_REF,
+                mid
+            );
+    }
+
+    /**
+     * Method sets user picture
+     *
+     * @param id — an user id
+     * @param picture — an user picture
+     * */
+    public void setUserPicture(long id, String picture)
+    {
+        manager.updateEntity(id, User.Model.PICTURE, picture);
+    }
+
+    public void updateEntity(BaseEntity entity)
+    {
+        PersistenceEntity persistenceEntity = converter.convertToEntity(entity);
+
+        HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
+        Object sqcParam[] = new Object[4 + (attributes.size() << 1)];
+
+        int itera = 0;
+        for (String key : attributes.keySet())
+        {
+            sqcParam[itera] = key;
+            ++itera;
+            sqcParam[itera] = attributes.get(key);
+            ++itera;
+        }
+
+        sqcParam[itera] = "-3";
+        ++itera;
+        sqcParam[itera] = persistenceEntity.getName();
+        ++itera;
+        sqcParam[itera] = "-4";
+        ++itera;
+        sqcParam[itera] = persistenceEntity.getDescription();
+
+        manager.updateEntity(persistenceEntity.getObject_id(), sqcParam);
     }
 }

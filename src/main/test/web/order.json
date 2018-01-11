@@ -1,0 +1,13 @@
+{
+  "name": "U_Daily cleaning",
+  "description": "U_DESCR : 30",
+  "object_id": 30,
+  "master": 30,
+  "masterName": null,
+  "masterProfession": "Handyman",
+  "smallDescription": "U_Daily cleaning",
+  "bigDescription": "U_Daily cleaning",
+  "startDate": -61599024840000,
+  "dueDate": -61597988040000,
+  "status": "New"
+}

@@ -104,5 +104,12 @@ public interface Manager
      * */
     void deleteEntity(long id);
 
+    /**
+     * Method is used for updating entities
+     *
+     * @param id — id of entity
+     * @param sqcParam — an array of object couples. First couple element is attr_id
+     *      of attribute and second one is value
+     * */
     void updateEntity(long id, Object ... sqcParam);
 }

@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
+import ubermaster.entity.security.JwtAuthenticationRequest;
 import ubermaster.entityGenerator.entity.EntityGenerator;
 import ubermaster.persistence.facade.Facade;
 import ubermaster.persistence.manager.Manager;
@@ -147,7 +148,7 @@ public class EntityController<T extends BaseEntity>
     @RequestMapping
     (
         value = "/setUserBlock",
-        method = RequestMethod.GET,
+        method = RequestMethod.POST,
         produces = "application/json"
     )
     public String setUserBlock
@@ -164,7 +165,7 @@ public class EntityController<T extends BaseEntity>
 	@RequestMapping
 	(
 		value = "/setOrderStatus",
-		method = RequestMethod.GET,
+		method = RequestMethod.POST,
 		produces = "application/json"
 	)
 	public String setOrderStatus
@@ -175,6 +176,119 @@ public class EntityController<T extends BaseEntity>
 	)
 	{
 		facade.setOrderStatus(id, mid, status);
+
+		return "DONE";
+	}
+
+    @RequestMapping
+    (
+        value = "/setUserPicture",
+        method = RequestMethod.POST,
+        produces = "application/json"
+    )
+    public String setUserPicture
+    (
+        @RequestParam("id") long id,
+        @RequestParam(value = "picture") String pictureURL
+    )
+    {
+        facade.setUserPicture(id, pictureURL);
+
+        return "DONE";
+    }
+
+    @RequestMapping
+	(
+		value = "/updatePoke",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updatePoke
+	(
+		@RequestBody Poke poke
+	)
+	{
+		facade.updateEntity(poke);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/updateMaster",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updateMaster
+	(
+		@RequestBody Master master
+	)
+	{
+		facade.updateEntity(master);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/updateOrder",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updateOrder
+	(
+		@RequestBody Order order
+	)
+	{
+		facade.updateEntity(order);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/addPoke",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addPoke
+	(
+		@RequestBody Poke poke
+	)
+	{
+		facade.createEntity(poke);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/addMaster",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addMaster
+	(
+		@RequestBody Master master
+	)
+	{
+		facade.createEntity(master);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/addOrder",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addOrder
+	(
+		@RequestBody Order order
+	)
+	{
+		facade.createEntity(order);
 
 		return "DONE";
 	}

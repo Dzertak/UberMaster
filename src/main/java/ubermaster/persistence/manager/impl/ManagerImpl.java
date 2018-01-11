@@ -47,12 +47,11 @@ public class ManagerImpl implements Manager
             HashMap<String, Object> hashMap =
                     (HashMap<String, Object>) persistenceEntity.getAttributes();
             String[] elements = new String[4 + (hashMap.size() << 1)];
-            elements[0] = Long.toString(persistenceEntity.getObject_id());
-            elements[1] = _class.getAnnotation(ObjectType.class).value();
-            elements[2] = persistenceEntity.getName();
-            elements[3] = persistenceEntity.getDescription();
+            elements[0] = _class.getAnnotation(ObjectType.class).value();
+            elements[1] = persistenceEntity.getName();
+            elements[2] = persistenceEntity.getDescription();
 
-            int i = 4;
+            int i = 3;
             Iterator<String> iterator = hashMap.keySet().iterator();
             while (iterator.hasNext())
             {
@@ -557,7 +556,7 @@ public class ManagerImpl implements Manager
 
             OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
                     (
-                        UPDATE_ENTITY
+                            UPDATE_ENTITY
                     );
             stmt.setARRAY(1, array);
             stmt.execute();
@@ -565,8 +564,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException exc)
         {
-            //log.error(exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
         }
 
         finally
@@ -578,8 +577,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                //log.error(exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }

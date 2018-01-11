@@ -1,0 +1,20 @@
+{
+  "name":"MasterGuy",
+  "description":"U_DESCR : 25",
+  "object_id":25,
+  "location":"Malinovskyy",
+  "userDescription":"U_USERDESCR",
+  "phoneNumber":"380754832658",
+  "password":"U_pass1",
+  "picture":"U_pic1",
+  "classType":"Master",
+  "isUserBlocked":"false",
+  "profession":"Handyman",
+  "skills":"U_Cool Guy",
+  "experience":"14 years",
+  "payment":1250,
+  "smoke":"true",
+  "tools":"axe",
+  "start_time":-61599024840000,
+  "end_time":-61597815240000
+}
