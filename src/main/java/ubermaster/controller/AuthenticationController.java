@@ -33,9 +33,6 @@ public class AuthenticationController {
     private JwtTokenUtil jwtTokenUtil;
 
     @Autowired
-    private Facade facade;
-
-    @Autowired
     private JwtUserDetailsServiceImpl userDetailsService;
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)

@@ -7,13 +7,11 @@ import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
-import ubermaster.persistence.manager.data.UberDataSource;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -34,15 +32,13 @@ public class ManagerImpl implements Manager
 {
 /*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     private static Logger log = Logger.getLogger(ManagerImpl.class.getName());
-    @Autowired
-    private UberDataSource dataSource;
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public void createEntity
     (
-        PersistenceEntity persistenceEntity,
-        Class<? extends BaseEntity> _class
+            PersistenceEntity persistenceEntity,
+            Class<? extends BaseEntity> _class
     )
     {
         OracleConnection oracleConnection = null;
@@ -66,24 +62,24 @@ public class ManagerImpl implements Manager
                 elements[i] = ConverterImpl.convertObjectToString(hashMap.get(attrID));
                 ++i;
             }
-            
+
             oracleConnection = getConnection();
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
                     (
-                        "ARRAY",
-                        oracleConnection
+                            "ARRAY",
+                            oracleConnection
                     );
             ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
 
             OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
                     (
-                        INSERT_ENTITY
+                            INSERT_ENTITY
                     );
             stmt.setARRAY(1, array);
             stmt.execute();
-        } 
-        
-        catch (SQLException exc) 
+        }
+
+        catch (SQLException exc)
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
@@ -104,155 +100,146 @@ public class ManagerImpl implements Manager
         }
     }
 
-
-    public PersistenceEntity getEntity
-    (
-        long id, 
-        Class<? extends BaseEntity> _class
-    )
+    private PersistenceEntity getPersistanceEntity(ResultSet resultSet)
+            throws SQLException, ParseException
     {
-        OracleCallableStatement calStat;
-        ResultSet resultSet;
-        OracleConnection oracleConnection = null;
         PersistenceEntity persistenceEntity = new PersistenceEntity();
-        try
+
+        HashMap<String, Object> attrMap = new HashMap<>();
+        Class<? extends BaseEntity> entity_classType = null;
+
+        final String MASTER_OT = Master.class.getAnnotation(ObjectType.class).value();
+        final String POKE_OT = Poke.class.getAnnotation(ObjectType.class).value();
+        final String ADMIN_OT = Admin.class.getAnnotation(ObjectType.class).value();
+        final String ORDER_OT = Order.class.getAnnotation(ObjectType.class).value();
+        while (resultSet.next())
         {
-            oracleConnection = getConnection();
-            calStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
-            calStat.setString(1, Long.toString(id));
-            calStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
-            calStat.execute();
-            resultSet = calStat.getCursor(2);
+            String attr_id = resultSet.getString(2);
 
-            persistenceEntity.setObject_id(id);
-            persistenceEntity.setClassType(_class);
-            HashMap<String, Object> attrMap = new HashMap<>();
-            while (resultSet.next())
+            switch (attr_id)
             {
-                String attr_id = resultSet.getString(2);
-
-                switch (attr_id)
-                {
-                    case ATTR_OBJECT_ID:
-                    case ATTR_OBJECT_TYPE_ID:
+                case ATTR_OBJECT_ID:
+                    persistenceEntity.setObject_id(Long.parseLong(resultSet.getString(1)));
                     break;
 
-                    case ATTR_NAME:
-                        persistenceEntity.setName(resultSet.getString(1));
+                case ATTR_OBJECT_TYPE_ID:
+                    String objectTypeID = resultSet.getString(1);
+
+                    if (objectTypeID.equals(ORDER_OT))
+                        entity_classType = Order.class;
+
+                    else if (objectTypeID.equals(MASTER_OT))
+                        entity_classType = Master.class;
+
+                    else if (objectTypeID.equals(POKE_OT))
+                        entity_classType = Poke.class;
+
+                    else if (objectTypeID.equals(ADMIN_OT))
+                        entity_classType = Admin.class;
+
+                    persistenceEntity.setClassType(entity_classType);
+                break;
+
+                case ATTR_NAME:
+                    persistenceEntity.setName(resultSet.getString(1));
                     break;
 
-                    case ATTR_DESCR:
-                        persistenceEntity.setDescription(resultSet.getString(1));
+                case ATTR_DESCR:
+                    persistenceEntity.setDescription(resultSet.getString(1));
                     break;
 
-                    default:
-                        Class fieldType = BaseEntity.getFieldType(attr_id, _class);
-                        Object fieldObj = ConverterImpl.convertStringToObject
+                default:
+                    Class fieldType = BaseEntity.getFieldType(attr_id, entity_classType);
+                    Object fieldObj = ConverterImpl.convertStringToObject
                             (
-                                resultSet.getString(1),
-                                fieldType
-                            );
-                        attrMap.put(attr_id, fieldObj);
-                }
-            }
-
-            persistenceEntity.setAttributes(attrMap);
-        }
-
-        catch (SQLException | ParseException exc)
-        {
-            log.error(exc.getMessage(), exc);
-            //exc.printStackTrace();
-            return null;
-        }
-
-        finally
-        {
-            try
-            {
-                oracleConnection.close();
-            }
-
-            catch (SQLException exc)
-            {
-                log.error(exc.getMessage(), exc);
-                //exc.printStackTrace();
-            }
-        }
-
-        return persistenceEntity;
-    }
-
-    public PersistenceEntity getUser(String phoneNumber, String password)
-    {
-        OracleCallableStatement calStat;
-        ResultSet resultSet;
-        PersistenceEntity persistenceEntity = new PersistenceEntity();
-        OracleConnection oracleConnection = null;
-        try
-        {
-            oracleConnection = getConnection();
-            calStat = (OracleCallableStatement) oracleConnection
-                                            .prepareCall(GET_USER);
-            calStat.setString(1, phoneNumber);
-            calStat.setString(2, password);
-            calStat.registerOutParameter
-                    (
-                        3,
-                        oracle.jdbc.OracleTypes.CURSOR
-                    );
-            calStat.execute();
-            resultSet = calStat.getCursor(3);
-
-            HashMap<String, Object> attrMap = new HashMap<>();
-            Class<? extends BaseEntity> entity_classType = null;
-            final String MASTER_OT = Master.class.getAnnotation(ObjectType.class).value();
-            final String POKE_OT = Poke.class.getAnnotation(ObjectType.class).value();
-            while (resultSet.next())
-            {
-                String attr_id = resultSet.getString(2);
-
-                switch (attr_id)
-                {
-                    case ATTR_OBJECT_ID:
-                        persistenceEntity.setObject_id(Long.parseLong(resultSet.getString(1)));
-                    break;
-
-                    case ATTR_OBJECT_TYPE_ID:
-                        String objectTypeID = resultSet.getString(1);
-
-                        if (objectTypeID.equals(MASTER_OT))
-                            entity_classType = Master.class;
-
-                        else if (objectTypeID.equals(POKE_OT))
-                            entity_classType = Poke.class;
-
-                        else
-                            entity_classType = Admin.class;
-
-                        persistenceEntity.setClassType(entity_classType);
-                    break;
-
-                    case ATTR_NAME:
-                        persistenceEntity.setName(resultSet.getString(1));
-                    break;
-
-                    case ATTR_DESCR:
-                        persistenceEntity.setDescription(resultSet.getString(1));
-                    break;
-
-                    default:
-                        Class fieldType = BaseEntity.getFieldType(attr_id, entity_classType);
-                        Object fieldObj = ConverterImpl.convertStringToObject
-                                (
                                     resultSet.getString(1),
                                     fieldType
+                            );
+                    attrMap.put(attr_id, fieldObj);
+            }
+        }
+
+        persistenceEntity.setAttributes(attrMap);
+
+        return persistenceEntity;
+    }
+
+    private PersistenceEntity[] getPersistanceEntities
+            (
+                    Object sqcEntity[],
+                    Class<? extends BaseEntity> _class
+            )
+            throws SQLException, ParseException
+    {
+        int lengthEntity = sqcEntity.length;
+        PersistenceEntity sqcPE[] = new PersistenceEntity[lengthEntity];
+        for (int iteraEntity = 0; iteraEntity < lengthEntity; ++iteraEntity)
+        {
+            PersistenceEntity persistenceEntity = new PersistenceEntity();
+            persistenceEntity.setClassType(_class);
+            HashMap<String, Object> attrMap = new HashMap<>();
+
+            Object sqcField[] = (Object[]) ((ARRAY)sqcEntity[iteraEntity]).getArray();
+            int lengthField = sqcField.length;
+            //--:   Field cycle
+            for (int iteraField = 0; iteraField < lengthField; ++iteraField)
+            {
+                Object sqcAttr_Val[] = ((STRUCT)sqcField[iteraField]).getAttributes();
+
+                String attrID = (String)sqcAttr_Val[0];
+                String value = (String)sqcAttr_Val[1];
+
+                switch (attrID)
+                {
+                    case ATTR_OBJECT_ID :
+                        persistenceEntity.setObject_id(Long.parseLong(value));
+                        break;
+
+                    case ATTR_NAME :
+                        persistenceEntity.setName(value);
+                        break;
+
+                    case ATTR_DESCR :
+                        persistenceEntity.setDescription(value);
+                        break;
+
+                    default :
+                        Class fieldType = BaseEntity.getFieldType
+                                (
+                                        attrID,
+                                        _class
                                 );
-                        attrMap.put(attr_id, fieldObj);
+                        Object fieldObj = ConverterImpl.convertStringToObject
+                                (
+                                        value,
+                                        fieldType
+                                );
+                        attrMap.put(attrID, fieldObj);
                 }
             }
 
             persistenceEntity.setAttributes(attrMap);
+            sqcPE[iteraEntity] = persistenceEntity;
+        }
+
+        return sqcPE;
+    }
+
+    public PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class)
+    {
+        OracleCallableStatement callStat;
+        ResultSet resultSet;
+        OracleConnection oracleConnection = null;
+        try
+        {
+            oracleConnection = getConnection();
+            callStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
+            callStat.setString(1, Long.toString(id));
+            callStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
+            callStat.execute();
+            resultSet = callStat.getCursor(2);
+
+            return getPersistanceEntity(resultSet);
         }
 
         catch (SQLException | ParseException exc)
@@ -275,79 +262,71 @@ public class ManagerImpl implements Manager
                 //exc.printStackTrace();
             }
         }
+    }
 
-        return persistenceEntity;
+    public PersistenceEntity[] getTypedEntities(Class<? extends BaseEntity> _class)
+    {
+
+        String objectTypeID = _class.getAnnotation(ObjectType.class).value();
+        OracleConnection connection = null;
+        OracleCallableStatement callStat;
+        try
+        {
+            connection = getConnection();
+            callStat = (OracleCallableStatement) connection.prepareCall(GET_TYPED_ENTITIES);
+            callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
+            callStat.setString(1, objectTypeID);
+            callStat.execute();
+
+            return getPersistanceEntities
+                    (
+                            (Object[]) callStat.getARRAY(2).getArray(),
+                            _class
+                    );
+        }
+
+        catch (SQLException | ParseException exc)
+        {
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
+            return null;
+        }
+
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
+            }
+        }
     }
 
     public PersistenceEntity getUserByPhone(String phoneNumber)
     {
-        OracleCallableStatement calStat;
+        OracleCallableStatement callStat;
         ResultSet resultSet;
-        PersistenceEntity persistenceEntity = new PersistenceEntity();
         OracleConnection oracleConnection = null;
         try
         {
             oracleConnection = getConnection();
-            calStat = (OracleCallableStatement) oracleConnection
+            callStat = (OracleCallableStatement) oracleConnection
                     .prepareCall(GET_USER_BY_PHONE);
-            calStat.setString(1, phoneNumber);
-            calStat.registerOutParameter
+            callStat.setString(1, phoneNumber);
+            callStat.registerOutParameter
                     (
                             2,
                             oracle.jdbc.OracleTypes.CURSOR
                     );
-            calStat.execute();
-            resultSet = calStat.getCursor(2);
+            callStat.execute();
+            resultSet = callStat.getCursor(2);
 
-            HashMap<String, Object> attrMap = new HashMap<>();
-            Class<? extends BaseEntity> entity_classType = null;
-            final String MASTER_OT = Master.class.getAnnotation(ObjectType.class).value();
-            final String POKE_OT = Poke.class.getAnnotation(ObjectType.class).value();
-            while (resultSet.next())
-            {
-                String attr_id = resultSet.getString(2);
-
-                switch (attr_id)
-                {
-                    case ATTR_OBJECT_ID:
-                        persistenceEntity.setObject_id(Long.parseLong(resultSet.getString(1)));
-                        break;
-
-                    case ATTR_OBJECT_TYPE_ID:
-                        String objectTypeID = resultSet.getString(1);
-
-                        if (objectTypeID.equals(MASTER_OT))
-                            entity_classType = Master.class;
-
-                        else if (objectTypeID.equals(POKE_OT))
-                            entity_classType = Poke.class;
-
-                        else
-                            entity_classType = Admin.class;
-
-                        persistenceEntity.setClassType(entity_classType);
-                        break;
-
-                    case ATTR_NAME:
-                        persistenceEntity.setName(resultSet.getString(1));
-                        break;
-
-                    case ATTR_DESCR:
-                        persistenceEntity.setDescription(resultSet.getString(1));
-                        break;
-
-                    default:
-                        Class fieldType = BaseEntity.getFieldType(attr_id, entity_classType);
-                        Object fieldObj = ConverterImpl.convertStringToObject
-                                (
-                                        resultSet.getString(1),
-                                        fieldType
-                                );
-                        attrMap.put(attr_id, fieldObj);
-                }
-            }
-
-            persistenceEntity.setAttributes(attrMap);
+            return getPersistanceEntity(resultSet);
         }
 
         catch (SQLException | ParseException exc)
@@ -370,8 +349,152 @@ public class ManagerImpl implements Manager
                 //exc.printStackTrace();
             }
         }
+    }
 
-        return persistenceEntity;
+    public PersistenceEntity getUserByPhonePass(String phoneNumber, String password)
+    {
+        OracleCallableStatement callStat;
+        ResultSet resultSet;
+        OracleConnection oracleConnection = null;
+        try
+        {
+            oracleConnection = getConnection();
+            callStat = (OracleCallableStatement) oracleConnection
+                    .prepareCall(GET_USER);
+            callStat.setString(1, phoneNumber);
+            callStat.setString(2, password);
+            callStat.registerOutParameter
+                    (
+                            3,
+                            oracle.jdbc.OracleTypes.CURSOR
+                    );
+            callStat.execute();
+            resultSet = callStat.getCursor(3);
+
+            return getPersistanceEntity(resultSet);
+        }
+
+        catch (SQLException | ParseException exc)
+        {
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
+            return null;
+        }
+
+        finally
+        {
+            try
+            {
+                oracleConnection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
+            }
+        }
+    }
+
+    public PersistenceEntity[] getUserOrders(long id, int userType)
+    {
+        OracleCallableStatement callStat;
+        OracleConnection connection = null;
+        PersistenceEntity sqcPE[];
+        try
+        {
+            connection = getConnection();//dataSource.getConnection();
+            
+            switch (userType)
+            {
+                case MASTER_TYPE_ORDERS :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_MASTER_ORDERS);
+                break;
+                
+                case POKE_TYPE_ORDERS :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_POKE_ORDERS);
+                break;
+                
+                default :
+                    callStat = null;
+            }
+
+            callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
+
+            callStat.setString(1, Long.toString(id));
+            callStat.execute();
+
+            return getPersistanceEntities
+                    (
+                        (Object[]) callStat.getARRAY(2).getArray(),
+                        Order.class
+                    );
+        }
+
+        catch (SQLException | ParseException exc)
+        {
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
+            return null;
+        }
+
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
+            }
+        }
+    }
+
+    public PersistenceEntity[] getOrdersByProfession(String profession)
+    {
+        OracleCallableStatement callStat;
+        PersistenceEntity sqcPE[];
+        OracleConnection connection = null;
+        try
+        {
+            connection = getConnection();//dataSource.getConnection();
+            callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
+
+            callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
+
+            callStat.setString(1, profession);
+            callStat.execute();
+
+            return getPersistanceEntities
+                    (
+                            (Object[]) callStat.getARRAY(2).getArray(),
+                            Order.class
+                    );
+        }
+
+        catch (SQLException | ParseException exc)
+        {
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
+            return null;
+        }
+
+        finally
+        {
+            try
+            {
+                connection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
+            }
+        }
     }
 
     public void deleteEntity(long id)
@@ -381,7 +504,7 @@ public class ManagerImpl implements Manager
         {
             oracleConnection = getConnection();
             PreparedStatement statement = oracleConnection
-                                    .prepareStatement(DELETE_ENTITY);
+                    .prepareStatement(DELETE_ENTITY);
             statement.setString(1, Long.toString(id));
             statement.execute();
         }
@@ -407,295 +530,57 @@ public class ManagerImpl implements Manager
         }
     }
 
-    public void updateEntity
-    (
-        PersistenceEntity persistenceEntity,
-        Class<? extends BaseEntity> _class
-    )
+    public void updateEntity(long id, Object ... sqcParam)
     {
-
-    }
-
-    public PersistenceEntity[] getTypedEntities
-    (
-        Class<? extends BaseEntity> _class
-    )
-    {
-        String objectTypeID = _class.getAnnotation(ObjectType.class).value();
-        OracleConnection connection = null;
-        OracleCallableStatement calStat;
-        PersistenceEntity sqcPE[];
+        OracleConnection oracleConnection = null;
         try
         {
-            connection = getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_TYPED_ENTITIES);
+            String elements[] = new String[1 + sqcParam.length];
+            final int LEN_ELEMENTS = elements.length;
 
-            calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
-
-            calStat.setString(1, objectTypeID);
-            calStat.execute();
-
-            //--:   Entities cycle
-            Object sqcEntity[] = (Object[]) calStat.getARRAY(2).getArray();
-            int lengthEntity = sqcEntity.length;
-            sqcPE = new PersistenceEntity[lengthEntity];
-            for (int iteraEntity = 0; iteraEntity < lengthEntity; ++iteraEntity)
+            elements[0] = Long.toString(id);
+            for (int i = 1; i < LEN_ELEMENTS;)
             {
-                PersistenceEntity persistenceEntity = new PersistenceEntity();
-                persistenceEntity.setClassType(_class);
-                HashMap<String, Object> attrMap = new HashMap<>();
-
-                Object sqcField[] = (Object[]) ((ARRAY)sqcEntity[iteraEntity]).getArray();
-                int lengthField = sqcField.length;
-                //--:   Field cycle
-                for (int iteraField = 0; iteraField < lengthField; ++iteraField)
-                {
-                    Object sqcAttr_Val[] = ((STRUCT)sqcField[iteraField]).getAttributes();
-
-                    String attrID = (String)sqcAttr_Val[0];
-                    String value = (String)sqcAttr_Val[1];
-
-                    switch (attrID)
-                    {
-                        case ATTR_OBJECT_ID :
-                            persistenceEntity.setObject_id(Long.parseLong(value));
-                        break;
-
-                        case ATTR_NAME :
-                            persistenceEntity.setName(value);
-                        break;
-
-                        case ATTR_DESCR :
-                            persistenceEntity.setDescription(value);
-                        break;
-
-                        default :
-                            Class fieldType = BaseEntity.getFieldType
-                                    (
-                                        attrID,
-                                        _class
-                                    );
-                            Object fieldObj = ConverterImpl.convertStringToObject
-                                    (
-                                            value,
-                                            fieldType
-                                    );
-                            attrMap.put(attrID, fieldObj);
-                    }
-                }
-
-                persistenceEntity.setAttributes(attrMap);
-                sqcPE[iteraEntity] = persistenceEntity;
+                elements[i] = (String)sqcParam[i - 1];
+                ++i;
+                elements[i] = ConverterImpl.convertObjectToString(sqcParam[i - 1]);
+                ++i;
             }
+
+            oracleConnection = getConnection();
+            ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
+                    (
+                            "ARRAY",
+                            oracleConnection
+                    );
+            ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
+
+            OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
+                    (
+                        UPDATE_ENTITY
+                    );
+            stmt.setARRAY(1, array);
+            stmt.execute();
         }
 
-        catch (SQLException | ParseException exc)
+        catch (SQLException exc)
         {
-            log.error(exc.getMessage(), exc);
-            //exc.printStackTrace();
-            return null;
+            //log.error(exc.getMessage(), exc);
+            exc.printStackTrace();
         }
 
         finally
         {
             try
             {
-                connection.close();
+                oracleConnection.close();
             }
 
             catch (SQLException exc)
             {
-                log.error(exc.getMessage(), exc);
-                //exc.printStackTrace();
+                //log.error(exc.getMessage(), exc);
+                exc.printStackTrace();
             }
         }
-
-        return sqcPE;
-    }
-
-    public PersistenceEntity[] getPokeOrders(long id)
-    {
-        OracleCallableStatement calStat;
-        OracleConnection connection = null;
-        PersistenceEntity sqcPE[];
-        try
-        {
-            connection = getConnection();//dataSource.getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_POKE_ORDERS);
-
-            calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
-
-            calStat.setString(1, Long.toString(id));
-            calStat.execute();
-
-            //--:   Entities cycle
-            Object sqcEntity[] = (Object[]) calStat.getARRAY(2).getArray();
-            int lengthEntity = sqcEntity.length;
-            sqcPE = new PersistenceEntity[lengthEntity];
-            for (int iteraEntity = 0; iteraEntity < lengthEntity; ++iteraEntity)
-            {
-                PersistenceEntity persistenceEntity = new PersistenceEntity();
-                persistenceEntity.setClassType(Order.class);
-                HashMap<String, Object> attrMap = new HashMap<>();
-
-                Object sqcField[] = (Object[]) ((ARRAY)sqcEntity[iteraEntity]).getArray();
-                int lengthField = sqcField.length;
-                //--:   Field cycle
-                for (int iteraField = 0; iteraField < lengthField; ++iteraField)
-                {
-                    Object sqcAttr_Val[] = ((STRUCT)sqcField[iteraField]).getAttributes();
-
-                    String attrID = (String)sqcAttr_Val[0];
-                    String value = (String)sqcAttr_Val[1];
-
-                    switch (attrID)
-                    {
-                        case ATTR_OBJECT_ID :
-                            persistenceEntity.setObject_id(Long.parseLong(value));
-                        break;
-
-                        case ATTR_NAME :
-                            persistenceEntity.setName(value);
-                        break;
-
-                        case ATTR_DESCR :
-                            persistenceEntity.setDescription(value);
-                        break;
-
-                        default :
-                            Class fieldType = BaseEntity.getFieldType
-                                    (
-                                        attrID,
-                                        Order.class
-                                    );
-                            Object fieldObj = ConverterImpl.convertStringToObject
-                                    (
-                                            value,
-                                            fieldType
-                                    );
-                            attrMap.put(attrID, fieldObj);
-                    }
-                }
-
-                persistenceEntity.setAttributes(attrMap);
-                sqcPE[iteraEntity] = persistenceEntity;
-            }
-        }
-
-        catch (SQLException | ParseException exc)
-        {
-            log.error(exc.getMessage(), exc);
-            //exc.printStackTrace();
-            return null;
-        }
-
-        finally
-        {
-            try
-            {
-                connection.close();
-            }
-
-            catch (SQLException exc)
-            {
-                log.error(exc.getMessage(), exc);
-                //exc.printStackTrace();
-            }
-        }
-
-        return sqcPE;
-    }
-
-    public PersistenceEntity[] getOrdersByProfession(String profession)
-    {
-        OracleCallableStatement calStat;
-        PersistenceEntity sqcPE[];
-        OracleConnection connection = null;
-        try
-        {
-            connection = getConnection();//dataSource.getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
-
-            calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
-
-            calStat.setString(1, profession);
-            calStat.execute();
-
-            //--:   Entities cycle
-            Object sqcEntity[] = (Object[]) calStat.getARRAY(2).getArray();
-            int lengthEntity = sqcEntity.length;
-            sqcPE = new PersistenceEntity[lengthEntity];
-            for (int iteraEntity = 0; iteraEntity < lengthEntity; ++iteraEntity)
-            {
-                PersistenceEntity persistenceEntity = new PersistenceEntity();
-                persistenceEntity.setClassType(Order.class);
-                HashMap<String, Object> attrMap = new HashMap<>();
-
-                Object sqcField[] = (Object[]) ((ARRAY)sqcEntity[iteraEntity]).getArray();
-                int lengthField = sqcField.length;
-                //--:   Field cycle
-                for (int iteraField = 0; iteraField < lengthField; ++iteraField)
-                {
-                    Object sqcAttr_Val[] = ((STRUCT)sqcField[iteraField]).getAttributes();
-
-                    String attrID = (String)sqcAttr_Val[0];
-                    String value = (String)sqcAttr_Val[1];
-
-                    switch (attrID)
-                    {
-                        case ATTR_OBJECT_ID :
-                            persistenceEntity.setObject_id(Long.parseLong(value));
-                            break;
-
-                        case ATTR_NAME :
-                            persistenceEntity.setName(value);
-                            break;
-
-                        case ATTR_DESCR :
-                            persistenceEntity.setDescription(value);
-                            break;
-
-                        default :
-                            Class fieldType = BaseEntity.getFieldType
-                                    (
-                                            attrID,
-                                            Order.class
-                                    );
-                            Object fieldObj = ConverterImpl.convertStringToObject
-                                    (
-                                            value,
-                                            fieldType
-                                    );
-                            attrMap.put(attrID, fieldObj);
-                    }
-                }
-
-                persistenceEntity.setAttributes(attrMap);
-                sqcPE[iteraEntity] = persistenceEntity;
-            }
-        }
-
-        catch (SQLException | ParseException exc)
-        {
-            log.error(exc.getMessage(), exc);
-            //exc.printStackTrace();
-            return null;
-        }
-
-        finally
-        {
-            try
-            {
-                connection.close();
-            }
-
-            catch (SQLException exc)
-            {
-                log.error(exc.getMessage(), exc);
-                //exc.printStackTrace();
-            }
-        }
-
-        return sqcPE;
     }
 }
