@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
 import ubermaster.entityGenerator.entity.EntityGenerator;
 import ubermaster.persistence.facade.Facade;
+import ubermaster.persistence.manager.Manager;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -50,28 +51,50 @@ public class EntityController<T extends BaseEntity>
         return facade.getUserByPhone(phoneNumber);
     }
 
-    @RequestMapping(value = "/getTypedEntity",
-            method = RequestMethod.GET,
-            produces = "application/json")
+    @RequestMapping
+    (
+        value = "/getTypedEntity",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
     public BaseEntity[] getTypedEntity(@RequestParam("class") String type)
-            throws ClassNotFoundException
+        throws ClassNotFoundException
     {
-       try {
+       try
+       {
            Class<? extends BaseEntity> _class = (Class<? extends BaseEntity>)
-                   Class.forName("ubermaster.entity.model." + type);
+           Class.forName("ubermaster.entity.model." + type);
            return facade.getTypedEntities(_class);
-       } catch(ClassNotFoundException ex) {
-           log.error(ex.getMessage(),ex);
-           throw new ClassNotFoundException(ex.getMessage());
+       }
+
+       catch(ClassNotFoundException exc)
+       {
+           log.error(exc.getMessage(),exc);
+
+           throw new ClassNotFoundException(exc.getMessage());
        }
     }
 
-    @RequestMapping(value = "/getPokeOrders",
-            method = RequestMethod.GET,
-            produces = "application/json")
+    @RequestMapping
+    (
+        value = "/getPokeOrders",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
     public BaseEntity[] getPokeOrders(@RequestParam("id") long id)
     {
-        return facade.getPokeOrders(id);
+        return facade.getUserOrders(id, Manager.POKE_TYPE_ORDERS);
+    }
+
+    @RequestMapping
+    (
+        value = "/getMasterOrders",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
+    public BaseEntity[] getMasterOrders(@RequestParam("id") long id)
+    {
+        return facade.getUserOrders(id, Manager.MASTER_TYPE_ORDERS);
     }
 
     @RequestMapping

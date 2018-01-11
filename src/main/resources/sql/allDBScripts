@@ -1,0 +1,648 @@
+/*
+===========================================================================
+    CLEAR
+===========================================================================
+*/
+drop table ObjType CASCADE CONSTRAINTS;
+drop table AttrType CASCADE CONSTRAINTS;
+drop table Lists CASCADE CONSTRAINTS;
+drop table Objects CASCADE CONSTRAINTS;
+drop table Attributes CASCADE CONSTRAINTS;
+drop table ObjReference CASCADE CONSTRAINTS;
+
+drop procedure getOrdersByProfession;
+drop procedure getMasterOrders;
+drop procedure getPokeOrders;
+drop procedure getTypedEntities;
+drop procedure getEntities;
+drop type arrayFiled;
+drop type arrayEntites;
+drop type type_attributes;
+drop procedure getUserByPhone;
+drop procedure getUser;
+drop procedure insertEntity;
+drop type array;
+drop procedure getEntity;
+
+/*
+===========================================================================
+    DATA BASE STRUCTURE
+===========================================================================
+*/
+create table ObjType
+(
+    object_type_id number(10) not null,
+    parent_id number(10),
+    Code varchar2(20),
+    Description varchar2(1000 byte),
+    constraint con_OT_obj_type_id primary key (object_type_id),
+    constraint con_OT_parent_id foreign key (parent_id) references ObjType (object_type_id) on delete cascade
+);
+
+create table AttrType
+(
+    attr_id number(10) not null,
+    object_type_id number(10) not null,
+    object_type_id_ref number(10),
+    Code varchar2(20),
+    constraint con_AT_attr_id primary key (attr_id),
+    constraint con_AT_obj_type_id foreign key (object_type_id) references ObjType (object_type_id),
+    constraint con_AT_obj_type_ref foreign key (object_type_id_ref) references ObjType (object_type_id)
+);
+
+create table Lists
+(
+    attr_id number(10) not null,
+    list_value_id number(10) not null,
+    value varchar(4000),
+    constraint con_L_attr_id foreign key (attr_id) references AttrType (attr_id) on delete cascade
+);
+
+create table Objects
+(
+    object_id number(20) not null,
+    parent_id number(20),
+    object_type_id number(10) not null,
+    Name varchar2(2000 byte),
+    Description varchar2(4000 byte),
+    constraint con_O_object_id primary key (object_id),
+    constraint con_O_parent_id foreign key (parent_id) references Objects (object_id) on delete cascade,
+    constraint con_O_obj_type_id foreign key (object_type_id) references ObjType (object_type_id)
+);
+
+create table Attributes
+(
+    attr_id number(10) not null,
+    object_id number(20) not null,
+    value varchar2(4000 byte),
+    date_value date,
+    list_value_id number(10),
+    constraint  con_ATR_attr_id foreign key (attr_id) references AttrType (attr_id) on delete cascade,
+    constraint con_ATR_object_id foreign key (object_id) references Objects (object_id) on delete cascade
+);
+
+create table ObjReference
+(
+    attr_id number(10) not null,
+    refer_id number(20) not null,
+    object_id number(20) not null,
+    constraint con_OR_primar primary key (attr_id, object_id, refer_id),
+    constraint con_OR_attr_id foreign key (attr_id) references AttrType (attr_id) on delete cascade,
+    constraint con_OR_object_id foreign key (object_id) references Objects (object_id) on delete cascade,
+    constraint con_OR_ref_id foreign key (refer_id) references Objects (object_id) on delete cascade
+);
+
+/*
+===========================================================================
+    DATA BASE PROTOTYPE
+===========================================================================
+*/
+insert all
+into ObjType (object_type_id, parent_id, Code, Description) values ( 1, null, 'User', null)
+into ObjType (object_type_id, parent_id, Code, Description) values ( 2, 1, 'Master', null)
+into ObjType (object_type_id, parent_id, Code, Description) values ( 3, 1, 'Poke', null)
+into ObjType (object_type_id, parent_id, Code, Description) values ( 4, 1, 'Admin', null)
+into ObjType (object_type_id, parent_id, Code, Description) values ( 5, null, 'Order', null)
+select * from dual;
+
+-- for users
+insert all
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values(1, 1, null, 'Phone Number')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values(2, 1, null, 'Password')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values(3, 1, null, 'Description')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values(4, 1, null, 'Picture')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values(5, 1, null, 'Location')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values(20, 1, null, 'isUserBlocked')
+select * from dual;
+
+-- for masters
+insert all
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values (6, 2, null, 'Profession')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values (7, 2, null, 'Skills')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values (8, 2, null, 'Experience')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values (9, 2, null, 'Payment')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values (10, 2, null, 'Smoke')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values (11, 2, null, 'Tools')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values (12, 2, null, 'Start Time')
+into AttrType (attr_id,  object_type_id,  object_type_id_ref, Code) values (13, 2, null, 'End Time')
+select * from dual;
+
+--for orders
+insert all
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (14, 5, 2, 'Master')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (15, 5, null, 'Small Description')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (16, 5, null, 'Big Description')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (17, 5, null, 'Start Date')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (18, 5, null, 'Due Date')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (19, 5, null, 'Status')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (21, 5, null, 'Master profession')
+select * from dual;
+
+--  for users field locations
+insert all
+into Lists (attr_id, list_value_id, value) values (5, 1, 'Kievskyy')
+into Lists (attr_id, list_value_id, value) values (5, 2, 'Primorskyy')
+into Lists (attr_id, list_value_id, value) values (5, 3, 'Suvorovskyy')
+into Lists (attr_id, list_value_id, value) values (5, 4, 'Malinovskyy')
+select * from dual;
+
+-- for masters 'Smoke'
+insert all
+into Lists (attr_id, list_value_id, value) values (10, 5, 'true')
+into Lists (attr_id, list_value_id, value) values (10, 6, 'false')
+select * from dual;
+
+-- for orders status
+insert all
+into Lists (attr_id, list_value_id, value) values (19, 7, 'New')
+into Lists (attr_id, list_value_id, value) values (19, 8, 'In processing')
+into Lists (attr_id, list_value_id, value) values (19, 9, 'Completed')
+select * from dual;
+
+-- for Pokes/Masters 'isBlocked'
+insert all
+into Lists (attr_id, list_value_id, value) values (20, 10, 'true')
+into Lists (attr_id, list_value_id, value) values (20, 11, 'false')
+select * from dual;
+
+-- for Masters 'Profession'
+insert all
+into Lists (attr_id, list_value_id, value) values (6, 12, 'Locksmith')
+into Lists (attr_id, list_value_id, value) values (6, 13, 'Plumber')
+into Lists (attr_id, list_value_id, value) values (6, 14, 'Electrician')
+into Lists (attr_id, list_value_id, value) values (6, 15, 'Cleaner')
+into Lists (attr_id, list_value_id, value) values (6, 16, 'Computer foreman')
+into Lists (attr_id, list_value_id, value) values (6, 17, 'Handyman')
+select * from dual;
+
+-- for Orders 'Profession'
+insert all
+into Lists (attr_id, list_value_id, value) values (21, 18, 'Locksmith')
+into Lists (attr_id, list_value_id, value) values (21, 19, 'Plumber')
+into Lists (attr_id, list_value_id, value) values (21, 20, 'Electrician')
+into Lists (attr_id, list_value_id, value) values (21, 21, 'Cleaner')
+into Lists (attr_id, list_value_id, value) values (21, 22, 'Computer foreman')
+into Lists (attr_id, list_value_id, value) values (21, 23, 'Handyman')
+select * from dual;
+
+/*
+===================================================================================================================
+				GET ENTITY BY ID
+===================================================================================================================
+*/
+
+create or replace procedure getEntity(innerID in number, returnCursor out sys_refCursor)
+is
+    ObjName Objects.name%type;
+    ObjDescr Objects.description%type;
+    ObjTypeID Objects.object_type_id%type;
+    begin
+        begin
+            select object_type_id, name, description
+            into ObjTypeID, ObjName, ObjDescr
+            from Objects
+            where object_id = innerID;
+        end;
+
+        open returnCursor for
+        with result as
+        (
+            select
+                attr_id
+            from
+                AttrType attrT join
+                (
+                    select
+                        object_type_id
+                    from ObjType
+                    start with object_type_id =
+                               (
+                                   select
+                                       object_type_id
+                                   from
+                                       Objects
+                                   where object_id = innerId
+                               )
+                    connect by prior parent_id = object_type_id
+                )
+                allObjTypes on allObjTypes.object_type_id = attrT.object_type_id
+        )
+        select
+            to_char(innerID),
+            '-1'
+        from dual
+        union all
+        select
+            to_char(ObjTypeID),
+            '-2'
+        from dual
+        union all
+        select
+            ObjName,
+            '-3'
+        from dual
+        union all
+        select
+            ObjDescr,
+            '-4'
+        from dual
+        union all
+        select
+            case when value is not null then value
+            else case when date_value is not null then to_char(date_value, 'DD/MM/YY hh24:mi')
+                 else
+                     (
+                         select lst.value
+                         from Lists lst
+                         where attr.list_value_id = lst.list_value_id
+                     )
+                 end
+            end,
+            to_char(attr.attr_id)
+        from Attributes attr, result
+        where attr.attr_id in result.attr_id and attr.object_id = innerId
+        union all
+        select
+            to_char(objRef.object_id),
+            to_char(objRef.attr_id)
+        from ObjReference objRef, result
+        where objRef.attr_id in result.attr_id and objRef.object_id = innerId;
+    end;
+/
+
+
+/*
+===================================================================================================================
+				INSERT ENTITY
+===================================================================================================================
+*/
+create or replace type array as table of varchar(4000);
+/
+
+create or replace procedure insertEntity(innerArray in array)
+as
+    obID Objects.object_id%type;
+    obTyID Objects.object_type_id%type;
+    name Objects.name%type;
+    descr Objects.description%type;
+
+    attrID Attributes.attr_id%type;
+    attrValue Attributes.value%type;
+
+    lstMaxID Lists.list_value_id%type;
+    lstID Lists.list_value_id%type;
+
+    i binary_integer;
+    begin
+        i := innerArray.first();
+        obID := to_number(innerArray(i));
+        i := innerArray.next(i);
+        obTyID := to_number(innerArray(i));
+        i := innerArray.next(i);
+        name := innerArray(i);
+        i := innerArray.next(i);
+        descr := innerArray(i);
+
+        --INSERT OBJECTS
+        begin
+            insert into Objects ( object_id, parent_id, object_type_id, name, description)
+            values (obID, null, obTyID, name, descr);
+        end;
+
+        -- defining MAX ID of Lists
+        begin
+            select max(list_value_id) + 1
+            into lstMaxID
+            from Lists;
+        end;
+
+        --INSERT ATTRIBUTES
+        i := innerArray.next(i);
+        while i is not null loop
+            attrID := to_number(innerArray(i));
+            i := innerArray.next(i);
+            attrValue := to_char(innerArray(i));
+
+            if (attrID is null) then
+                exit;
+            end if;
+
+            --defining is that parent_id(Poke) of Order
+            if (attrID = -19) then
+                begin
+                    update Objects
+                    set parent_id = to_number(attrValue, '9999999999999')
+                    where object_id = obID;
+
+                    goto rrr;
+                end;
+            end if;
+
+            --	defining is that master reference
+            if (attrID = 14) then
+                begin
+                    insert into ObjReference (attr_id, refer_id, object_id)
+                    values (attrID, to_number(attrValue, '999999999'), obID);
+
+                    goto rrr;
+                end;
+            end if;
+
+            -- defining of presenting of value or not
+            if (attrID in (5, 6, 10, 19, 20, 21)) then
+                if (obTyID = 5) then
+                    begin
+                        select max(list_value_id)
+                        into lstID
+                        from Lists lst join AttrType attrT on lst.attr_id = attrT.attr_id
+                        where lower(value) = lower(attrValue);
+                        /*EXCEPTION WHEN NO_DATA_FOUND then
+                          lstID := null;*/
+                    end;
+                else
+                    begin
+                        select min(list_value_id)
+                        into lstID
+                        from Lists lst join AttrType attrT on lst.attr_id = attrT.attr_id
+                        where lower(value) = lower(attrValue);
+                        /*EXCEPTION WHEN NO_DATA_FOUND then
+                          lstID := null;*/
+                    end;
+                end if;
+            end if;
+
+            -- if lst location
+            if (attrID in (5, 6, 10, 19, 20, 21)) then
+                -- if such value is not presenting
+                if (lstID is null) then
+                    insert into Lists (attr_id, list_value_id, value)
+                    values (attrID, lstMaxID, attrValue);
+
+                    insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
+                    values (attrID, obID, null, null, lstMaxID);
+
+                    lstMaxID := lstMaxID + 1;
+                else
+                    insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
+                    values (attrID, obID, null, null, lstID);
+                end if;
+            else
+                if (attrID in (12, 13, 17, 18)) then
+                    insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
+                    values (attrID, obID, null, to_date(attrValue, 'DD/MM/YYYY hh24:mi'), null);
+                else
+                    insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
+                    values (attrID, obID, attrValue, null, null);
+                end if;
+            end if;
+        <<RRR>>
+            i := innerArray.next(i);
+        end loop;
+    end;
+/
+
+/*
+===================================================================================================================
+				GET USER BY PHONE AND PASS
+===================================================================================================================
+*/
+create or replace procedure getUser(telephone in varchar2, passwd in varchar2, returnCursor out sys_refCursor)
+is
+    objID Objects.object_id%type;
+    begin
+        objID := -9;
+
+        begin
+            select attrPN.object_id
+            into objID
+            from Attributes attrPN join Attributes attrPass on attrPN.object_id = attrPass.object_id
+            where attrPN.value = telephone and attrPN.attr_id = 1 and attrPass.value = passwd and attrPass.attr_id = 2;
+        end;
+
+        if (objID > -1) then
+            getEntity(objID, returnCursor);
+        end if;
+    end;
+/
+/*
+===================================================================================================================
+				GET USER BY PHONE
+===================================================================================================================
+*/
+create or replace procedure getUserByPhone(telephone in varchar2, returnCursor out sys_refCursor)
+is
+    objID Objects.object_id%type;
+    begin
+        objID := -9;
+
+        begin
+            select object_id
+            into objID
+            from Attributes
+            where value = telephone and attr_id = 1;
+        end;
+
+        if (objID > -1) then
+            getEntity(objID, returnCursor);
+        end if;
+    end;
+/
+/*
+===================================================================================================================
+				GET TYPED ENTITIES BY OBJECT_TYPE_ID
+===================================================================================================================
+*/
+CREATE OR REPLACE TYPE type_attributes AS OBJECT
+(
+    attrID varchar(4000),
+    value varchar(4000)
+)
+/
+
+create or replace type arrayFiled as table of type_attributes;
+/
+
+create or replace type arrayEntites as table of arrayFiled;
+/
+
+create or replace procedure getEntities(innerID in number, innerArray out arrayFiled)
+is
+    ObjName Objects.name%type;
+    ObjDescr Objects.description%type;
+    ObjTypeID Objects.object_type_id%type;
+
+    retArray arrayFiled := arrayFiled();
+    begin
+        begin
+            select object_type_id, name, description
+            into ObjTypeID, ObjName, ObjDescr
+            from Objects
+            where object_id = innerID;
+        end;
+
+        with result as
+        (
+            select
+                attr_id
+            from
+                AttrType attrT join
+                (
+                    select
+                        object_type_id
+                    from ObjType
+                    start with object_type_id =
+                               (
+                                   select
+                                       object_type_id
+                                   from
+                                       Objects
+                                   where object_id = innerId
+                               )
+                    connect by prior parent_id = object_type_id
+                )
+                allObjTypes on allObjTypes.object_type_id = attrT.object_type_id
+        )
+        select type_attributes(aid, val)
+        bulk collect into retArray
+        from
+            (
+                select
+                    to_char(innerID) val,
+                    '-1' aid
+                from dual
+                union all
+                select
+                    ObjName val,
+                    '-3' aid
+                from dual
+                union all
+                select
+                    ObjDescr val,
+                    '-4' aid
+                from dual
+                union all
+                select
+                    case when value is not null then value
+                    else case when date_value is not null then to_char(date_value, 'DD/MM/YY hh24:mi')
+                         else
+                             (
+                                 select lst.value
+                                 from Lists lst
+                                 where attr.list_value_id = lst.list_value_id
+                             )
+                         end
+                    end val,
+                    to_char(attr.attr_id) aid
+                from Attributes attr, result
+                where attr.attr_id in result.attr_id and attr.object_id = innerId
+                                      union all
+                                            select
+                                            to_char(objRef.refer_id) val,
+                                                                     to_char(objRef.attr_id) aid
+                                                                                             from ObjReference objRef, result
+                                                                                             where objRef.attr_id in result.attr_id and objRef.object_id = innerId
+            );
+
+        innerArray := retArray;
+    end;
+/
+
+create or replace procedure getTypedEntities(innerObjTypeID in number, innerArray out arrayEntites)
+as
+    idsArray dbms_sql.number_table;
+    fileds arrayFiled := arrayFiled();
+    begin
+        select object_id
+        bulk collect into idsArray
+        from Objects
+        where object_type_id = innerObjTypeID;
+
+        innerArray := arrayEntites();
+
+        for itera in 1..idsArray.last loop
+            innerArray.extend();
+            getEntities(idsArray(itera), fileds);
+            innerArray(itera) := fileds;
+        end loop;
+    end;
+/
+
+/*
+===================================================================================================================
+				GET POKE ORDERS BY ID
+===================================================================================================================
+*/
+
+create or replace procedure getPokeOrders(innerID in number, innerArray out arrayEntites)
+as
+    idsArray dbms_sql.number_table;
+    fileds arrayFiled := arrayFiled();
+    begin
+        select object_id
+        bulk collect into idsArray
+        from Objects
+        where parent_id = innerID;
+
+        innerArray := arrayEntites();
+
+        for itera in 1..idsArray.last loop
+            innerArray.extend();
+            getEntities(idsArray(itera), fileds);
+            innerArray(itera) := fileds;
+        end loop;
+    end;
+/
+
+/*
+===================================================================================================================
+				GET MASTER ORDERS BY ID
+===================================================================================================================
+*/
+
+create or replace procedure getMasterOrders(innerID in number, innerArray out arrayEntites)
+as
+    idsArray dbms_sql.number_table;
+    fileds arrayFiled := arrayFiled();
+    begin
+        select object_id
+        bulk collect into idsArray
+        from ObjReference
+        where refer_id = innerID;
+
+        innerArray := arrayEntites();
+
+        for itera in 1..idsArray.last loop
+            innerArray.extend();
+            getEntities(idsArray(itera), fileds);
+            innerArray(itera) := fileds;
+        end loop;
+    end;
+/
+
+/*
+===================================================================================================================
+				GET ORDERS BY PROFESSION
+===================================================================================================================
+*/
+
+create or replace procedure getOrdersByProfession(profession in varchar, innerArray out arrayEntites)
+as
+    idsArray dbms_sql.number_table;
+    fileds arrayFiled := arrayFiled();
+    masterName type_attributes;
+    begin
+        select obj.object_id
+        bulk collect into idsArray
+        from Objects obj join Attributes attr on obj.object_id = attr.object_id
+            join Lists lst on lst.list_value_id = attr.list_value_id
+        where lower(lst.value) = lower(profession) and object_type_id = 5;
+
+        innerArray := arrayEntites();
+
+        for itera in 1..idsArray.last loop
+            innerArray.extend();
+            getEntities(idsArray(itera), fileds);
+            innerArray(itera) := fileds;
+        end loop;
+    end;
+/

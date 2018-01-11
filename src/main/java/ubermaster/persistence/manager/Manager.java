@@ -9,6 +9,7 @@ public interface Manager
     String GET_ENTITY = "{call getEntity(?, ?)}";
     String GET_TYPED_ENTITIES = "{call getTypedEntities(?, ?)}";
     String GET_POKE_ORDERS = "{call getPokeOrders(?, ?)}";
+    String GET_MASTER_ORDERS = "{call getMasterOrders(?, ?)}";
     String GET_USER = "{call getUser(?, ?, ?)}";
     String GET_USER_BY_PHONE = "{call getUserByPhone(?, ?)}";
     String DELETE_ENTITY = "delete from Objects where object_id = ?";
@@ -22,6 +23,9 @@ public interface Manager
 
     String ARRAY_ENTITIES = "ARRAYENTITES";
     String ARRAY_STRING = "ARRAY";
+
+    int MASTER_TYPE_ORDERS = 1;
+    int POKE_TYPE_ORDERS = 2;
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     /**

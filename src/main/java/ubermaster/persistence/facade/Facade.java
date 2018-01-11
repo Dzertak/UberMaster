@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
+import ubermaster.persistence.manager.Manager;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
 import java.util.HashMap;
@@ -161,16 +162,17 @@ public class Facade
     }
 
     /**
-     * Method get all {@code Order} instances by {@code Poke} entity id
+     * Method get all {@code Order} instances by {@code Poke} or
+     * {@code Master} entity id
      *
      * @param id — Poke id
-     *
+     * @param userType — a constant param of user from {@code Manager} class
      * @return an array of {@code Order} instances
      */
-    public <T extends BaseEntity> T[] getPokeOrders(long id)
+    public <T extends BaseEntity> T[] getUserOrders(long id, int userType)
     {
     //--:   DB
-        PersistenceEntity sqcPE[] = manager.getPokeOrders(id);
+        PersistenceEntity sqcPE[] = manager.getUserOrders(id, userType);
 
         if (sqcPE == null)
             return null;

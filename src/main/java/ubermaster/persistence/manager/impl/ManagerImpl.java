@@ -7,13 +7,11 @@ import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
-import ubermaster.persistence.manager.data.UberDataSource;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,9 +30,9 @@ import static ubermaster.persistence.manager.data.UberDataSource.getConnection;
 @Component
 public class ManagerImpl implements Manager
 {
-    /*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     private static Logger log = Logger.getLogger(ManagerImpl.class.getName());
-    /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+/*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public void createEntity
@@ -83,8 +81,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException exc)
         {
-            //log.error(exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
         }
 
         finally
@@ -96,8 +94,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                //log.error(exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }
@@ -229,25 +227,25 @@ public class ManagerImpl implements Manager
 
     public PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class)
     {
-        OracleCallableStatement calStat;
+        OracleCallableStatement callStat;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
         {
             oracleConnection = getConnection();
-            calStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
-            calStat.setString(1, Long.toString(id));
-            calStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
-            calStat.execute();
-            resultSet = calStat.getCursor(2);
+            callStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
+            callStat.setString(1, Long.toString(id));
+            callStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
+            callStat.execute();
+            resultSet = callStat.getCursor(2);
 
             return getPersistanceEntity(resultSet);
         }
 
         catch (SQLException | ParseException exc)
         {
-            //log.error(exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -260,8 +258,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                //log.error(exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }
@@ -271,26 +269,26 @@ public class ManagerImpl implements Manager
 
         String objectTypeID = _class.getAnnotation(ObjectType.class).value();
         OracleConnection connection = null;
-        OracleCallableStatement calStat;
+        OracleCallableStatement callStat;
         try
         {
             connection = getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_TYPED_ENTITIES);
-            calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
-            calStat.setString(1, objectTypeID);
-            calStat.execute();
+            callStat = (OracleCallableStatement) connection.prepareCall(GET_TYPED_ENTITIES);
+            callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
+            callStat.setString(1, objectTypeID);
+            callStat.execute();
 
             return getPersistanceEntities
                     (
-                            (Object[]) calStat.getARRAY(2).getArray(),
+                            (Object[]) callStat.getARRAY(2).getArray(),
                             _class
                     );
         }
 
         catch (SQLException | ParseException exc)
         {
-            //log.error(exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -303,38 +301,38 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                //log.error(exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }
 
     public PersistenceEntity getUserByPhone(String phoneNumber)
     {
-        OracleCallableStatement calStat;
+        OracleCallableStatement callStat;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
         {
             oracleConnection = getConnection();
-            calStat = (OracleCallableStatement) oracleConnection
+            callStat = (OracleCallableStatement) oracleConnection
                     .prepareCall(GET_USER_BY_PHONE);
-            calStat.setString(1, phoneNumber);
-            calStat.registerOutParameter
+            callStat.setString(1, phoneNumber);
+            callStat.registerOutParameter
                     (
                             2,
                             oracle.jdbc.OracleTypes.CURSOR
                     );
-            calStat.execute();
-            resultSet = calStat.getCursor(2);
+            callStat.execute();
+            resultSet = callStat.getCursor(2);
 
             return getPersistanceEntity(resultSet);
         }
 
         catch (SQLException | ParseException exc)
         {
-            //log.error(exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -347,39 +345,39 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                //log.error(exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }
 
     public PersistenceEntity getUserByPhonePass(String phoneNumber, String password)
     {
-        OracleCallableStatement calStat;
+        OracleCallableStatement callStat;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
         {
             oracleConnection = getConnection();
-            calStat = (OracleCallableStatement) oracleConnection
+            callStat = (OracleCallableStatement) oracleConnection
                     .prepareCall(GET_USER);
-            calStat.setString(1, phoneNumber);
-            calStat.setString(2, password);
-            calStat.registerOutParameter
+            callStat.setString(1, phoneNumber);
+            callStat.setString(2, password);
+            callStat.registerOutParameter
                     (
                             3,
                             oracle.jdbc.OracleTypes.CURSOR
                     );
-            calStat.execute();
-            resultSet = calStat.getCursor(3);
+            callStat.execute();
+            resultSet = callStat.getCursor(3);
 
             return getPersistanceEntity(resultSet);
         }
 
         catch (SQLException | ParseException exc)
         {
-            //log.error(exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -392,31 +390,44 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                //log.error(exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }
 
-    public PersistenceEntity[] getPokeOrders(long id)
+    public PersistenceEntity[] getUserOrders(long id, int userType)
     {
-        OracleCallableStatement calStat;
+        OracleCallableStatement callStat;
         OracleConnection connection = null;
         PersistenceEntity sqcPE[];
         try
         {
             connection = getConnection();//dataSource.getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_POKE_ORDERS);
+            
+            switch (userType)
+            {
+                case MASTER_TYPE_ORDERS :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_MASTER_ORDERS);
+                break;
+                
+                case POKE_TYPE_ORDERS :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_POKE_ORDERS);
+                break;
+                
+                default :
+                    callStat = null;
+            }
 
-            calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
+            callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
 
-            calStat.setString(1, Long.toString(id));
-            calStat.execute();
+            callStat.setString(1, Long.toString(id));
+            callStat.execute();
 
             return getPersistanceEntities
                     (
-                            (Object[]) calStat.getARRAY(2).getArray(),
-                            Order.class
+                        (Object[]) callStat.getARRAY(2).getArray(),
+                        Order.class
                     );
         }
 
@@ -444,30 +455,30 @@ public class ManagerImpl implements Manager
 
     public PersistenceEntity[] getOrdersByProfession(String profession)
     {
-        OracleCallableStatement calStat;
+        OracleCallableStatement callStat;
         PersistenceEntity sqcPE[];
         OracleConnection connection = null;
         try
         {
             connection = getConnection();//dataSource.getConnection();
-            calStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
+            callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
 
-            calStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
+            callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
 
-            calStat.setString(1, profession);
-            calStat.execute();
+            callStat.setString(1, profession);
+            callStat.execute();
 
             return getPersistanceEntities
                     (
-                            (Object[]) calStat.getARRAY(2).getArray(),
+                            (Object[]) callStat.getARRAY(2).getArray(),
                             Order.class
                     );
         }
 
         catch (SQLException | ParseException exc)
         {
-            //log.error(exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
             return null;
         }
 
@@ -480,8 +491,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                //log.error(exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }
