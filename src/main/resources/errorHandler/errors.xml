@@ -6,4 +6,19 @@
     <error id="SER-2">
         <errormessage>Field "Password" must be filled</errormessage>
     </error>
+    <error id="SER-3">
+        <errormessage>Incorrect ID</errormessage>
+    </error>
+    <error id="SER-4">
+        <errormessage>Incorrect CLASS</errormessage>
+    </error>
+    <error id="SER-5">
+        <errormessage></errormessage>
+    </error>
+    <error id="SER-6">
+        <errormessage></errormessage>
+    </error>
+    <error id="SER-7">
+        <errormessage></errormessage>
+    </error>
 </errors>

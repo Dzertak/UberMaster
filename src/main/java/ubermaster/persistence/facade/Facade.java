@@ -6,6 +6,7 @@ import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -28,8 +29,7 @@ public class Facade
      *
      * @param baseEntity an entity that will be inserted to the database
      */
-    public void createEntity(BaseEntity baseEntity)
-    {
+    public void createEntity(BaseEntity baseEntity) {
         PersistenceEntity persistenceEntity = converter.convertToEntity(baseEntity);
         manager.createEntity(persistenceEntity, baseEntity.getClass());
     }

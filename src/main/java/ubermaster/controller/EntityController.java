@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
 import ubermaster.entityGenerator.entity.EntityGenerator;
+import ubermaster.errorHandler.ErrorHandler;
 import ubermaster.persistence.facade.Facade;
 
 import java.sql.SQLException;
