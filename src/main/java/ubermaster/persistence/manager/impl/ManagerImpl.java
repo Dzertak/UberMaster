@@ -47,12 +47,11 @@ public class ManagerImpl implements Manager
             HashMap<String, Object> hashMap =
                     (HashMap<String, Object>) persistenceEntity.getAttributes();
             String[] elements = new String[4 + (hashMap.size() << 1)];
-            elements[0] = Long.toString(persistenceEntity.getObject_id());
-            elements[1] = _class.getAnnotation(ObjectType.class).value();
-            elements[2] = persistenceEntity.getName();
-            elements[3] = persistenceEntity.getDescription();
+            elements[0] = _class.getAnnotation(ObjectType.class).value();
+            elements[1] = persistenceEntity.getName();
+            elements[2] = persistenceEntity.getDescription();
 
-            int i = 4;
+            int i = 3;
             Iterator<String> iterator = hashMap.keySet().iterator();
             while (iterator.hasNext())
             {

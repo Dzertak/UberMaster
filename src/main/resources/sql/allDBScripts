@@ -294,9 +294,15 @@ as
 
     i binary_integer;
     begin
+        select max(object_id) + 1
+        into obID
+        from Objects;
+
+        if (obID is null) then
+            obID := 0;
+        end if;
+
         i := innerArray.first();
-        obID := to_number(innerArray(i));
-        i := innerArray.next(i);
         obTyID := to_number(innerArray(i));
         i := innerArray.next(i);
         name := innerArray(i);

@@ -244,4 +244,52 @@ public class EntityController<T extends BaseEntity>
 
 		return "DONE";
 	}
+
+	@RequestMapping
+	(
+		value = "/addPoke",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addPoke
+	(
+		@RequestBody Poke poke
+	)
+	{
+		facade.createEntity(poke);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/addMaster",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addMaster
+	(
+		@RequestBody Master master
+	)
+	{
+		facade.createEntity(master);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/addOrder",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addOrder
+	(
+		@RequestBody Order order
+	)
+	{
+		facade.createEntity(order);
+
+		return "DONE";
+	}
 }
