@@ -199,16 +199,32 @@ public class EntityController<T extends BaseEntity>
 
     @RequestMapping
 	(
-		value = "/updateUser",
+		value = "/updatePoke",
 		method = RequestMethod.POST,
 		produces = "application/json"
 	)
-	public String updateEntity
+	public String updatePoke
 	(
-			@RequestBody BlockedUser entity
+		@RequestBody Poke poke
 	)
 	{
-		facade.updateEntity(entity);
+		facade.updateEntity(poke);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/updateMaster",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updateMaster
+	(
+		@RequestBody Master master
+	)
+	{
+		facade.updateEntity(master);
 
 		return "DONE";
 	}
