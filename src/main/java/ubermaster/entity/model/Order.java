@@ -34,7 +34,34 @@ public class Order extends BaseEntity {
     @Attribute(Model.MASTER_PROFESSION)
     protected String masterProfession;
 
+    @Attribute(Model.MARK)
+    protected byte mark;
+
+    @Attribute(Model.COMMENT)
+    protected String comment;
+
+
     public interface Model extends OrderAttr {
+    }
+
+    public String getComment()
+    {
+        return comment;
+    }
+
+    public void setComment(String comment)
+    {
+        this.comment = comment;
+    }
+
+    public byte getMark()
+    {
+        return mark;
+    }
+
+    public void setMark(byte mark)
+    {
+        this.mark = mark;
     }
 
     public String getMasterProfession()
@@ -114,6 +141,8 @@ public class Order extends BaseEntity {
         hashmap.put(Model.DUE_DATE, DueDate);
         hashmap.put(Model.STATUS, Status);
         hashmap.put(Model.MASTER_PROFESSION, masterProfession);
+        hashmap.put(Model.MARK, mark);
+        hashmap.put(Model.COMMENT, comment);
 
         return hashmap;
     }
@@ -129,6 +158,8 @@ public class Order extends BaseEntity {
                 ", \nStatus='" + Status + '\'' +
                 ", \nmaster=" + master +
                 ", \nmaster profession : " + masterProfession +
+                ", \nmark : " + mark +
+                ", \ncomment : " + comment +
                 '}';
     }
 }

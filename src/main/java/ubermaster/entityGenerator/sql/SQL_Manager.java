@@ -27,7 +27,10 @@ public final class SQL_Manager implements _SQL
 	{
 		final int LEN_SQC_ENTITY = sqcEntity.length;
 		for (int i = 0; i < LEN_SQC_ENTITY; ++i)
-			insertEntity(sqcEntity[i].getAllParamAsArray());
+		{
+			String sqcParam[] = sqcEntity[i].getAllParamAsArray();
+			insertEntity(deleteFirst(sqcParam));
+		}
 	}
 
 	private static void insertEntity(String sqcParam[])
@@ -86,5 +89,16 @@ public final class SQL_Manager implements _SQL
             log.error(exc.getMessage(), exc);
 			//exc.printStackTrace();
 		}
+	}
+
+	private static String[] deleteFirst(String sqcString[])
+	{
+		String sqcResult[] = new String[sqcString.length - 1];
+
+		int length = sqcResult.length;
+		for (int i = 0; i < length;)
+			sqcResult[i] = sqcString[++i];
+
+		return sqcResult;
 	}
 }

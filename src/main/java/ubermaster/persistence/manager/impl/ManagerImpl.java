@@ -46,7 +46,7 @@ public class ManagerImpl implements Manager
         {
             HashMap<String, Object> hashMap =
                     (HashMap<String, Object>) persistenceEntity.getAttributes();
-            String[] elements = new String[4 + (hashMap.size() << 1)];
+            String[] elements = new String[3     + (hashMap.size() << 1)];
             elements[0] = _class.getAnnotation(ObjectType.class).value();
             elements[1] = persistenceEntity.getName();
             elements[2] = persistenceEntity.getDescription();
@@ -556,7 +556,7 @@ public class ManagerImpl implements Manager
 
             OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
                     (
-                            UPDATE_ENTITY
+                            INSERT_ENTITY
                     );
             stmt.setARRAY(1, array);
             stmt.execute();

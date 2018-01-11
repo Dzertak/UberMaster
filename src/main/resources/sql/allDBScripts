@@ -136,6 +136,8 @@ into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (17,
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (18, 5, null, 'Due Date')
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (19, 5, null, 'Status')
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (21, 5, null, 'Master profession')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (22, 5, null, 'Mark')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (23, 5, null, 'Comment')
 select * from dual;
 
 --  for users field locations
@@ -185,6 +187,14 @@ into Lists (attr_id, list_value_id, value) values (21, 22, 'Computer foreman')
 into Lists (attr_id, list_value_id, value) values (21, 23, 'Handyman')
 select * from dual;
 
+-- for Orders 'Mark'
+insert all
+into Lists (attr_id, list_value_id, value) values (22, 24, '1')
+into Lists (attr_id, list_value_id, value) values (22, 25, '2')
+into Lists (attr_id, list_value_id, value) values (22, 26, '3')
+into Lists (attr_id, list_value_id, value) values (22, 27, '4')
+into Lists (attr_id, list_value_id, value) values (22, 28, '5')
+select * from dual;
 /*
 ===================================================================================================================
 				GET ENTITY BY ID

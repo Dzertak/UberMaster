@@ -60,5 +60,5 @@ public interface SQC_DATA
 
 	int ATTR_POKE_SIZE = 8;
 	int ATTR_MASTER_SIZE = 16;
-	int ATTR_ORDER_SIZE = 10;
+	int ATTR_ORDER_SIZE = 12;
 }
