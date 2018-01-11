@@ -565,8 +565,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException exc)
         {
-            log.error(exc.getMessage(), exc);
-            //exc.printStackTrace();
+            //log.error(exc.getMessage(), exc);
+            exc.printStackTrace();
         }
 
         finally
@@ -578,8 +578,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                log.error(exc.getMessage(), exc);
-                //exc.printStackTrace();
+                //log.error(exc.getMessage(), exc);
+                exc.printStackTrace();
             }
         }
     }

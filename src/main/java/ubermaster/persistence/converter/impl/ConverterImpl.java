@@ -101,6 +101,9 @@ public class ConverterImpl implements Converter
         if (Boolean.class.isAssignableFrom(CLASS))
             return Boolean.toString((boolean) value);
 
+        if (Long.class.isAssignableFrom(CLASS))
+            return Long.toString((long) value);
+
         return null;
     }
 

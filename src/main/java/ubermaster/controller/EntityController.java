@@ -150,7 +150,7 @@ public class EntityController<T extends BaseEntity>
         method = RequestMethod.GET,
         produces = "application/json"
     )
-    public String getUserBlock
+    public String setUserBlock
     (
         @RequestParam("id") long id,
         @RequestParam("isBlocked") boolean isBlocked
@@ -160,4 +160,22 @@ public class EntityController<T extends BaseEntity>
 
         return "DONE";
     }
+
+	@RequestMapping
+	(
+		value = "/setOrderStatus",
+		method = RequestMethod.GET,
+		produces = "application/json"
+	)
+	public String setOrderStatus
+	(
+		@RequestParam("id") long id,
+		@RequestParam("status") String status,
+		@RequestParam("mid") long mid
+	)
+	{
+		facade.setOrderStatus(id, mid, status);
+
+		return "DONE";
+	}
 }

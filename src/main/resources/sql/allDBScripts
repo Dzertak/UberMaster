@@ -664,9 +664,9 @@ as
     begin
         obID := to_number(innerArray(innerArray.first()));
 
-        itera := 1;
+        itera := 2;
         length := innerArray.last;
-        while (itera < length) loop
+        while (itera <= length) loop
             attrID := to_number(innerArray(itera), '99999999999999');
 
             --	Attributes -> value
@@ -692,7 +692,7 @@ as
                 select list_value_id
                 into lst_id
                 from Lists
-                where value = innerArray(itera + 1) and attr_id = attrID;
+                where lower(value) = lower(innerArray(itera + 1)) and attr_id = attrID;
 
                 update Attributes
                 set list_value_id = lst_id
@@ -703,11 +703,19 @@ as
 
             --	ObjReference
             if (attrID = 14) then
+                if (innerArray(itera + 1) = -1) then
+                    delete from ObjReference where object_id = obID;
+                else
+                    if (innerArray(itera + 1) > 0) then
+                        insert into ObjReference (attr_id, refer_id, object_id) values (14, to_number(innerArray(itera + 1), '9999999999'), obID);
+                    end if;
+                end if;
+
                 goto jump;
             end if;
 
         <<jump>>
-            itera := itera + 1;
+            itera := itera + 2;
         end loop;
 
         commit work;

@@ -217,4 +217,14 @@ public class Facade
 
         manager.updateEntity(id, BlockedUser.Model.IS_BLOCKED, isBlocked);
     }
+
+    /**
+     * if mid == -1 then master will deleted
+     *
+     * else if mid == -2 then master will not changed
+     * */
+    public void setOrderStatus(long id, long mid, String status)
+    {
+        manager.updateEntity(id, Order.Model.STATUS, status, Order.Model.MASTER_REF, mid);
+    }
 }
