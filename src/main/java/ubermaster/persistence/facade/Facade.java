@@ -219,12 +219,34 @@ public class Facade
     }
 
     /**
-     * if mid == -1 then master will deleted
+     * Method sets order status
      *
-     * else if mid == -2 then master will not changed
+     * @param id — an order id
+     * @param mid — a master id
+     *             if mid == -1 then master will deleted
+     *             else if mid == -2 then master will still same
+     * @param status — new status of order
      * */
     public void setOrderStatus(long id, long mid, String status)
     {
-        manager.updateEntity(id, Order.Model.STATUS, status, Order.Model.MASTER_REF, mid);
+        manager.updateEntity
+            (
+                id,
+                Order.Model.STATUS,
+                status,
+                Order.Model.MASTER_REF,
+                mid
+            );
+    }
+
+    /**
+     * Method sets user picture
+     *
+     * @param id — an user id
+     * @param picture — an user picture
+     * */
+    public void setUserPicture(long id, String picture)
+    {
+        manager.updateEntity(id, User.Model.PICTURE, picture);
     }
 }

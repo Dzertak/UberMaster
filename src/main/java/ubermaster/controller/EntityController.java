@@ -178,4 +178,21 @@ public class EntityController<T extends BaseEntity>
 
 		return "DONE";
 	}
+
+    @RequestMapping
+    (
+        value = "/setUserPicture",
+        method = RequestMethod.POST,
+        produces = "application/json"
+    )
+    public String setUserPicture
+    (
+        @RequestParam("id") long id,
+        @RequestParam("picture") String pictureURL
+    )
+    {
+        facade.setUserPicture(id, pictureURL);
+
+        return "DONE";
+    }
 }
