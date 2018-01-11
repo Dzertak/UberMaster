@@ -143,4 +143,21 @@ public class EntityController<T extends BaseEntity>
 
         return "DONE";
     }
+
+    @RequestMapping
+    (
+        value = "/setUserBlock",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
+    public String getUserBlock
+    (
+        @RequestParam("id") long id,
+        @RequestParam("isBlocked") boolean isBlocked
+    )
+    {
+        facade.setBlocked(id, isBlocked);
+
+        return "DONE";
+    }
 }

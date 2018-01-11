@@ -14,6 +14,7 @@ public interface Manager
     String GET_USER_BY_PHONE = "{call getUserByPhone(?, ?)}";
     String DELETE_ENTITY = "delete from Objects where object_id = ?";
     String INSERT_ENTITY = "{call insertEntity(?)}";
+    String UPDATE_ENTITY = "{call updateEntity(?)}";
     String GET_ORDER_BY_PROFESSION = "call getOrdersByProfession(?, ?)";
 
     String ATTR_OBJECT_ID = "-1";
@@ -23,8 +24,8 @@ public interface Manager
 
     String ARRAY_ENTITIES = "ARRAYENTITES";
 
-    int MASTER_TYPE_ORDERS = 1;
-    int POKE_TYPE_ORDERS = 2;
+    byte MASTER_TYPE_ORDERS = 1;
+    byte POKE_TYPE_ORDERS = 2;
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     /**
@@ -102,4 +103,6 @@ public interface Manager
      * @param id — entity id
      * */
     void deleteEntity(long id);
+
+    void updateEntity(long id, Object ... sqcParam);
 }

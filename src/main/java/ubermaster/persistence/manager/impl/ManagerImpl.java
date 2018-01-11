@@ -529,4 +529,58 @@ public class ManagerImpl implements Manager
             }
         }
     }
+
+    public void updateEntity(long id, Object ... sqcParam)
+    {
+        OracleConnection oracleConnection = null;
+        try
+        {
+            String elements[] = new String[1 + sqcParam.length];
+            final int LEN_ELEMENTS = elements.length;
+
+            elements[0] = Long.toString(id);
+            for (int i = 1; i < LEN_ELEMENTS;)
+            {
+                elements[i] = (String)sqcParam[i - 1];
+                ++i;
+                elements[i] = ConverterImpl.convertObjectToString(sqcParam[i - 1]);
+                ++i;
+            }
+
+            oracleConnection = getConnection();
+            ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
+                    (
+                            "ARRAY",
+                            oracleConnection
+                    );
+            ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
+
+            OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
+                    (
+                        UPDATE_ENTITY
+                    );
+            stmt.setARRAY(1, array);
+            stmt.execute();
+        }
+
+        catch (SQLException exc)
+        {
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
+        }
+
+        finally
+        {
+            try
+            {
+                oracleConnection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
+            }
+        }
+    }
 }

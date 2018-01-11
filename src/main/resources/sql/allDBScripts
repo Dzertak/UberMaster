@@ -646,3 +646,39 @@ as
         end loop;
     end;
 /
+/*
+===================================================================================================================
+				UPDATE
+===================================================================================================================
+*/
+
+create or replace procedure updateEntity(innerArray in array)
+as
+    obID Objects.object_id%type;
+    attrID AttrType.attr_id%type;
+
+    length number;
+    itera number;
+    begin
+        obID := to_number(innerArray(innerArray.first()));
+
+        itera := 1;
+        length := innerArray.last;
+        while (itera < length) loop
+            attrID := to_number(innerArray(itera), '99999999999999');
+
+            if (attrID in (2, 3, 4, 5, 20, 7, 8, 9, 10, 11, 15, 16)) then
+                update Attributes
+                set value = innerArray(itera + 1)
+                where attr_id = attrID;
+
+                goto jump;
+            end if;
+
+        <<jump>>
+            itera := itera + 1;
+        end loop;
+
+        commit work;
+    end;
+/

@@ -47,8 +47,8 @@ public class Facade
             final Class<? extends BaseEntity> CLASS
     )
     {
-        if (CACHE.containsKey(id))
-            return converter.convertToModel(CACHE.get(id), CLASS);
+        /*if (CACHE.containsKey(id))
+            return converter.convertToModel(CACHE.get(id), CLASS);*/
 
         PersistenceEntity persistenceEntity = manager.getEntity(id, CLASS);
 
@@ -70,7 +70,7 @@ public class Facade
     public <T extends User> T getUser(String phoneNumber, String password)
     {
     //--:   Checking for presenting entity in the CACHE
-        final byte NOT_FOUND = 0;
+       /* final byte NOT_FOUND = 0;
         final byte PHONE_NUMBER_EQUALS = 1;
         final byte PASS_EQUALS = 2;
         final byte ALL_EQUALS = 3;
@@ -100,7 +100,7 @@ public class Facade
                 if (condition == ALL_EQUALS)
                     return converter.convertToModel(persistenceEntity);
             }
-        }
+        }*/
 
         PersistenceEntity persistenceEntity =
                 manager.getUserByPhonePass(phoneNumber, password);
@@ -201,5 +201,20 @@ public class Facade
             sqcT[itera] = converter.convertToModel(sqcPE[itera], Order.class);
 
         return sqcT;
+    }
+
+    public void setBlocked(long id, boolean isBlocked)
+    {
+        /*PersistenceEntity persistenceEntity = CACHE.get(id);
+
+        if (persistenceEntity != null)
+        {
+            HashMap<String, Object> attributes = (HashMap<String, Object>)persistenceEntity.getAttributes();
+
+            attributes.remove(BlockedUser.Model.IS_BLOCKED);
+            attributes.put(BlockedUser.Model.IS_BLOCKED, isBlocked);
+        }*/
+
+        manager.updateEntity(id, BlockedUser.Model.IS_BLOCKED, isBlocked);
     }
 }
