@@ -659,6 +659,8 @@ as
 
     length number;
     itera number;
+
+    lst_id Lists.list_value_id%type;
     begin
         obID := to_number(innerArray(innerArray.first()));
 
@@ -667,11 +669,40 @@ as
         while (itera < length) loop
             attrID := to_number(innerArray(itera), '99999999999999');
 
-            if (attrID in (2, 3, 4, 5, 20, 7, 8, 9, 10, 11, 15, 16)) then
+            --	Attributes -> value
+            if (attrID in (2, 3, 4, 7, 8, 9, 11, 15, 16)) then
                 update Attributes
                 set value = innerArray(itera + 1)
                 where attr_id = attrID;
 
+                goto jump;
+            end if;
+
+            --	Attributes -> date_value
+            if (attrID in (12, 13, 17, 18)) then
+                update Attributes
+                set date_value = innerArray(itera + 1)
+                where attr_id = attrID and object_id = obID;
+
+                goto jump;
+            end if;
+
+            --	Attributes -> list_value_id
+            if (attrID in (5, 6, 10, 19, 20, 21)) then
+                select list_value_id
+                into lst_id
+                from Lists
+                where value = innerArray(itera + 1) and attr_id = attrID;
+
+                update Attributes
+                set list_value_id = lst_id
+                where attr_id = attrID and object_id = obID;
+
+                goto jump;
+            end if;
+
+            --	ObjReference
+            if (attrID = 14) then
                 goto jump;
             end if;
 
