@@ -48,25 +48,25 @@ public class ConverterImpl implements Converter
         else if (Master.class.isAssignableFrom(CLASS))
         {
             entity = new Master();
-            ((User)entity).setClassType(Master.class);
+            ((User)entity).setClassType(Master.class.getSimpleName());
         }
 
         else if (Poke.class.isAssignableFrom(CLASS))
         {
             entity = new Poke();
-            ((User)entity).setClassType(Poke.class);
+            ((User)entity).setClassType(Poke.class.getSimpleName());
         }
 
         else if (User.class.isAssignableFrom(CLASS))
         {
             entity = new User();
-            ((User)entity).setClassType(User.class);
+            ((User)entity).setClassType(User.class.getSimpleName());
         }
 
         else if (Admin.class.isAssignableFrom(CLASS))
         {
             entity = new Admin();
-            ((User)entity).setClassType(Admin.class);
+            ((User)entity).setClassType(Admin.class.getSimpleName());
         }
 
         HashMap<String, Object> hashMap =

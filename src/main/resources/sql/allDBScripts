@@ -669,11 +669,29 @@ as
         while (itera <= length) loop
             attrID := to_number(innerArray(itera), '99999999999999');
 
+            --	Objects -> name
+            if (attrID = -3) then
+                update Objects
+                set name = innerArray(itera + 1)
+                where object_id = obID;
+
+                goto jump;
+            end if;
+
+            --	Objects -> 	description
+            if (attrID = -4) then
+                update Objects
+                set description = innerArray(itera + 1)
+                where object_id = obID;
+
+                goto jump;
+            end if;
+
             --	Attributes -> value
             if (attrID in (2, 3, 4, 7, 8, 9, 11, 15, 16)) then
                 update Attributes
                 set value = innerArray(itera + 1)
-                where attr_id = attrID;
+                where attr_id = attrID and object_id = obID;
 
                 goto jump;
             end if;
@@ -681,7 +699,7 @@ as
             --	Attributes -> date_value
             if (attrID in (12, 13, 17, 18)) then
                 update Attributes
-                set date_value = innerArray(itera + 1)
+                set date_value = to_date(innerArray(itera + 1), 'DD/MM/YY hh24:mi')
                 where attr_id = attrID and object_id = obID;
 
                 goto jump;

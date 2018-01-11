@@ -557,7 +557,7 @@ public class ManagerImpl implements Manager
 
             OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
                     (
-                        UPDATE_ENTITY
+                            UPDATE_ENTITY
                     );
             stmt.setARRAY(1, array);
             stmt.execute();
@@ -565,8 +565,8 @@ public class ManagerImpl implements Manager
 
         catch (SQLException exc)
         {
-            //log.error(exc.getMessage(), exc);
-            exc.printStackTrace();
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
         }
 
         finally
@@ -578,8 +578,8 @@ public class ManagerImpl implements Manager
 
             catch (SQLException exc)
             {
-                //log.error(exc.getMessage(), exc);
-                exc.printStackTrace();
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
             }
         }
     }

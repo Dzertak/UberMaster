@@ -7,6 +7,8 @@ import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -248,5 +250,32 @@ public class Facade
     public void setUserPicture(long id, String picture)
     {
         manager.updateEntity(id, User.Model.PICTURE, picture);
+    }
+
+    public void updateEntity(BaseEntity entity)
+    {
+        PersistenceEntity persistenceEntity = converter.convertToEntity(entity);
+
+        HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
+        Object sqcParam[] = new Object[4 + (attributes.size() << 1)];
+
+        int itera = 0;
+        for (String key : attributes.keySet())
+        {
+            sqcParam[itera] = key;
+            ++itera;
+            sqcParam[itera] = attributes.get(key);
+            ++itera;
+        }
+
+        sqcParam[itera] = "-3";
+        ++itera;
+        sqcParam[itera] = persistenceEntity.getName();
+        ++itera;
+        sqcParam[itera] = "-4";
+        ++itera;
+        sqcParam[itera] = persistenceEntity.getDescription();
+
+        manager.updateEntity(persistenceEntity.getObject_id(), sqcParam);
     }
 }

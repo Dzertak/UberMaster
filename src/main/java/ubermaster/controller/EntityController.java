@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
+import ubermaster.entity.security.JwtAuthenticationRequest;
 import ubermaster.entityGenerator.entity.EntityGenerator;
 import ubermaster.persistence.facade.Facade;
 import ubermaster.persistence.manager.Manager;
@@ -147,7 +148,7 @@ public class EntityController<T extends BaseEntity>
     @RequestMapping
     (
         value = "/setUserBlock",
-        method = RequestMethod.GET,
+        method = RequestMethod.POST,
         produces = "application/json"
     )
     public String setUserBlock
@@ -164,7 +165,7 @@ public class EntityController<T extends BaseEntity>
 	@RequestMapping
 	(
 		value = "/setOrderStatus",
-		method = RequestMethod.GET,
+		method = RequestMethod.POST,
 		produces = "application/json"
 	)
 	public String setOrderStatus
@@ -188,11 +189,27 @@ public class EntityController<T extends BaseEntity>
     public String setUserPicture
     (
         @RequestParam("id") long id,
-        @RequestParam("picture") String pictureURL
+        @RequestParam(value = "picture") String pictureURL
     )
     {
         facade.setUserPicture(id, pictureURL);
 
         return "DONE";
     }
+
+    @RequestMapping
+	(
+		value = "/updateUser",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updateEntity
+	(
+			@RequestBody BlockedUser entity
+	)
+	{
+		facade.updateEntity(entity);
+
+		return "DONE";
+	}
 }
