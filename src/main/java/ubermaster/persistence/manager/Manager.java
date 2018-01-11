@@ -22,7 +22,6 @@ public interface Manager
     String ATTR_DESCR = "-4";
 
     String ARRAY_ENTITIES = "ARRAYENTITES";
-    String ARRAY_STRING = "ARRAY";
 
     int MASTER_TYPE_ORDERS = 1;
     int POKE_TYPE_ORDERS = 2;
@@ -35,7 +34,7 @@ public interface Manager
      *
      * @param _class — a type of instance
      * */
-    //void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
+    void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
 
     /**
      * Get an entity from data base by entity id
@@ -46,21 +45,61 @@ public interface Manager
      *
      * @return an instance of {@code PersistenceEntity} class
      * */
-   //PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class);
+    PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class);
+
+    /**
+     * Get an array of entities from data base by class type
+     *
+     * @param _class — a class type of entity
+     *
+     * @return an instance of array of {@code PersistenceEntity} instances
+     * */
+    PersistenceEntity[] getTypedEntities(Class<? extends BaseEntity> _class);
+
+    /**
+     * Get a user from data base by phone number
+     *
+     * @param phoneNumber — a phone number of entity
+     *
+     * @return an instance of {@code PersistenceEntity} instance
+     * */
+    PersistenceEntity getUserByPhone(String phoneNumber);
+
+    /**
+     * Get a user from data base by phone number and password
+     *
+     * @param phoneNumber — a phone number of entity
+     * @param password  — a password of entity
+     *
+     * @return an instance of {@code PersistenceEntity} instance
+     * */
+    PersistenceEntity getUserByPhonePass(String phoneNumber, String password);
+
+    /**
+     * Get the orders of master or poke in array of {@code PersistenceEntity}
+     * instances
+     *
+     * @param id — an id of entity
+     * @param userType — int value of class type from Manager
+     *
+     * @return an instance of array of {@code PersistenceEntity} instances
+     * */
+    PersistenceEntity[] getUserOrders(long id, int userType);
+
+    /**
+     * Get the orders in array of {@code PersistenceEntity} by profession
+     * instances
+     *
+     * @param profession —  order profession
+     *
+     * @return an instance of array of {@code PersistenceEntity} instances
+     * */
+    PersistenceEntity[] getOrdersByProfession(String profession);
 
     /**
      * Deletes entity from data base by entity id
      *
      * @param id — entity id
      * */
-   // void deleteEntity(long id);
-
-    /**
-     * Updates entity in data base
-     *
-     * @param persistenceEntity — an entity
-     *
-     * @param _class — a type of instance
-     * */
-    //void updateEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
+    void deleteEntity(long id);
 }
