@@ -556,7 +556,7 @@ public class ManagerImpl implements Manager
 
             OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
                     (
-                            INSERT_ENTITY
+                        UPDATE_ENTITY
                     );
             stmt.setARRAY(1, array);
             stmt.execute();
