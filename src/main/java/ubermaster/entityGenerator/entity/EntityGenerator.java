@@ -370,6 +370,13 @@ public class EntityGenerator implements SQC_DATA, _SQL
 								RANDOM.nextInt(LST_MASTER_REF.size())
 						);
 				controller.addParam(ATTR_MASTER_REF, MASTER_REF);
+
+				controller.addParam
+					(
+						ATTR_ORDER_MARK,
+						Integer.toString(RANDOM.nextInt(5) + 1)
+					);
+				controller.addParam(ATTR_ORDER_COMMENT, "SOME COMMENT " + ID);
 			}
 
 			else

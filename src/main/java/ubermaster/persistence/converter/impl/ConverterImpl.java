@@ -48,25 +48,25 @@ public class ConverterImpl implements Converter
         else if (Master.class.isAssignableFrom(CLASS))
         {
             entity = new Master();
-            ((User)entity).setClassType(Master.class);
+            ((User)entity).setClassType(Master.class.getSimpleName());
         }
 
         else if (Poke.class.isAssignableFrom(CLASS))
         {
             entity = new Poke();
-            ((User)entity).setClassType(Poke.class);
+            ((User)entity).setClassType(Poke.class.getSimpleName());
         }
 
         else if (User.class.isAssignableFrom(CLASS))
         {
             entity = new User();
-            ((User)entity).setClassType(User.class);
+            ((User)entity).setClassType(User.class.getSimpleName());
         }
 
         else if (Admin.class.isAssignableFrom(CLASS))
         {
             entity = new Admin();
-            ((User)entity).setClassType(Admin.class);
+            ((User)entity).setClassType(Admin.class.getSimpleName());
         }
 
         HashMap<String, Object> hashMap =
@@ -101,6 +101,12 @@ public class ConverterImpl implements Converter
         if (Boolean.class.isAssignableFrom(CLASS))
             return Boolean.toString((boolean) value);
 
+        if (Long.class.isAssignableFrom(CLASS))
+            return Long.toString((long) value);
+
+        if (Byte.class.isAssignableFrom(CLASS))
+            return Byte.toString((byte)value);
+
         return null;
     }
 
@@ -111,16 +117,23 @@ public class ConverterImpl implements Converter
         if (boolean.class.isAssignableFrom(CLASS))
             return Boolean.parseBoolean(VALUE);
 
-        try {
+        try
+        {
             if (Date.class.isAssignableFrom(CLASS))
                 return new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(VALUE);
-        } catch(ParseException ex) {
-            log.error(ex.getMessage(), ex);
-            throw new ParseException(ex.getMessage(), ex.getErrorOffset());
+        }
+
+        catch(ParseException exc)
+        {
+            log.error(exc.getMessage(), exc);
+            throw new ParseException(exc.getMessage(), exc.getErrorOffset());
         }
 
         if (long.class.isAssignableFrom(CLASS))
             return Long.parseLong(VALUE);
+
+        if (byte.class.isAssignableFrom(CLASS))
+            return Byte.parseByte(VALUE);
 
         return VALUE;
 

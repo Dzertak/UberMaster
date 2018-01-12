@@ -4,9 +4,11 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
+import ubermaster.entity.security.JwtAuthenticationRequest;
 import ubermaster.entityGenerator.entity.EntityGenerator;
 import ubermaster.errorHandler.ErrorHandler;
 import ubermaster.persistence.facade.Facade;
+import ubermaster.persistence.manager.Manager;
 
 import java.sql.SQLException;
 import java.util.Date;
@@ -51,28 +53,50 @@ public class EntityController<T extends BaseEntity>
         return facade.getUserByPhone(phoneNumber);
     }
 
-    @RequestMapping(value = "/getTypedEntity",
-            method = RequestMethod.GET,
-            produces = "application/json")
+    @RequestMapping
+    (
+        value = "/getTypedEntity",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
     public BaseEntity[] getTypedEntity(@RequestParam("class") String type)
-            throws ClassNotFoundException
+        throws ClassNotFoundException
     {
-       try {
+       try
+       {
            Class<? extends BaseEntity> _class = (Class<? extends BaseEntity>)
-                   Class.forName("ubermaster.entity.model." + type);
+           Class.forName("ubermaster.entity.model." + type);
            return facade.getTypedEntities(_class);
-       } catch(ClassNotFoundException ex) {
-           log.error(ex.getMessage(),ex);
-           throw new ClassNotFoundException(ex.getMessage());
+       }
+
+       catch(ClassNotFoundException exc)
+       {
+           log.error(exc.getMessage(),exc);
+
+           throw new ClassNotFoundException(exc.getMessage());
        }
     }
 
-    @RequestMapping(value = "/getPokeOrders",
-            method = RequestMethod.GET,
-            produces = "application/json")
+    @RequestMapping
+    (
+        value = "/getPokeOrders",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
     public BaseEntity[] getPokeOrders(@RequestParam("id") long id)
     {
-        return facade.getPokeOrders(id);
+        return facade.getUserOrders(id, Manager.POKE_TYPE_ORDERS);
+    }
+
+    @RequestMapping
+    (
+        value = "/getMasterOrders",
+        method = RequestMethod.GET,
+        produces = "application/json"
+    )
+    public BaseEntity[] getMasterOrders(@RequestParam("id") long id)
+    {
+        return facade.getUserOrders(id, Manager.MASTER_TYPE_ORDERS);
     }
 
     @RequestMapping
@@ -121,4 +145,152 @@ public class EntityController<T extends BaseEntity>
 
         return "DONE";
     }
+
+    @RequestMapping
+    (
+        value = "/setUserBlock",
+        method = RequestMethod.POST,
+        produces = "application/json"
+    )
+    public String setUserBlock
+    (
+        @RequestParam("id") long id,
+        @RequestParam("isBlocked") boolean isBlocked
+    )
+    {
+        facade.setBlocked(id, isBlocked);
+
+        return "DONE";
+    }
+
+	@RequestMapping
+	(
+		value = "/setOrderStatus",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String setOrderStatus
+	(
+		@RequestParam("id") long id,
+		@RequestParam("status") String status,
+		@RequestParam("mid") long mid
+	)
+	{
+		facade.setOrderStatus(id, mid, status);
+
+		return "DONE";
+	}
+
+    @RequestMapping
+    (
+        value = "/setUserPicture",
+        method = RequestMethod.POST,
+        produces = "application/json"
+    )
+    public String setUserPicture
+    (
+        @RequestParam("id") long id,
+        @RequestParam(value = "picture") String pictureURL
+    )
+    {
+        facade.setUserPicture(id, pictureURL);
+
+        return "DONE";
+    }
+
+    @RequestMapping
+	(
+		value = "/updatePoke",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updatePoke
+	(
+		@RequestBody Poke poke
+	)
+	{
+		facade.updateEntity(poke);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/updateMaster",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updateMaster
+	(
+		@RequestBody Master master
+	)
+	{
+		facade.updateEntity(master);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/updateOrder",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String updateOrder
+	(
+		@RequestBody Order order
+	)
+	{
+		facade.updateEntity(order);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/addPoke",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addPoke
+	(
+		@RequestBody Poke poke
+	)
+	{
+		facade.createEntity(poke);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/addMaster",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addMaster
+	(
+		@RequestBody Master master
+	)
+	{
+		facade.createEntity(master);
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/addOrder",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public String addOrder
+	(
+		@RequestBody Order order
+	)
+	{
+		facade.createEntity(order);
+
+		return "DONE";
+	}
 }

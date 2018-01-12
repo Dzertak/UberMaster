@@ -24,17 +24,17 @@ public class User extends BaseEntity {
     @Attribute(Model.PICTURE)
     protected String picture;
 
-    protected Class<? extends BaseEntity> classType;
+    protected String classType;
 
     public interface Model extends UserAttr {
     }
 
-    public void setClassType(Class<? extends BaseEntity> classType)
+    public void setClassType(String classType)
     {
         this.classType = classType;
     }
 
-    public Class<? extends BaseEntity> getClassType()
+    public String getClassType()
     {
         return classType;
     }

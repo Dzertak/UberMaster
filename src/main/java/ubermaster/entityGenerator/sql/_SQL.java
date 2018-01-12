@@ -32,6 +32,8 @@ public interface _SQL
 	String ATTR_STATUS = "19";
 	String ATTR_BLOCKED = "20";
 	String ATTR_ORDER_PROFESSION = "21";
+	String ATTR_ORDER_MARK = "22";
+	String ATTR_ORDER_COMMENT = "23";
 
 	String DATE = "01/01/18 ";
 

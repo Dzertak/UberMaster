@@ -36,7 +36,7 @@ public class JwtUser<T extends User> implements UserDetails {
         this.id = user.getObject_id();
         this.phone = user.getPhoneNumber();
         this.password = user.getPassword();
-        this.authorities = (AuthorityUtils.commaSeparatedStringToAuthorityList(user.getClassType().getSimpleName().toUpperCase()));
+        this.authorities = (AuthorityUtils.commaSeparatedStringToAuthorityList(user.getClassType().toUpperCase()));
     }
 
     @JsonIgnore

@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
+import ubermaster.persistence.manager.Manager;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -29,7 +31,8 @@ public class Facade
      *
      * @param baseEntity an entity that will be inserted to the database
      */
-    public void createEntity(BaseEntity baseEntity) {
+    public void createEntity(BaseEntity baseEntity)
+    {
         PersistenceEntity persistenceEntity = converter.convertToEntity(baseEntity);
         manager.createEntity(persistenceEntity, baseEntity.getClass());
     }
@@ -46,8 +49,8 @@ public class Facade
             final Class<? extends BaseEntity> CLASS
     )
     {
-        if (CACHE.containsKey(id))
-            return converter.convertToModel(CACHE.get(id), CLASS);
+        /*if (CACHE.containsKey(id))
+            return converter.convertToModel(CACHE.get(id), CLASS);*/
 
         PersistenceEntity persistenceEntity = manager.getEntity(id, CLASS);
 
@@ -69,7 +72,7 @@ public class Facade
     public <T extends User> T getUser(String phoneNumber, String password)
     {
     //--:   Checking for presenting entity in the CACHE
-        final byte NOT_FOUND = 0;
+       /* final byte NOT_FOUND = 0;
         final byte PHONE_NUMBER_EQUALS = 1;
         final byte PASS_EQUALS = 2;
         final byte ALL_EQUALS = 3;
@@ -99,10 +102,10 @@ public class Facade
                 if (condition == ALL_EQUALS)
                     return converter.convertToModel(persistenceEntity);
             }
-        }
+        }*/
 
         PersistenceEntity persistenceEntity =
-                manager.getUser(phoneNumber, password);
+                manager.getUserByPhonePass(phoneNumber, password);
 
         if (persistenceEntity == null)
             return null;
@@ -137,36 +140,6 @@ public class Facade
     }
 
     /**
-     * Method that updates entity in database
-     *
-     * @param entity — The entity, what needs to update
-     */
-    public void updateEntity(BaseEntity entity)
-    {
-        //CACHE.replace(entity.getObject_id(), converter.convertToEntity(entity));
-        //CACHE.put(entity.getObject_id(), converter.convertToEntity(entity));
-        PersistenceEntity convertedPE = converter.convertToEntity(entity);
-        updateCache(convertedPE);
-
-        manager.updateEntity(convertedPE, entity.getClass());
-    }
-
-    /**
-     * Method updates entity data in CACHE
-     *
-     * @param convertedPE — Persistence Entity that needs to update
-     */
-    private void updateCache(PersistenceEntity convertedPE)
-    {
-        PersistenceEntity persistenceEntity =
-                CACHE.get(convertedPE.getObject_id());
-
-        persistenceEntity.setName(convertedPE.getName());
-        persistenceEntity.setDescription(convertedPE.getDescription());
-        persistenceEntity.setAttributes(convertedPE.getAttributes());
-    }
-
-    /**
      * Method get typed entity for data base
      *
      * @param _class — type of entities
@@ -191,16 +164,17 @@ public class Facade
     }
 
     /**
-     * Method get all {@code Order} instances by {@code Poke} entity id
+     * Method get all {@code Order} instances by {@code Poke} or
+     * {@code Master} entity id
      *
      * @param id — Poke id
-     *
+     * @param userType — a constant param of user from {@code Manager} class
      * @return an array of {@code Order} instances
      */
-    public <T extends BaseEntity> T[] getPokeOrders(long id)
+    public <T extends BaseEntity> T[] getUserOrders(long id, int userType)
     {
     //--:   DB
-        PersistenceEntity sqcPE[] = manager.getPokeOrders(id);
+        PersistenceEntity sqcPE[] = manager.getUserOrders(id, userType);
 
         if (sqcPE == null)
             return null;
@@ -229,5 +203,79 @@ public class Facade
             sqcT[itera] = converter.convertToModel(sqcPE[itera], Order.class);
 
         return sqcT;
+    }
+
+    public void setBlocked(long id, boolean isBlocked)
+    {
+        /*PersistenceEntity persistenceEntity = CACHE.get(id);
+
+        if (persistenceEntity != null)
+        {
+            HashMap<String, Object> attributes = (HashMap<String, Object>)persistenceEntity.getAttributes();
+
+            attributes.remove(BlockedUser.Model.IS_BLOCKED);
+            attributes.put(BlockedUser.Model.IS_BLOCKED, isBlocked);
+        }*/
+
+        manager.updateEntity(id, BlockedUser.Model.IS_BLOCKED, isBlocked);
+    }
+
+    /**
+     * Method sets order status
+     *
+     * @param id — an order id
+     * @param mid — a master id
+     *             if mid == -1 then master will deleted
+     *             else if mid == -2 then master will still same
+     * @param status — new status of order
+     * */
+    public void setOrderStatus(long id, long mid, String status)
+    {
+        manager.updateEntity
+            (
+                id,
+                Order.Model.STATUS,
+                status,
+                Order.Model.MASTER_REF,
+                mid
+            );
+    }
+
+    /**
+     * Method sets user picture
+     *
+     * @param id — an user id
+     * @param picture — an user picture
+     * */
+    public void setUserPicture(long id, String picture)
+    {
+        manager.updateEntity(id, User.Model.PICTURE, picture);
+    }
+
+    public void updateEntity(BaseEntity entity)
+    {
+        PersistenceEntity persistenceEntity = converter.convertToEntity(entity);
+
+        HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
+        Object sqcParam[] = new Object[4 + (attributes.size() << 1)];
+
+        int itera = 0;
+        for (String key : attributes.keySet())
+        {
+            sqcParam[itera] = key;
+            ++itera;
+            sqcParam[itera] = attributes.get(key);
+            ++itera;
+        }
+
+        sqcParam[itera] = "-3";
+        ++itera;
+        sqcParam[itera] = persistenceEntity.getName();
+        ++itera;
+        sqcParam[itera] = "-4";
+        ++itera;
+        sqcParam[itera] = persistenceEntity.getDescription();
+
+        manager.updateEntity(persistenceEntity.getObject_id(), sqcParam);
     }
 }

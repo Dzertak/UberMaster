@@ -11,5 +11,7 @@ public interface OrderAttr
     String DUE_DATE = "18";
     String STATUS = "19";
     String MASTER_PROFESSION = "21";
+    String MARK = "22";
+    String COMMENT = "23";
 }
 
