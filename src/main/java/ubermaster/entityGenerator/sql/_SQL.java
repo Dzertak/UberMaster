@@ -34,6 +34,7 @@ public interface _SQL
 	String ATTR_ORDER_PROFESSION = "21";
 	String ATTR_ORDER_MARK = "22";
 	String ATTR_ORDER_COMMENT = "23";
+	String ATTR_ORDER_MASTER_END_DATE = "24";
 
 	String DATE = "01/01/18 ";
 

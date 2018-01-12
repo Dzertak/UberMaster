@@ -35,7 +35,7 @@ public class Order extends BaseEntity {
     protected String masterProfession;
 
     @Attribute(Model.MARK)
-    protected byte mark;
+    protected byte mark = -1;
 
     @Attribute(Model.COMMENT)
     protected String comment;

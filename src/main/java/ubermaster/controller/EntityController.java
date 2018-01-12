@@ -54,7 +54,7 @@ public class EntityController<T extends BaseEntity>
 
     @RequestMapping
     (
-        value = "/getTypedEntity",
+        value = "/getTypedEntities",
         method = RequestMethod.GET,
         produces = "application/json"
     )
