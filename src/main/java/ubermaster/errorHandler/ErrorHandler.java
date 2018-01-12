@@ -19,7 +19,7 @@ public class ErrorHandler {
 
     private static Logger log = Logger.getLogger(ErrorHandler.class.getName());
 
-    public Exception createError(String errorCode) throws Exception {
+    public static Exception createError(String errorCode) throws Exception {
         Exception exception = null;
         try {
             final File xmlFile = new File(FILEPATH);

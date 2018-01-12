@@ -3,6 +3,8 @@ package ubermaster.persistence.manager;
 import ubermaster.entity.model.BaseEntity;
 import ubermaster.entity.model.PersistenceEntity;
 
+import java.sql.SQLException;
+
 public interface Manager
 {
 /*::|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/

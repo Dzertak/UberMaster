@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ubermaster.entity.model.*;
 import ubermaster.entity.security.JwtAuthenticationRequest;
 import ubermaster.entityGenerator.entity.EntityGenerator;
+import ubermaster.errorHandler.ErrorHandler;
 import ubermaster.persistence.facade.Facade;
 import ubermaster.persistence.manager.Manager;
 
