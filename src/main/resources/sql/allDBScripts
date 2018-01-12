@@ -138,6 +138,7 @@ into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (19,
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (21, 5, null, 'Master profession')
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (22, 5, null, 'Mark')
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (23, 5, null, 'Comment')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (24, 5, null, 'Master end date')
 select * from dual;
 
 --  for users field locations
@@ -403,7 +404,7 @@ as
                     values (attrID, obID, null, null, lstID);
                 end if;
             else
-                if (attrID in (12, 13, 17, 18)) then
+                if (attrID in (12, 13, 17, 18, 24)) then
                     insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
                     values (attrID, obID, null, to_date(attrValue, 'DD/MM/YYYY hh24:mi'), null);
                 else
@@ -713,7 +714,7 @@ as
             end if;
 
             --	Attributes -> date_value
-            if (attrID in (12, 13, 17, 18)) then
+            if (attrID in (12, 13, 17, 18, 24)) then
                 update Attributes
                 set date_value = to_date(innerArray(itera + 1), 'DD/MM/YY hh24:mi')
                 where attr_id = attrID and object_id = obID;

@@ -45,8 +45,8 @@ public class Facade
      */
     public <T extends BaseEntity> T getEntity
     (
-            long id,
-            final Class<? extends BaseEntity> CLASS
+        long id,
+        final Class<? extends BaseEntity> CLASS
     )
     {
         /*if (CACHE.containsKey(id))

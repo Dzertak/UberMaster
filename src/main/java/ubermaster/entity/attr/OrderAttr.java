@@ -13,5 +13,6 @@ public interface OrderAttr
     String MASTER_PROFESSION = "21";
     String MARK = "22";
     String COMMENT = "23";
+    String MASTER_END_DATE = "24";
 }
 
