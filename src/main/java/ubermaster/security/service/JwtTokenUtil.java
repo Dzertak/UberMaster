@@ -21,13 +21,10 @@ public class JwtTokenUtil {
     private Long expiration = EXPIRATION_TIME;
 
     private Claims parseToken(String token) {
-
         Claims body = Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token.substring(10))
                 .getBody();
-
-
 
         return body;
     }
@@ -38,6 +35,10 @@ public class JwtTokenUtil {
 
     public Date getExpirationDateFromToken(String token) {
         return parseToken(token).getExpiration();
+    }
+
+    public String getRoleFromUser(String token) {
+        return (String) parseToken(token).get("role");
     }
 
     private Boolean isTokenExpired(String token) {
@@ -55,6 +56,7 @@ public class JwtTokenUtil {
                 .setExpiration(expirationDate)
                 .setId(String.valueOf(jwtUser.getId()));
         claims.put("role", jwtUser.getAuthorities().iterator().next().toString());
+        claims.put("isBanned", jwtUser.isEnabled());
 
         return Jwts.builder()
                 .setClaims(claims)

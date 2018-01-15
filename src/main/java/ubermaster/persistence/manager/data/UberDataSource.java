@@ -5,6 +5,8 @@ import org.apache.log4j.Logger;
 import org.apache.tomcat.jdbc.pool.ConnectionPool;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
@@ -23,7 +25,9 @@ public class UberDataSource {
 
     public static OracleConnection getConnection() throws SQLException {
         try {
-            return connectionPool.getConnection().unwrap(OracleConnection.class);
+            OracleConnection oracleConnection = connectionPool.getConnection().unwrap(OracleConnection.class);
+            oracleConnection.setAutoClose(true);
+            return oracleConnection;
         } catch (SQLException ex) {
             log.error(ex.getMessage(), ex);
             throw new SQLException(ex.getMessage());
