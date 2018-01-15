@@ -15,14 +15,15 @@ import java.io.IOException;
 
 public class ErrorHandler {
     private static final String FILEPATH = System.getProperty("user.dir")+
-            "src\\main\\resources\\errorHandler\\errors.xml";
+            "src\\main\\resources\\errorHandler\\";
 
     private static Logger log = Logger.getLogger(ErrorHandler.class.getName());
 
-    public static Exception createError(String errorCode) throws Exception {
+    public static Exception createError(Errors errorCode) throws Exception {
         Exception exception = null;
         try {
-            final File xmlFile = new File(FILEPATH);
+            final File xmlFile = new File(FILEPATH
+                    + errorCode.toString() + ".xml");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(xmlFile);
