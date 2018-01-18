@@ -16,6 +16,7 @@ public interface Manager
     String INSERT_ENTITY = "{call insertEntity(?)}";
     String UPDATE_ENTITY = "{call updateEntity(?)}";
     String GET_ORDER_BY_PROFESSION = "call getOrdersByProfession(?, ?)";
+    String GET_ORDER_BY_STATUS = "call getOrdersByStatus(?, ?)";
 
     String ATTR_OBJECT_ID = "-1";
     String ATTR_OBJECT_TYPE_ID = "-2";
@@ -26,6 +27,9 @@ public interface Manager
 
     byte MASTER_TYPE_ORDERS = 1;
     byte POKE_TYPE_ORDERS = 2;
+
+    byte CON_LST_PROFESSION = 1;
+    byte CON_LST_STATUS = 2;
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     /**
@@ -87,15 +91,7 @@ public interface Manager
      * */
     PersistenceEntity[] getUserOrders(long id, int userType);
 
-    /**
-     * Get the orders in array of {@code PersistenceEntity} by profession
-     * instances
-     *
-     * @param profession —  order profession
-     *
-     * @return an instance of array of {@code PersistenceEntity} instances
-     * */
-    PersistenceEntity[] getOrdersByProfession(String profession);
+    PersistenceEntity[] getOrdersByList(byte condition, String profession);
 
     /**
      * Deletes entity from data base by entity id

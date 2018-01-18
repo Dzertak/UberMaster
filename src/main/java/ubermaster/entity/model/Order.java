@@ -43,7 +43,6 @@ public class Order extends BaseEntity {
     @Attribute(Model.MASTER_END_DATE)
     protected Date masterEndDate;
 
-
     public interface Model extends OrderAttr {
     }
 

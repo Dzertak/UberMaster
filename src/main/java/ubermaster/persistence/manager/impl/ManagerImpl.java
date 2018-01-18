@@ -452,26 +452,38 @@ public class ManagerImpl implements Manager
         }
     }
 
-    public PersistenceEntity[] getOrdersByProfession(String profession)
+    public PersistenceEntity[] getOrdersByList(final byte CON_LST_VAL, String value)
     {
         OracleCallableStatement callStat;
-        PersistenceEntity sqcPE[];
         OracleConnection connection = null;
         try
         {
-            connection = getConnection();//dataSource.getConnection();
-            callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
+            connection = getConnection();
+
+            switch (CON_LST_VAL)
+            {
+                case CON_LST_PROFESSION :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
+                    break;
+
+                case CON_LST_STATUS :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_STATUS);
+                    break;
+
+                default :
+                    callStat = null;
+            }
 
             callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
 
-            callStat.setString(1, profession);
+            callStat.setString(1, value);
             callStat.execute();
 
             return getPersistanceEntities
-                    (
-                            (Object[]) callStat.getARRAY(2).getArray(),
-                            Order.class
-                    );
+                (
+                    (Object[]) callStat.getARRAY(2).getArray(),
+                    Order.class
+                );
         }
 
         catch (SQLException | ParseException exc)

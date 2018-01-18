@@ -190,8 +190,18 @@ public class Facade
 
     public <T extends BaseEntity> T[] getOrdersByProfession(String profession)
     {
+        return getOrdersByList(Manager.CON_LST_PROFESSION, profession);
+    }
+
+    public <T extends BaseEntity> T[] getOrdersByStatus(String status)
+    {
+        return getOrdersByList(Manager.CON_LST_STATUS, status);
+    }
+
+    private <T extends BaseEntity> T[] getOrdersByList(byte condition, String value)
+    {
         //--:   DB
-        PersistenceEntity sqcPE[] = manager.getOrdersByProfession(profession);
+        PersistenceEntity sqcPE[] = manager.getOrdersByList(condition, value);
 
         if (sqcPE == null)
             return null;

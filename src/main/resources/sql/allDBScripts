@@ -160,6 +160,7 @@ insert all
 into Lists (attr_id, list_value_id, value) values (19, 7, 'New')
 into Lists (attr_id, list_value_id, value) values (19, 8, 'In processing')
 into Lists (attr_id, list_value_id, value) values (19, 9, 'Completed')
+into Lists (attr_id, list_value_id, value) values (19, 29, 'Master done')
 select * from dual;
 
 -- for Pokes/Masters 'isBlocked'
