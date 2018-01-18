@@ -37,11 +37,12 @@ public class ManagerImpl implements Manager
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public void createEntity
     (
-            PersistenceEntity persistenceEntity,
-            Class<? extends BaseEntity> _class
+        PersistenceEntity persistenceEntity,
+        Class<? extends BaseEntity> _class
     )
     {
         OracleConnection oracleConnection = null;
+        OracleCallableStatement oraCallStat = null;
         try
         {
             HashMap<String, Object> hashMap =
@@ -70,12 +71,12 @@ public class ManagerImpl implements Manager
                     );
             ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
 
-            OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
+            oraCallStat = (OracleCallableStatement) oracleConnection.prepareCall
                     (
                             INSERT_ENTITY
                     );
-            stmt.setARRAY(1, array);
-            stmt.execute();
+            oraCallStat.setARRAY(1, array);
+            oraCallStat.execute();
         }
 
         catch (SQLException exc)
@@ -88,6 +89,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                oraCallStat.close();
                 oracleConnection.close();
             }
 
@@ -164,11 +166,11 @@ public class ManagerImpl implements Manager
     }
 
     private PersistenceEntity[] getPersistanceEntities
-            (
-                    Object sqcEntity[],
-                    Class<? extends BaseEntity> _class
-            )
-            throws SQLException, ParseException
+    (
+        Object sqcEntity[],
+        Class<? extends BaseEntity> _class
+    )
+        throws SQLException, ParseException
     {
         int lengthEntity = sqcEntity.length;
         PersistenceEntity sqcPE[] = new PersistenceEntity[lengthEntity];
@@ -226,7 +228,7 @@ public class ManagerImpl implements Manager
 
     public PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class)
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
@@ -252,6 +254,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                callStat.close();
                 oracleConnection.close();
             }
 
@@ -268,7 +271,7 @@ public class ManagerImpl implements Manager
 
         String objectTypeID = _class.getAnnotation(ObjectType.class).value();
         OracleConnection connection = null;
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         try
         {
             connection = getConnection();
@@ -295,6 +298,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                callStat.close();
                 connection.close();
             }
 
@@ -308,7 +312,7 @@ public class ManagerImpl implements Manager
 
     public PersistenceEntity getUserByPhone(String phoneNumber)
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
@@ -339,6 +343,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                callStat.close();
                 oracleConnection.close();
             }
 
@@ -352,7 +357,7 @@ public class ManagerImpl implements Manager
 
     public PersistenceEntity getUserByPhonePass(String phoneNumber, String password)
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
@@ -384,6 +389,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                callStat.close();
                 oracleConnection.close();
             }
 
@@ -397,7 +403,7 @@ public class ManagerImpl implements Manager
 
     public PersistenceEntity[] getUserOrders(long id, int userType)
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         OracleConnection connection = null;
         PersistenceEntity sqcPE[];
         try
@@ -441,6 +447,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                callStat.close();
                 connection.close();
             }
 
@@ -454,7 +461,7 @@ public class ManagerImpl implements Manager
 
     public PersistenceEntity[] getOrdersByList(final byte CON_LST_VAL, String value)
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         OracleConnection connection = null;
         try
         {
@@ -497,6 +504,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                callStat.close();
                 connection.close();
             }
 
@@ -511,10 +519,11 @@ public class ManagerImpl implements Manager
     public void deleteEntity(long id)
     {
         OracleConnection oracleConnection = null;
+        PreparedStatement statement = null;
         try
         {
             oracleConnection = getConnection();
-            PreparedStatement statement = oracleConnection
+            statement = oracleConnection
                     .prepareStatement(DELETE_ENTITY);
             statement.setString(1, Long.toString(id));
             statement.execute();
@@ -530,6 +539,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                statement.close();
                 oracleConnection.close();
             }
 
@@ -544,6 +554,7 @@ public class ManagerImpl implements Manager
     public void updateEntity(long id, Object ... sqcParam)
     {
         OracleConnection oracleConnection = null;
+        OracleCallableStatement callStat = null;
         try
         {
             String elements[] = new String[1 + sqcParam.length];
@@ -566,12 +577,12 @@ public class ManagerImpl implements Manager
                     );
             ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
 
-            OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
+            callStat = (OracleCallableStatement) oracleConnection.prepareCall
                     (
                         UPDATE_ENTITY
                     );
-            stmt.setARRAY(1, array);
-            stmt.execute();
+            callStat.setARRAY(1, array);
+            callStat.execute();
         }
 
         catch (SQLException exc)
@@ -584,6 +595,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
+                callStat.close();
                 oracleConnection.close();
             }
 
