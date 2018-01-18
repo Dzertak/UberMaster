@@ -33,6 +33,11 @@ public class Master extends BlockedUser {
     @Attribute(Model.END_TIME)
     protected Date endTime;
 
+    public Master()
+    {
+        super("Master");
+    }
+
     public interface Model extends MasterAttr {
     }
 
