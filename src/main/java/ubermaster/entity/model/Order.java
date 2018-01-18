@@ -43,7 +43,20 @@ public class Order extends BaseEntity {
     @Attribute(Model.MASTER_END_DATE)
     protected Date masterEndDate;
 
+    @Attribute(Model.POKE_ID)
+    protected long pokeId;
+
     public interface Model extends OrderAttr {
+    }
+
+    public long getPokeId()
+    {
+        return pokeId;
+    }
+
+    public void setPokeId(long pokeId)
+    {
+        this.pokeId = pokeId;
     }
 
     public Date getMasterEndDate()

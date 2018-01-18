@@ -14,5 +14,7 @@ public interface OrderAttr
     String MARK = "22";
     String COMMENT = "23";
     String MASTER_END_DATE = "24";
+
+    String POKE_ID = "-19";
 }
 
