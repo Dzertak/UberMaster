@@ -757,3 +757,31 @@ as
         commit work;
     end;
 /
+
+/*
+===================================================================================================================
+				GET ORDER BY STATUS
+===================================================================================================================
+*/
+
+create or replace procedure getOrdersByStatus(status in varchar, innerArray out arrayEntites)
+as
+    idsArray dbms_sql.number_table;
+    fileds arrayFiled := arrayFiled();
+    masterName type_attributes;
+    begin
+        select obj.object_id
+        bulk collect into idsArray
+        from Objects obj join Attributes attr on obj.object_id = attr.object_id
+            join Lists lst on lst.list_value_id = attr.list_value_id
+        where lower(lst.value) = lower(status) and object_type_id = 5;
+
+        innerArray := arrayEntites();
+
+        for itera in 1..idsArray.last loop
+            innerArray.extend();
+            getEntities(idsArray(itera), fileds);
+            innerArray(itera) := fileds;
+        end loop;
+    end;
+/
