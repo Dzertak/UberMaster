@@ -10,6 +10,9 @@ drop table Objects CASCADE CONSTRAINTS;
 drop table Attributes CASCADE CONSTRAINTS;
 drop table ObjReference CASCADE CONSTRAINTS;
 
+drop procedure getMasterAverMark;
+drop procedure getOrdersByStatus;
+drop procedure updateEntity;
 drop procedure getOrdersByProfession;
 drop procedure getMasterOrders;
 drop procedure getPokeOrders;
