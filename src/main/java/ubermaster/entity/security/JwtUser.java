@@ -37,6 +37,7 @@ public class JwtUser<T extends User> implements UserDetails {
         this.phone = user.getPhoneNumber();
         this.password = user.getPassword();
         this.authorities = (AuthorityUtils.commaSeparatedStringToAuthorityList(user.getClassType().toUpperCase()));
+        this.enabled = true;
     }
 
     @JsonIgnore
@@ -82,5 +83,9 @@ public class JwtUser<T extends User> implements UserDetails {
     @Override
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 }

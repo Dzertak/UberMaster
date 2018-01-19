@@ -3,40 +3,50 @@
 */
 
     --Generate Entities
-	http://localhost:8090/entities/generate
+    http://localhost:8090/entities/generate
 
-	--Get Some Pokes
-	http://localhost:8090/entities/getEntity?id=0&class=Poke
-	http://localhost:8090/entities/getEntity?id=7&class=Poke
+    --Get Some Pokes
+    http://localhost:8090/entities/getEntity?id=0&class=Poke
+    http://localhost:8090/entities/getEntity?id=7&class=Poke
 
-	--Get Some Masters
-	http://localhost:8090/entities/getEntity?id=10&class=Master
-	http://localhost:8090/entities/getEntity?id=13&class=Master
-	http://localhost:8090/entities/getEntity?id=20&class=Master
+    --Get Some Masters
+    http://localhost:8090/entities/getEntity?id=10&class=Master
+    http://localhost:8090/entities/getEntity?id=13&class=Master
+    http://localhost:8090/entities/getEntity?id=20&class=Master
 
-	--Get Some Orders
-	http://localhost:8090/entities/getEntity?id=30&class=Order
-	http://localhost:8090/entities/getEntity?id=33&class=Order
-	http://localhost:8090/entities/getEntity?id=34&class=Order
+    --Get Some Orders
+    http://localhost:8090/entities/getEntity?id=30&class=Order
+    http://localhost:8090/entities/getEntity?id=33&class=Order
+    http://localhost:8090/entities/getEntity?id=34&class=Order
 
-	--Get User By Phone
-	http://localhost:8090/entities/getUser?phone=500282531872&password=yGypB4E2WUH
-	http://localhost:8090/entities/getUser?phone=146229766768&password=Kicnmdg0hOlO
+    --Get User By Phone And Pass
+    /*
+        http://localhost:8090/entities/getUserByPhonePass?phone=500282531872&password=yGypB4E2WUH
+        http://localhost:8090/entities/getUserByPhonePass?phone=146229766768&password=Kicnmdg0hOlO
+    */
 
-	--Get All Pokes
-	http://localhost:8090/entities/getTypedEntity?class=Poke
+    --Get User By Phone
+    http://localhost:8090/entities/getUserByPhone?phone=500282531872
+    http://localhost:8090/entities/getUserByPhone?phone=146229766768
 
-	--Get All Masters
-	http://localhost:8090/entities/getTypedEntity?class=Master
+    --Get All Pokes
+    http://localhost:8090/entities/getTypedEntity?class=Poke
 
-	--Get All Orders
-	http://localhost:8090/entities/getTypedEntity?class=Order
+    --Get All Masters
+    http://localhost:8090/entities/getTypedEntity?class=Master
 
-	--Get All Poke Orders
-	http://localhost:8090/entities/getPokeOrders?id=3
-	http://localhost:8090/entities/getPokeOrders?id=7
-	http://localhost:8090/entities/getPokeOrders?id=8
+    --Get All Orders
+    http://localhost:8090/entities/getTypedEntity?class=Order
 
-	--Get All Orders By Profession(for Master)
-	http://localhost:8090/entities/getOrdersByProfession?profession=Cleaner
-	http://localhost:8090/entities/getOrdersByProfession?profession=Electrician
+    --Get All Poke Orders
+    http://localhost:8090/entities/getPokeOrders?id=3
+    http://localhost:8090/entities/getPokeOrders?id=7
+    http://localhost:8090/entities/getPokeOrders?id=8
+
+    --Get All Master Orders
+    http://localhost:8090/entities/getMasterOrders?id=12
+    http://localhost:8090/entities/getMasterOrders?id=18
+
+    --Get All Orders By Profession(for Master)
+    http://localhost:8090/entities/getOrdersByProfession?profession=Cleaner
+    http://localhost:8090/entities/getOrdersByProfession?profession=Electrician
