@@ -10,6 +10,11 @@ public class Poke extends BlockedUser {
     public interface Model extends PokeAttr {
     }
 
+    public Poke()
+    {
+       super("Poke");
+    }
+
     @Override
     public HashMap getAllFields() {
         HashMap<String, Object> hashmap = super.getAllFields();

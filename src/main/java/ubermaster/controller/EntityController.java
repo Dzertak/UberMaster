@@ -55,7 +55,7 @@ public class EntityController<T extends BaseEntity>
 
     @RequestMapping
     (
-        value = "/getTypedEntity",
+        value = "/getTypedEntities",
         method = RequestMethod.GET,
         produces = "application/json"
     )
@@ -293,4 +293,75 @@ public class EntityController<T extends BaseEntity>
 
 		return "DONE";
 	}
+
+	@RequestMapping
+	(
+		value = "/masterDoneOrder",
+		method = RequestMethod.GET,
+		produces = "application/json"
+	)
+	public String masterDoneOrder(@RequestParam("id") long orderID)
+	{
+		facade.setOrderStatus(orderID, -2, "Master done");
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/masterCancelDoneOrder",
+		method = RequestMethod.GET,
+		produces = "application/json"
+	)
+	public String masterCancelDoneOrder(@RequestParam("id") long orderID)
+	{
+		facade.setOrderStatus(orderID, -2, "In progress");
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/masterAcceptOrder",
+		method = RequestMethod.GET,
+		produces = "application/json"
+	)
+	public String masterAcceptOrder
+	(
+		@RequestParam("id") long orderID,
+		@RequestParam("mid") long masterID
+	)
+	{
+		facade.setOrderStatus(orderID, masterID, "In progress");
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/masterDiscardOrder",
+		method = RequestMethod.GET,
+		produces = "application/json"
+	)
+	public String masterDiscardOrder(@RequestParam("id") long orderID)
+	{
+		facade.setOrderStatus(orderID, -1, "New");
+
+		return "DONE";
+	}
+
+	@RequestMapping
+	(
+		value = "/getOrdersByStatus",
+		method = RequestMethod.POST,
+		produces = "application/json"
+	)
+	public BaseEntity[] getOrdersByStatus
+	(
+		@RequestParam("status") String status
+	)
+	{
+		return facade.getOrdersByStatus(status);
+	}
+
 }

@@ -8,7 +8,7 @@ import ubermaster.entity.attr.UserAttr;
 import java.util.HashMap;
 
 @ObjectType(UserAttr.OBJTYPE)
-public class User extends BaseEntity {
+public abstract class User extends BaseEntity {
     @Attribute(Model.LOCATION)
     protected String location;
 
@@ -24,19 +24,19 @@ public class User extends BaseEntity {
     @Attribute(Model.PICTURE)
     protected String picture;
 
-    protected String classType;
+    protected final String CLASS_TYPE;
 
     public interface Model extends UserAttr {
     }
 
-    public void setClassType(String classType)
+    User(String classType)
     {
-        this.classType = classType;
+        CLASS_TYPE = classType;
     }
 
     public String getClassType()
     {
-        return classType;
+        return CLASS_TYPE;
     }
 
     public String getLocation() {

@@ -35,13 +35,38 @@ public class Order extends BaseEntity {
     protected String masterProfession;
 
     @Attribute(Model.MARK)
-    protected byte mark;
+    protected byte mark = -1;
 
     @Attribute(Model.COMMENT)
     protected String comment;
 
+    @Attribute(Model.MASTER_END_DATE)
+    protected Date masterEndDate;
+
+    @Attribute(Model.POKE_ID)
+    protected long pokeId;
 
     public interface Model extends OrderAttr {
+    }
+
+    public long getPokeId()
+    {
+        return pokeId;
+    }
+
+    public void setPokeId(long pokeId)
+    {
+        this.pokeId = pokeId;
+    }
+
+    public Date getMasterEndDate()
+    {
+        return masterEndDate;
+    }
+
+    public void setMasterEndDate(Date date)
+    {
+        masterEndDate = date;
     }
 
     public String getComment()
@@ -143,6 +168,7 @@ public class Order extends BaseEntity {
         hashmap.put(Model.MASTER_PROFESSION, masterProfession);
         hashmap.put(Model.MARK, mark);
         hashmap.put(Model.COMMENT, comment);
+        hashmap.put(Model.MASTER_END_DATE, masterEndDate);
 
         return hashmap;
     }
@@ -160,6 +186,7 @@ public class Order extends BaseEntity {
                 ", \nmaster profession : " + masterProfession +
                 ", \nmark : " + mark +
                 ", \ncomment : " + comment +
+                ", \nmaster end date : " + masterEndDate +
                 '}';
     }
 }

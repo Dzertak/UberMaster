@@ -138,6 +138,7 @@ into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (19,
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (21, 5, null, 'Master profession')
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (22, 5, null, 'Mark')
 into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (23, 5, null, 'Comment')
+into AttrType  (attr_id,  object_type_id,  object_type_id_ref, Code) values (24, 5, null, 'Master end date')
 select * from dual;
 
 --  for users field locations
@@ -159,6 +160,7 @@ insert all
 into Lists (attr_id, list_value_id, value) values (19, 7, 'New')
 into Lists (attr_id, list_value_id, value) values (19, 8, 'In processing')
 into Lists (attr_id, list_value_id, value) values (19, 9, 'Completed')
+into Lists (attr_id, list_value_id, value) values (19, 29, 'Master done')
 select * from dual;
 
 -- for Pokes/Masters 'isBlocked'
@@ -303,7 +305,40 @@ as
     lstID Lists.list_value_id%type;
 
     i binary_integer;
+    phoneIn varchar(4000);
+    phone varchar(4000);
+    itera number;
+    lastIndex number;
     begin
+        lastIndex := innerArray.last;
+        itera := innerArray.first;
+        while (itera < lastIndex) loop
+            if (innerArray(itera) = '1') then
+                phoneIn := innerArray(itera + 1);
+
+                goto outCycle;
+            end if;
+
+            itera := itera + 1;
+        end loop;
+
+        <<outCycle>>
+        if (phoneIn is not null) then
+            begin
+                select value
+                into phone
+                from Attributes
+                where attr_id = 1 and phoneIn = value;
+                EXCEPTION
+                WHEN NO_DATA_FOUND THEN
+                goto continueProc;
+            end;
+
+            --goto exitProc;
+            raise_application_error( -20001, 'Phone like this '||phoneIn||' is already exists');
+        end if;
+
+        <<continueProc>>
         select max(object_id) + 1
         into obID
         from Objects;
@@ -365,7 +400,7 @@ as
             end if;
 
             -- defining of presenting of value or not
-            if (attrID in (5, 6, 10, 19, 20, 21)) then
+            if (attrID in (5, 6, 10, 19, 20, 21, 22)) then
                 if (obTyID = 5) then
                     begin
                         select max(list_value_id)
@@ -388,7 +423,7 @@ as
             end if;
 
             -- if lst location
-            if (attrID in (5, 6, 10, 19, 20, 21)) then
+            if (attrID in (5, 6, 10, 19, 20, 21, 22)) then
                 -- if such value is not presenting
                 if (lstID is null) then
                     insert into Lists (attr_id, list_value_id, value)
@@ -403,7 +438,7 @@ as
                     values (attrID, obID, null, null, lstID);
                 end if;
             else
-                if (attrID in (12, 13, 17, 18)) then
+                if (attrID in (12, 13, 17, 18, 24)) then
                     insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
                     values (attrID, obID, null, to_date(attrValue, 'DD/MM/YYYY hh24:mi'), null);
                 else
@@ -414,6 +449,9 @@ as
         <<RRR>>
             i := innerArray.next(i);
         end loop;
+
+        <<exitProc>>
+        phone := '';
     end;
 /
 
@@ -713,7 +751,7 @@ as
             end if;
 
             --	Attributes -> date_value
-            if (attrID in (12, 13, 17, 18)) then
+            if (attrID in (12, 13, 17, 18, 24)) then
                 update Attributes
                 set date_value = to_date(innerArray(itera + 1), 'DD/MM/YY hh24:mi')
                 where attr_id = attrID and object_id = obID;
@@ -753,5 +791,63 @@ as
         end loop;
 
         commit work;
+    end;
+/
+
+/*
+===================================================================================================================
+				GET ORDER BY STATUS
+===================================================================================================================
+*/
+
+create or replace procedure getOrdersByStatus(status in varchar, innerArray out arrayEntites)
+as
+    idsArray dbms_sql.number_table;
+    fileds arrayFiled := arrayFiled();
+    masterName type_attributes;
+    begin
+        select obj.object_id
+        bulk collect into idsArray
+        from Objects obj join Attributes attr on obj.object_id = attr.object_id
+            join Lists lst on lst.list_value_id = attr.list_value_id
+        where lower(lst.value) = lower(status) and object_type_id = 5;
+
+        innerArray := arrayEntites();
+
+        for itera in 1..idsArray.last loop
+            innerArray.extend();
+            getEntities(idsArray(itera), fileds);
+            innerArray(itera) := fileds;
+        end loop;
+    end;
+/
+/*
+===================================================================================================================
+				GET MASTER AVER MARK
+===================================================================================================================
+*/
+
+create or replace function getMasterAverMark(masterID in number)
+    return number
+is
+    averMark number(1);
+    begin
+        with Orders as
+        (
+            select object_id
+            from ObjReference
+            where refer_id = masterID
+        )
+        select avg(to_number(lst.value, '9'))
+        into averMark
+        from Attributes attr join Lists lst on attr.list_value_id = lst.list_value_id
+            join Orders ord on ord.object_id = attr.object_id
+        where attr.attr_id = 22 and lst.value <> '-1';
+
+        if (averMark is null) then
+            averMark := 0;
+        end if;
+
+        return(averMark);
     end;
 /
