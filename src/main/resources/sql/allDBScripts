@@ -785,3 +785,33 @@ as
         end loop;
     end;
 /
+/*
+===================================================================================================================
+				GET MASTER AVER MARK
+===================================================================================================================
+*/
+
+create or replace function getMasterAverMark(masterID in number)
+    return number
+is
+    averMark number(1);
+    begin
+        with Orders as
+        (
+            select object_id
+            from ObjReference
+            where refer_id = masterID
+        )
+        select avg(to_number(lst.value, '9'))
+        into averMark
+        from Attributes attr join Lists lst on attr.list_value_id = lst.list_value_id
+            join Orders ord on ord.object_id = attr.object_id
+        where attr.attr_id = 22 and lst.value <> '-1';
+
+        if (averMark is null) then
+            averMark := 0;
+        end if;
+
+        return(averMark);
+    end;
+/

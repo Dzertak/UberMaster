@@ -516,40 +516,61 @@ public class ManagerImpl implements Manager
         }
     }
 
-    public void deleteEntity(long id)
-    {
-        OracleConnection oracleConnection = null;
-        PreparedStatement statement = null;
-        try
-        {
-            oracleConnection = getConnection();
-            statement = oracleConnection
-                    .prepareStatement(DELETE_ENTITY);
-            statement.setString(1, Long.toString(id));
-            statement.execute();
-        }
+    public String simpleQuery(final byte CON_QUERY_VAL, long id)
+	{
+		OracleConnection oracleConnection = null;
+		PreparedStatement statement = null;
+		try
+		{
+			oracleConnection = getConnection();
 
-        catch (SQLException exc)
-        {
-            log.error(exc.getMessage(), exc);
-            //exc.printStackTrace();
-        }
+			switch (CON_QUERY_VAL)
+			{
+				case CON_DELETE :
+					statement = oracleConnection.prepareStatement(DELETE_ENTITY);
+				break;
 
-        finally
-        {
-            try
-            {
-                statement.close();
-                oracleConnection.close();
-            }
+				case CON_MASTER_AVER :
+					statement = oracleConnection.prepareStatement(GET_MASTER_AVER_MARK);
+				break;
 
-            catch (SQLException exc)
-            {
-                log.error(exc.getMessage(), exc);
-                //exc.printStackTrace();
-            }
-        }
-    }
+			}
+
+			statement.setString(1, Long.toString(id));
+			statement.execute();
+
+			ResultSet resultSet = statement.getResultSet();
+
+			if (resultSet == null)
+				return null;
+
+			resultSet.next();
+			return resultSet.getString(1);
+		}
+
+		catch (SQLException exc)
+		{
+			log.error(exc.getMessage(), exc);
+			//exc.printStackTrace();
+		}
+
+		finally
+		{
+			try
+			{
+				statement.close();
+				oracleConnection.close();
+			}
+
+			catch (SQLException exc)
+			{
+				log.error(exc.getMessage(), exc);
+				//exc.printStackTrace();
+			}
+		}
+
+		return null;
+	}
 
     public void updateEntity(long id, Object ... sqcParam)
     {

@@ -7,6 +7,7 @@ import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -59,7 +60,22 @@ public class Facade
 
         CACHE.put(id, persistenceEntity);
 
-        return converter.convertToModel(persistenceEntity, CLASS);
+        T entity = converter.convertToModel(persistenceEntity, CLASS);
+
+        if (Master.class.isAssignableFrom(CLASS))
+        {
+            String value = manager.simpleQuery(Manager.CON_MASTER_AVER, id);
+            try
+            {
+                ((Master) entity).setAverMark((byte)ConverterImpl.convertStringToObject(value, byte.class));
+            }
+
+            catch (ParseException exc)
+            {
+                exc.printStackTrace();
+            }
+        }
+        return entity;
     }
 
     /**
@@ -136,7 +152,7 @@ public class Facade
      */
     public void deleteEntity(long id)
     {
-        manager.deleteEntity(id);
+        manager.simpleQuery(Manager.CON_DELETE, id);
     }
 
     /**

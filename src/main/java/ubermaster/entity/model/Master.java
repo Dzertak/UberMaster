@@ -33,12 +33,24 @@ public class Master extends BlockedUser {
     @Attribute(Model.END_TIME)
     protected Date endTime;
 
+    protected byte averMark = -1;
+
     public Master()
     {
         super("Master");
     }
 
     public interface Model extends MasterAttr {
+    }
+
+    public byte getAverMark()
+    {
+        return averMark;
+    }
+
+    public void setAverMark(byte mark)
+    {
+        averMark = mark;
     }
 
     public String getProfession() {
