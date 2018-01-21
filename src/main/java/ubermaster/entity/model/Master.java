@@ -28,12 +28,29 @@ public class Master extends BlockedUser {
     protected String tools;
 
     @Attribute(Model.ST_TIME)
-    protected Date startTime;
+    protected short startTime;
 
     @Attribute(Model.END_TIME)
-    protected Date endTime;
+    protected short endTime;
+
+    protected byte averMark = -1;
+
+    public Master()
+    {
+        super("Master");
+    }
 
     public interface Model extends MasterAttr {
+    }
+
+    public byte getAverMark()
+    {
+        return averMark;
+    }
+
+    public void setAverMark(byte mark)
+    {
+        averMark = mark;
     }
 
     public String getProfession() {
@@ -84,19 +101,19 @@ public class Master extends BlockedUser {
         this.tools = tools;
     }
 
-    public Date getStart_time() {
+    public short getStart_time() {
         return startTime;
     }
 
-    public void setStart_time(Date start_time) {
+    public void setStart_time(short start_time) {
         this.startTime = start_time;
     }
 
-    public Date getEnd_time() {
+    public short getEnd_time() {
         return endTime;
     }
 
-    public void setEnd_time(Date end_time) {
+    public void setEnd_time(short end_time) {
         this.endTime = end_time;
     }
 

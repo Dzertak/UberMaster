@@ -55,10 +55,10 @@ public interface SQC_DATA
 
 	String SQC_STATUS[] =
 	{
-		"New", "In processing", "Completed"
+		"New", "In processing", "Completed", "Master accepted"
 	};
 
 	int ATTR_POKE_SIZE = 8;
 	int ATTR_MASTER_SIZE = 16;
-	int ATTR_ORDER_SIZE = 12;
+	int ATTR_ORDER_SIZE = 13;
 }

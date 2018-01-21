@@ -1,3 +1,5 @@
+package java;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +14,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public class EntityTEST
 {
@@ -77,13 +78,13 @@ public class EntityTEST
 		master.setUserDescription("Master User Descr");
 		master.setObject_id(10);
 		master.setTools("Pipetka");
-		master.setStart_time(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("01/02/2003 04:05"));
+		master.setStart_time((short)830);
 		master.setDescription("SomeDescr about MASTA");
 		master.setLocation("MasterLand");
 		master.setPassword("masterPASS, it's hard pass, right?");
 		master.setPhoneNumber("0777");
 		master.setPicture("PHOTO");
-		master.setEnd_time(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("06/07/2008 09:10"));
+		master.setEnd_time((short)1700);
 		master.setExperience("11");
 		master.setPayment(120000);
 		master.setProfession("I'm master, what the stupid question?");

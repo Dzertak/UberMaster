@@ -1,12 +1,8 @@
 package ubermaster.persistence.manager;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.xml.sax.SAXException;
 import ubermaster.entity.model.BaseEntity;
 import ubermaster.entity.model.PersistenceEntity;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.sql.SQLException;
 
 public interface Manager
@@ -22,6 +18,9 @@ public interface Manager
     String INSERT_ENTITY = "{call insertEntity(?)}";
     String UPDATE_ENTITY = "{call updateEntity(?)}";
     String GET_ORDER_BY_PROFESSION = "call getOrdersByProfession(?, ?)";
+    String GET_ORDER_BY_STATUS = "call getOrdersByStatus(?, ?)";
+    String GET_MASTER_AVER_MARK = "select getMasterAverMark(?) from dual";
+    String GET_MASTER_NAME = "select getMasterName(?) from dual";
 
     String ATTR_OBJECT_ID = "-1";
     String ATTR_OBJECT_TYPE_ID = "-2";
@@ -32,6 +31,13 @@ public interface Manager
 
     byte MASTER_TYPE_ORDERS = 1;
     byte POKE_TYPE_ORDERS = 2;
+
+    byte CON_LST_PROFESSION = 1;
+    byte CON_LST_STATUS = 2;
+
+    byte CON_MASTER_AVER = 1;
+    byte CON_DELETE = 2;
+    byte CON_MASTER_NAME = 3;
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     /**
@@ -41,8 +47,7 @@ public interface Manager
      *
      * @param _class — a type of instance
      * */
-    void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class)
-            throws SQLException, ParserConfigurationException, SAXException, IOException;
+    void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
 
     /**
      * Get an entity from data base by entity id
@@ -53,8 +58,7 @@ public interface Manager
      *
      * @return an instance of {@code PersistenceEntity} class
      * */
-    PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class)
-            throws SQLException, ParserConfigurationException, SAXException, IOException;
+    PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class);
 
     /**
      * Get an array of entities from data base by class type
@@ -63,8 +67,7 @@ public interface Manager
      *
      * @return an instance of array of {@code PersistenceEntity} instances
      * */
-    PersistenceEntity[] getTypedEntities(Class<? extends BaseEntity> _class)
-            throws SQLException, ParserConfigurationException, SAXException, IOException;
+    PersistenceEntity[] getTypedEntities(Class<? extends BaseEntity> _class);
 
     /**
      * Get a user from data base by phone number
@@ -73,8 +76,7 @@ public interface Manager
      *
      * @return an instance of {@code PersistenceEntity} instance
      * */
-    PersistenceEntity getUserByPhone(String phoneNumber)
-        throws UsernameNotFoundException, ParserConfigurationException, SAXException, IOException;
+    PersistenceEntity getUserByPhone(String phoneNumber);
 
     /**
      * Get a user from data base by phone number and password
@@ -84,8 +86,7 @@ public interface Manager
      *
      * @return an instance of {@code PersistenceEntity} instance
      * */
-    PersistenceEntity getUserByPhonePass(String phoneNumber, String password)
-            throws SQLException, ParserConfigurationException, SAXException, IOException;
+    PersistenceEntity getUserByPhonePass(String phoneNumber, String password);
 
     /**
      * Get the orders of master or poke in array of {@code PersistenceEntity}
@@ -96,27 +97,28 @@ public interface Manager
      *
      * @return an instance of array of {@code PersistenceEntity} instances
      * */
-    PersistenceEntity[] getUserOrders(long id, int userType)
-            throws SQLException, ParserConfigurationException, SAXException, IOException;
+    PersistenceEntity[] getUserOrders(long id, int userType);
 
     /**
-     * Get the orders in array of {@code PersistenceEntity} by profession
-     * instances
+     * Get the order instances by some list value
      *
-     * @param profession —  order profession
+     * @param condition — a byte value that identifies list value type
+     * @param value — value of list_value
      *
      * @return an instance of array of {@code PersistenceEntity} instances
      * */
-    PersistenceEntity[] getOrdersByProfession(String profession)
-            throws SQLException, ParserConfigurationException, SAXException, IOException;
+    PersistenceEntity[] getOrdersByList(byte condition, String value);
 
     /**
-     * Deletes entity from data base by entity id
+     * Returns a string value from entity by condition
      *
-     * @param id — entity id
+     * @param CON_QUERY_VAL — a key value for entity value
+     *
+     * @param id — an id of entity
+     *
+     * @return — entity value performed like string value
      * */
-    void deleteEntity(long id)
-            throws SQLException, ParserConfigurationException, SAXException, IOException;
+    String simpleQuery(final byte CON_QUERY_VAL, long id);
 
     /**
      * Method is used for updating entities
@@ -125,6 +127,5 @@ public interface Manager
      * @param sqcParam — an array of object couples. First couple element is attr_id
      *      of attribute and second one is value
      * */
-    void updateEntity(long id, Object ... sqcParam)
-            throws SQLException, ParserConfigurationException, SAXException, IOException;
+    void updateEntity(long id, Object ... sqcParam);
 }

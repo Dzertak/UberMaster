@@ -10,6 +10,12 @@ public class Admin extends User {
     public interface Model extends AdminAttr {
     }
 
+    public Admin()
+    {
+        super("Admin");
+    }
+
+    @Override
     public HashMap getAllFields() {
         return null;
     }

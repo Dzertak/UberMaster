@@ -25,7 +25,6 @@ public class ConverterImpl implements Converter
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-
     public PersistenceEntity convertToEntity(BaseEntity baseEntity)
     {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
@@ -46,28 +45,13 @@ public class ConverterImpl implements Converter
             entity = new Order();
 
         else if (Master.class.isAssignableFrom(CLASS))
-        {
             entity = new Master();
-            ((User)entity).setClassType(Master.class.getSimpleName());
-        }
 
         else if (Poke.class.isAssignableFrom(CLASS))
-        {
             entity = new Poke();
-            ((User)entity).setClassType(Poke.class.getSimpleName());
-        }
-
-        else if (User.class.isAssignableFrom(CLASS))
-        {
-            entity = new User();
-            ((User)entity).setClassType(User.class.getSimpleName());
-        }
 
         else if (Admin.class.isAssignableFrom(CLASS))
-        {
             entity = new Admin();
-            ((User)entity).setClassType(Admin.class.getSimpleName());
-        }
 
         HashMap<String, Object> hashMap =
                 (HashMap<String, Object>) persistenceEntity.getAttributes();
@@ -107,6 +91,9 @@ public class ConverterImpl implements Converter
         if (Byte.class.isAssignableFrom(CLASS))
             return Byte.toString((byte)value);
 
+        if (Short.class.isAssignableFrom(CLASS))
+            return Short.toString((short)value);
+
         return null;
     }
 
@@ -134,6 +121,9 @@ public class ConverterImpl implements Converter
 
         if (byte.class.isAssignableFrom(CLASS))
             return Byte.parseByte(VALUE);
+
+        if (short.class.isAssignableFrom(CLASS))
+            return Short.parseShort(VALUE);
 
         return VALUE;
 

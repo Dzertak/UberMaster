@@ -1,17 +1,13 @@
 package ubermaster.persistence.facade;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.xml.sax.SAXException;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
-import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,7 +33,6 @@ public class Facade
      * @param baseEntity an entity that will be inserted to the database
      */
     public void createEntity(BaseEntity baseEntity)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         PersistenceEntity persistenceEntity = converter.convertToEntity(baseEntity);
         manager.createEntity(persistenceEntity, baseEntity.getClass());
@@ -51,9 +46,9 @@ public class Facade
      */
     public <T extends BaseEntity> T getEntity
     (
-            long id,
-            final Class<? extends BaseEntity> CLASS
-    ) throws SQLException, ParserConfigurationException, SAXException, IOException
+        long id,
+        final Class<? extends BaseEntity> CLASS
+    )
     {
         /*if (CACHE.containsKey(id))
             return converter.convertToModel(CACHE.get(id), CLASS);*/
@@ -65,7 +60,29 @@ public class Facade
 
         CACHE.put(id, persistenceEntity);
 
-        return converter.convertToModel(persistenceEntity, CLASS);
+        T entity = converter.convertToModel(persistenceEntity, CLASS);
+
+        if (Master.class.isAssignableFrom(CLASS))
+        {
+            String value = manager.simpleQuery(Manager.CON_MASTER_AVER, id);
+            try
+            {
+                ((Master) entity).setAverMark((byte)ConverterImpl.convertStringToObject(value, byte.class));
+            }
+
+            catch (ParseException exc)
+            {
+                exc.printStackTrace();
+            }
+        }
+
+        else if (Order.class.isAssignableFrom(CLASS))
+        {
+            String value = manager.simpleQuery(Manager.CON_MASTER_NAME, id);
+            ((Order) entity).setMasterName(value);
+        }
+
+        return entity;
     }
 
     /**
@@ -76,7 +93,6 @@ public class Facade
      * @return entity that can be Poke or Master
      */
     public <T extends User> T getUser(String phoneNumber, String password)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
     //--:   Checking for presenting entity in the CACHE
        /* final byte NOT_FOUND = 0;
@@ -127,7 +143,6 @@ public class Facade
      * @return entity that can be Poke or Master
      */
     public <T extends User> T getUserByPhone(String phoneNumber)
-            throws UsernameNotFoundException, ParserConfigurationException, SAXException, IOException
     {
         PersistenceEntity persistenceEntity = manager.getUserByPhone(phoneNumber);
 
@@ -143,9 +158,8 @@ public class Facade
      * @param id — the identification number of an entity
      */
     public void deleteEntity(long id)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
-        manager.deleteEntity(id);
+        manager.simpleQuery(Manager.CON_DELETE, id);
     }
 
     /**
@@ -156,7 +170,6 @@ public class Facade
      * @return an array of typed entity
      */
     public <T extends BaseEntity> T[] getTypedEntities(Class<? extends BaseEntity> _class)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
     //--:   DB
         PersistenceEntity sqcPE[] = manager.getTypedEntities(_class);
@@ -182,7 +195,6 @@ public class Facade
      * @return an array of {@code Order} instances
      */
     public <T extends BaseEntity> T[] getUserOrders(long id, int userType)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
     //--:   DB
         PersistenceEntity sqcPE[] = manager.getUserOrders(id, userType);
@@ -200,10 +212,19 @@ public class Facade
     }
 
     public <T extends BaseEntity> T[] getOrdersByProfession(String profession)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
+    {
+        return getOrdersByList(Manager.CON_LST_PROFESSION, profession);
+    }
+
+    public <T extends BaseEntity> T[] getOrdersByStatus(String status)
+    {
+        return getOrdersByList(Manager.CON_LST_STATUS, status);
+    }
+
+    private <T extends BaseEntity> T[] getOrdersByList(byte condition, String value)
     {
         //--:   DB
-        PersistenceEntity sqcPE[] = manager.getOrdersByProfession(profession);
+        PersistenceEntity sqcPE[] = manager.getOrdersByList(condition, value);
 
         if (sqcPE == null)
             return null;
@@ -218,7 +239,6 @@ public class Facade
     }
 
     public void setBlocked(long id, boolean isBlocked)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         /*PersistenceEntity persistenceEntity = CACHE.get(id);
 
@@ -243,7 +263,6 @@ public class Facade
      * @param status — new status of order
      * */
     public void setOrderStatus(long id, long mid, String status)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         manager.updateEntity
             (
@@ -262,13 +281,11 @@ public class Facade
      * @param picture — an user picture
      * */
     public void setUserPicture(long id, String picture)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         manager.updateEntity(id, User.Model.PICTURE, picture);
     }
 
     public void updateEntity(BaseEntity entity)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         PersistenceEntity persistenceEntity = converter.convertToEntity(entity);
 

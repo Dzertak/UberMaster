@@ -7,18 +7,12 @@ import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import org.apache.log4j.Logger;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import org.xml.sax.SAXException;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.*;
-import ubermaster.errorHandler.ErrorHandler;
-import ubermaster.errorHandler.Errors;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -43,11 +37,12 @@ public class ManagerImpl implements Manager
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public void createEntity
     (
-            PersistenceEntity persistenceEntity,
-            Class<? extends BaseEntity> _class
-    ) throws SQLException, ParserConfigurationException, SAXException, IOException
+        PersistenceEntity persistenceEntity,
+        Class<? extends BaseEntity> _class
+    )
     {
         OracleConnection oracleConnection = null;
+        OracleCallableStatement oraCallStat = null;
         try
         {
             HashMap<String, Object> hashMap =
@@ -76,25 +71,25 @@ public class ManagerImpl implements Manager
                     );
             ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
 
-            OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
+            oraCallStat = (OracleCallableStatement) oracleConnection.prepareCall
                     (
                             INSERT_ENTITY
                     );
-            stmt.setARRAY(1, array);
-            stmt.execute();
+            oraCallStat.setARRAY(1, array);
+            oraCallStat.execute();
         }
 
         catch (SQLException exc)
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            throw ErrorHandler.createSQLException(Errors.ser_7);
         }
 
         finally
         {
             try
             {
+                oraCallStat.close();
                 oracleConnection.close();
             }
 
@@ -171,11 +166,11 @@ public class ManagerImpl implements Manager
     }
 
     private PersistenceEntity[] getPersistanceEntities
-            (
-                    Object sqcEntity[],
-                    Class<? extends BaseEntity> _class
-            )
-            throws SQLException, ParseException
+    (
+        Object sqcEntity[],
+        Class<? extends BaseEntity> _class
+    )
+        throws SQLException, ParseException
     {
         int lengthEntity = sqcEntity.length;
         PersistenceEntity sqcPE[] = new PersistenceEntity[lengthEntity];
@@ -232,9 +227,8 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
@@ -253,14 +247,14 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            //return null;
-            throw ErrorHandler.createSQLException(Errors.ser_4);
+            return null;
         }
 
         finally
         {
             try
             {
+                callStat.close();
                 oracleConnection.close();
             }
 
@@ -273,12 +267,11 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity[] getTypedEntities(Class<? extends BaseEntity> _class)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
 
         String objectTypeID = _class.getAnnotation(ObjectType.class).value();
         OracleConnection connection = null;
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         try
         {
             connection = getConnection();
@@ -298,14 +291,14 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            //return null;
-            throw ErrorHandler.createSQLException(Errors.ser_4);
+            return null;
         }
 
         finally
         {
             try
             {
+                callStat.close();
                 connection.close();
             }
 
@@ -318,9 +311,8 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity getUserByPhone(String phoneNumber)
-            throws UsernameNotFoundException, ParserConfigurationException, SAXException, IOException
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
@@ -344,14 +336,14 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            //return null;
-            throw ErrorHandler.createUsernameNotFoundException(Errors.ser_4);
+            return null;
         }
 
         finally
         {
             try
             {
+                callStat.close();
                 oracleConnection.close();
             }
 
@@ -364,9 +356,8 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity getUserByPhonePass(String phoneNumber, String password)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         ResultSet resultSet;
         OracleConnection oracleConnection = null;
         try
@@ -391,14 +382,14 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            //return null;
-            throw ErrorHandler.createSQLException(Errors.ser_2);
+            return null;
         }
 
         finally
         {
             try
             {
+                callStat.close();
                 oracleConnection.close();
             }
 
@@ -411,9 +402,8 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity[] getUserOrders(long id, int userType)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
-        OracleCallableStatement callStat;
+        OracleCallableStatement callStat = null;
         OracleConnection connection = null;
         PersistenceEntity sqcPE[];
         try
@@ -450,14 +440,14 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            //return null;
-            throw ErrorHandler.createSQLException(Errors.ser_2);
+            return null;
         }
 
         finally
         {
             try
             {
+                callStat.close();
                 connection.close();
             }
 
@@ -469,41 +459,52 @@ public class ManagerImpl implements Manager
         }
     }
 
-    public PersistenceEntity[] getOrdersByProfession(String profession)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
+    public PersistenceEntity[] getOrdersByList(final byte CON_LST_VAL, String value)
     {
-        OracleCallableStatement callStat;
-        PersistenceEntity sqcPE[];
+        OracleCallableStatement callStat = null;
         OracleConnection connection = null;
         try
         {
-            connection = getConnection();//dataSource.getConnection();
-            callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
+            connection = getConnection();
+
+            switch (CON_LST_VAL)
+            {
+                case CON_LST_PROFESSION :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
+                    break;
+
+                case CON_LST_STATUS :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_STATUS);
+                    break;
+
+                default :
+                    callStat = null;
+            }
 
             callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
 
-            callStat.setString(1, profession);
+            callStat.setString(1, value);
             callStat.execute();
 
             return getPersistanceEntities
-                    (
-                            (Object[]) callStat.getARRAY(2).getArray(),
-                            Order.class
-                    );
+                (
+                    (Object[]) callStat.getARRAY(2).getArray(),
+                    Order.class
+                );
         }
 
         catch (SQLException | ParseException exc)
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            //return null;
-            throw ErrorHandler.createSQLException(Errors.ser_6);
+            return null;
         }
 
         finally
         {
             try
             {
+                callStat.close();
                 connection.close();
             }
 
@@ -515,45 +516,72 @@ public class ManagerImpl implements Manager
         }
     }
 
-    public void deleteEntity(long id)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
-    {
-        OracleConnection oracleConnection = null;
-        try
-        {
-            oracleConnection = getConnection();
-            PreparedStatement statement = oracleConnection
-                    .prepareStatement(DELETE_ENTITY);
-            statement.setString(1, Long.toString(id));
-            statement.execute();
-        }
+    public String simpleQuery(final byte CON_QUERY_VAL, long id)
+	{
+		OracleConnection oracleConnection = null;
+		PreparedStatement statement = null;
+		try
+		{
+			oracleConnection = getConnection();
 
-        catch (SQLException exc)
-        {
-            log.error(exc.getMessage(), exc);
-            //exc.printStackTrace();
-            throw ErrorHandler.createSQLException(Errors.ser_4);
-        }
+			switch (CON_QUERY_VAL)
+			{
+				case CON_DELETE :
+					statement = oracleConnection.prepareStatement(DELETE_ENTITY);
+				break;
 
-        finally
-        {
-            try
-            {
-                oracleConnection.close();
-            }
+				case CON_MASTER_AVER :
+					statement = oracleConnection.prepareStatement(GET_MASTER_AVER_MARK);
+				break;
 
-            catch (SQLException exc)
-            {
-                log.error(exc.getMessage(), exc);
-                //exc.printStackTrace();
-            }
-        }
-    }
+                case CON_MASTER_NAME :
+                    statement = oracleConnection.prepareStatement(GET_MASTER_NAME);
+                break;
+
+                default :
+                    statement = null;
+			}
+
+			statement.setString(1, Long.toString(id));
+			statement.execute();
+
+			ResultSet resultSet = statement.getResultSet();
+
+			if (resultSet == null)
+				return null;
+
+			resultSet.next();
+			return resultSet.getString(1);
+		}
+
+		catch (SQLException exc)
+		{
+			log.error(exc.getMessage(), exc);
+			//exc.printStackTrace();
+		}
+
+		finally
+		{
+			try
+			{
+				statement.close();
+				oracleConnection.close();
+			}
+
+			catch (SQLException exc)
+			{
+				log.error(exc.getMessage(), exc);
+				//exc.printStackTrace();
+			}
+		}
+
+		return null;
+	}
 
     public void updateEntity(long id, Object ... sqcParam)
-            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         OracleConnection oracleConnection = null;
+        OracleCallableStatement callStat = null;
         try
         {
             String elements[] = new String[1 + sqcParam.length];
@@ -576,25 +604,25 @@ public class ManagerImpl implements Manager
                     );
             ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
 
-            OracleCallableStatement stmt = (OracleCallableStatement) oracleConnection.prepareCall
+            callStat = (OracleCallableStatement) oracleConnection.prepareCall
                     (
                         UPDATE_ENTITY
                     );
-            stmt.setARRAY(1, array);
-            stmt.execute();
+            callStat.setARRAY(1, array);
+            callStat.execute();
         }
 
         catch (SQLException exc)
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            ErrorHandler.createSQLException(Errors.ser_4);
         }
 
         finally
         {
             try
             {
+                callStat.close();
                 oracleConnection.close();
             }
 

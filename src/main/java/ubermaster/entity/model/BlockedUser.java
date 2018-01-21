@@ -5,12 +5,16 @@ import ubermaster.entity.attr.BlockedUserAttr;
 
 import java.util.HashMap;
 
-public class BlockedUser extends User
+public abstract class BlockedUser extends User
 {
 /**:|       FIELD       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 	@Attribute(Model.IS_BLOCKED)
 	protected boolean isBlocked;
 /**:|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+	BlockedUser(String classType)
+	{
+		super(classType);
+	}
 /**:|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 	public interface Model extends BlockedUserAttr
 	{						}
