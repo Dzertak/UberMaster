@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<error id="SER-3">
+    <errormessage>Please fill in username and password</errormessage>
+</error>

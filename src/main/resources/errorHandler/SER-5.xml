@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<error id="SER-5">
+    <errormessage>This type doesn't exist</errormessage>
+</error>

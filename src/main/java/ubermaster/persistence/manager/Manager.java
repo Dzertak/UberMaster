@@ -20,6 +20,7 @@ public interface Manager
     String GET_ORDER_BY_PROFESSION = "call getOrdersByProfession(?, ?)";
     String GET_ORDER_BY_STATUS = "call getOrdersByStatus(?, ?)";
     String GET_MASTER_AVER_MARK = "select getMasterAverMark(?) from dual";
+    String GET_MASTER_NAME = "select getMasterName(?) from dual";
 
     String ATTR_OBJECT_ID = "-1";
     String ATTR_OBJECT_TYPE_ID = "-2";
@@ -36,6 +37,7 @@ public interface Manager
 
     byte CON_MASTER_AVER = 1;
     byte CON_DELETE = 2;
+    byte CON_MASTER_NAME = 3;
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     /**
@@ -107,6 +109,15 @@ public interface Manager
      * */
     PersistenceEntity[] getOrdersByList(byte condition, String value);
 
+    /**
+     * Returns a string value from entity by condition
+     *
+     * @param CON_QUERY_VAL — a key value for entity value
+     *
+     * @param id — an id of entity
+     *
+     * @return — entity value performed like string value
+     * */
     String simpleQuery(final byte CON_QUERY_VAL, long id);
 
     /**

@@ -75,6 +75,13 @@ public class Facade
                 exc.printStackTrace();
             }
         }
+
+        else if (Order.class.isAssignableFrom(CLASS))
+        {
+            String value = manager.simpleQuery(Manager.CON_MASTER_NAME, id);
+            ((Order) entity).setMasterName(value);
+        }
+
         return entity;
     }
 

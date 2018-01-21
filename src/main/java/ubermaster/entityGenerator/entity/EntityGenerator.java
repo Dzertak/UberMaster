@@ -264,34 +264,30 @@ public class EntityGenerator implements SQC_DATA, _SQL
 		final byte MAX_START_HOUR = 13;
 		final int START_HOUR = RANDOM.nextInt
 				(
-						MAX_START_HOUR
-								-
-								MIN_START_HOUR
+					MAX_START_HOUR
+						-
+					MIN_START_HOUR
 				) + MIN_START_HOUR;
 		final String START_TIME =
-				(START_HOUR < 10 ? "0" : "") + Integer.toString(START_HOUR)
-						+
-						":"
-						+
-						(RANDOM.nextBoolean() ? "00" : "30");
-		controller.addParam(ATTR_START_TIME, DATE + START_TIME);
+				Integer.toString(START_HOUR)
+					+
+				(RANDOM.nextBoolean() ? "00" : "30");
+		controller.addParam(ATTR_START_TIME, START_TIME);
 
 		//--:	END TIME
 		final byte MIN_END_HOUR = 15;
 		final byte MAX_END_HOUR = 20;
 		final int END_HOUR = RANDOM.nextInt
 				(
-						MAX_END_HOUR
-								-
-								MIN_END_HOUR
+					MAX_END_HOUR
+						-
+					MIN_END_HOUR
 				) + MIN_END_HOUR;
 		final String END_TIME =
 				Integer.toString(END_HOUR)
-						+
-						":"
-						+
-						(RANDOM.nextBoolean() ? "00" : "30");
-		controller.addParam(ATTR_END_TIME, DATE + END_TIME);
+					+
+				(RANDOM.nextBoolean() ? "00" : "30");
+		controller.addParam(ATTR_END_TIME, END_TIME);
 		return controller.getEntity();
 	}
 

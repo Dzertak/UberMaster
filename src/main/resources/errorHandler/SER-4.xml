@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<error id="SER-4">
+    <errormessage>There is no such entity in the database</errormessage>
+</error>

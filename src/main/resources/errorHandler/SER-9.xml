@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<error id="SER-9">
+    <errormessage>Token cannot be refreshed!</errormessage>
+</error>

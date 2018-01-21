@@ -1,15 +1,19 @@
+package java;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 import ubermaster.entity.model.Master;
 import ubermaster.entity.model.Order;
 import ubermaster.entity.model.Poke;
 import ubermaster.entity.model.User;
 import ubermaster.persistence.facade.Facade;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public class EntityTEST
 {
@@ -31,6 +35,7 @@ public class EntityTEST
 
 	@Test
 	public void getDifferentEntitiesTEST()
+			throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		System.out.println(facade.getEntity(1, Poke.class));
 		System.out.println();
@@ -43,6 +48,7 @@ public class EntityTEST
 
 	@Test
 	public void insertEntityTEST()
+			throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		final long ID = 11;
 
@@ -64,20 +70,21 @@ public class EntityTEST
 	}
 
 	@Test
-	public void insertMasterGetMasterTEST() throws ParseException
+	public void insertMasterGetMasterTEST()
+			throws SQLException, ParserConfigurationException, SAXException, IOException, ParseException
 	{
 		Master master = new Master();
 		master.setName("MasterName");
 		master.setUserDescription("Master User Descr");
 		master.setObject_id(10);
 		master.setTools("Pipetka");
-		master.setStart_time(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("01/02/2003 04:05"));
+		master.setStart_time((short)830);
 		master.setDescription("SomeDescr about MASTA");
 		master.setLocation("MasterLand");
 		master.setPassword("masterPASS, it's hard pass, right?");
 		master.setPhoneNumber("0777");
 		master.setPicture("PHOTO");
-		master.setEnd_time(new SimpleDateFormat("dd/MM/yyyy HH:mm").parse("06/07/2008 09:10"));
+		master.setEnd_time((short)1700);
 		master.setExperience("11");
 		master.setPayment(120000);
 		master.setProfession("I'm master, what the stupid question?");
@@ -90,6 +97,7 @@ public class EntityTEST
 
 	@Test
 	public void deleteEntityTEST()
+			throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.deleteEntity(10);
 		facade.deleteEntity(11);
@@ -97,6 +105,7 @@ public class EntityTEST
 
 	@Test
 	public void getEntityByTP()
+			throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		User user = facade.getUser("380456111789", "easy_password3");
 		System.out.println(user);
