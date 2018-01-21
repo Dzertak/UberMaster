@@ -441,7 +441,7 @@ as
                     values (attrID, obID, null, null, lstID);
                 end if;
             else
-                if (attrID in (12, 13, 17, 18, 24)) then
+                if (attrID in (17, 18, 24)) then
                     insert into Attributes (attr_id, object_id, value, date_value, list_value_id)
                     values (attrID, obID, null, to_date(attrValue, 'DD/MM/YYYY hh24:mi'), null);
                 else
@@ -745,7 +745,7 @@ as
             end if;
 
             --	Attributes -> value
-            if (attrID in (2, 3, 4, 7, 8, 9, 11, 15, 16)) then
+            if (attrID in (2, 3, 4, 7, 8, 9, 11, 12, 13, 15, 16)) then
                 update Attributes
                 set value = innerArray(itera + 1)
                 where attr_id = attrID and object_id = obID;
@@ -754,7 +754,7 @@ as
             end if;
 
             --	Attributes -> date_value
-            if (attrID in (12, 13, 17, 18, 24)) then
+            if (attrID in (17, 18, 24)) then
                 update Attributes
                 set date_value = to_date(innerArray(itera + 1), 'DD/MM/YY hh24:mi')
                 where attr_id = attrID and object_id = obID;

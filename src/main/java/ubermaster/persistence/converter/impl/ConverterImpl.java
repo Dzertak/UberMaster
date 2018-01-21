@@ -91,6 +91,9 @@ public class ConverterImpl implements Converter
         if (Byte.class.isAssignableFrom(CLASS))
             return Byte.toString((byte)value);
 
+        if (Short.class.isAssignableFrom(CLASS))
+            return Short.toString((short)value);
+
         return null;
     }
 
@@ -118,6 +121,9 @@ public class ConverterImpl implements Converter
 
         if (byte.class.isAssignableFrom(CLASS))
             return Byte.parseByte(VALUE);
+
+        if (short.class.isAssignableFrom(CLASS))
+            return Short.parseShort(VALUE);
 
         return VALUE;
 
