@@ -3,12 +3,15 @@ package java;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.xml.sax.SAXException;
 import ubermaster.entity.model.Master;
 import ubermaster.entity.model.Order;
 import ubermaster.entity.model.Poke;
 import ubermaster.entity.model.User;
 import ubermaster.persistence.facade.Facade;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
 
@@ -32,6 +35,7 @@ public class EntityTEST
 
 	@Test
 	public void getDifferentEntitiesTEST()
+			throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		System.out.println(facade.getEntity(1, Poke.class));
 		System.out.println();
@@ -44,6 +48,7 @@ public class EntityTEST
 
 	@Test
 	public void insertEntityTEST()
+			throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		final long ID = 11;
 
@@ -65,7 +70,8 @@ public class EntityTEST
 	}
 
 	@Test
-	public void insertMasterGetMasterTEST() throws ParseException
+	public void insertMasterGetMasterTEST()
+			throws SQLException, ParserConfigurationException, SAXException, IOException, ParseException
 	{
 		Master master = new Master();
 		master.setName("MasterName");
@@ -91,6 +97,7 @@ public class EntityTEST
 
 	@Test
 	public void deleteEntityTEST()
+			throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.deleteEntity(10);
 		facade.deleteEntity(11);
@@ -98,6 +105,7 @@ public class EntityTEST
 
 	@Test
 	public void getEntityByTP()
+			throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		User user = facade.getUser("380456111789", "easy_password3");
 		System.out.println(user);

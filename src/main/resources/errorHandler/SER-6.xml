@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<error id="SER-6">
+    <errormessage>There is no such profession in database</errormessage>
+</error>

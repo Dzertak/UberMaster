@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<error id="SER-2">
+    <errormessage>There is no such user</errormessage>
+</error>

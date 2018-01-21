@@ -2,14 +2,19 @@ package ubermaster.controller;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
+import org.xml.sax.SAXException;
 import ubermaster.entity.model.*;
 import ubermaster.entity.security.JwtAuthenticationRequest;
 import ubermaster.entityGenerator.entity.EntityGenerator;
 import ubermaster.errorHandler.ErrorHandler;
+import ubermaster.errorHandler.Errors;
 import ubermaster.persistence.facade.Facade;
 import ubermaster.persistence.manager.Manager;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Random;
@@ -29,7 +34,8 @@ public class EntityController<T extends BaseEntity>
     public T getUsersById(@RequestParam("id")
                                   long id,
                           @RequestParam("class")
-                                  String entityClass) {
+                                  String entityClass)
+			throws SQLException, ParserConfigurationException, SAXException, IOException {
         if (entityClass.equals(Poke.class.getSimpleName())) {
             return facade.getEntity(id, Poke.class);
         }
@@ -49,6 +55,7 @@ public class EntityController<T extends BaseEntity>
         produces = "application/json"
     )
     public User getUsersByPhone(@RequestParam("phone") String phoneNumber)
+			throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         return facade.getUserByPhone(phoneNumber);
     }
@@ -60,7 +67,7 @@ public class EntityController<T extends BaseEntity>
         produces = "application/json"
     )
     public BaseEntity[] getTypedEntity(@RequestParam("class") String type)
-        throws ClassNotFoundException
+			throws SQLException, ParserConfigurationException, SAXException, IOException, ClassNotFoundException
     {
        try
        {
@@ -73,7 +80,8 @@ public class EntityController<T extends BaseEntity>
        {
            log.error(exc.getMessage(),exc);
 
-           throw new ClassNotFoundException(exc.getMessage());
+           //throw new ClassNotFoundException(exc.getMessage());
+		   throw ErrorHandler.createClassNotFoundException(Errors.ser_5);
        }
     }
 
@@ -84,6 +92,7 @@ public class EntityController<T extends BaseEntity>
         produces = "application/json"
     )
     public BaseEntity[] getPokeOrders(@RequestParam("id") long id)
+			throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         return facade.getUserOrders(id, Manager.POKE_TYPE_ORDERS);
     }
@@ -95,6 +104,7 @@ public class EntityController<T extends BaseEntity>
         produces = "application/json"
     )
     public BaseEntity[] getMasterOrders(@RequestParam("id") long id)
+			throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         return facade.getUserOrders(id, Manager.MASTER_TYPE_ORDERS);
     }
@@ -108,7 +118,7 @@ public class EntityController<T extends BaseEntity>
     public BaseEntity[] getOrdersByProfession
     (
         @RequestParam("profession") String profession
-    )
+    ) throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         return facade.getOrdersByProfession(profession);
     }
@@ -116,14 +126,16 @@ public class EntityController<T extends BaseEntity>
     @RequestMapping(value = "/addEntity",
             method = RequestMethod.POST,
             produces = "application/json")
-    public void addUser(@RequestBody T entity) {
+    public void addUser(@RequestBody T entity)
+			throws SQLException, ParserConfigurationException, SAXException, IOException{
         facade.createEntity(entity);
     }
 
     @RequestMapping(value = "/deleteEntity",
             method = RequestMethod.DELETE)
     public void deleteUser(
-            @RequestParam("id") long id) {
+            @RequestParam("id") long id)
+			throws SQLException, ParserConfigurationException, SAXException, IOException{
         facade.deleteEntity(id);
     }
 
@@ -156,7 +168,7 @@ public class EntityController<T extends BaseEntity>
     (
         @RequestParam("id") long id,
         @RequestParam("isBlocked") boolean isBlocked
-    )
+    ) throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         facade.setBlocked(id, isBlocked);
 
@@ -174,7 +186,7 @@ public class EntityController<T extends BaseEntity>
 		@RequestParam("id") long id,
 		@RequestParam("status") String status,
 		@RequestParam("mid") long mid
-	)
+	) throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.setOrderStatus(id, mid, status);
 
@@ -191,7 +203,7 @@ public class EntityController<T extends BaseEntity>
     (
         @RequestParam("id") long id,
         @RequestParam(value = "picture") String pictureURL
-    )
+    ) throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         facade.setUserPicture(id, pictureURL);
 
@@ -207,7 +219,7 @@ public class EntityController<T extends BaseEntity>
 	public String updatePoke
 	(
 		@RequestBody Poke poke
-	)
+	) throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.updateEntity(poke);
 
@@ -223,7 +235,7 @@ public class EntityController<T extends BaseEntity>
 	public String updateMaster
 	(
 		@RequestBody Master master
-	)
+	) throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.updateEntity(master);
 
@@ -239,7 +251,7 @@ public class EntityController<T extends BaseEntity>
 	public String updateOrder
 	(
 		@RequestBody Order order
-	)
+	) throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.updateEntity(order);
 
@@ -255,7 +267,7 @@ public class EntityController<T extends BaseEntity>
 	public String addPoke
 	(
 		@RequestBody Poke poke
-	)
+	) throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.createEntity(poke);
 
@@ -271,7 +283,7 @@ public class EntityController<T extends BaseEntity>
 	public String addMaster
 	(
 		@RequestBody Master master
-	)
+	) throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.createEntity(master);
 
@@ -287,7 +299,7 @@ public class EntityController<T extends BaseEntity>
 	public String addOrder
 	(
 		@RequestBody Order order
-	)
+	) throws SQLException, ParserConfigurationException, SAXException, IOException
 	{
 		facade.createEntity(order);
 
