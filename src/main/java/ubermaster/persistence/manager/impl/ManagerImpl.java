@@ -7,12 +7,18 @@ import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import org.apache.log4j.Logger;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.*;
+import ubermaster.errorHandler.ErrorHandler;
+import ubermaster.errorHandler.Errors;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,7 +45,7 @@ public class ManagerImpl implements Manager
     (
             PersistenceEntity persistenceEntity,
             Class<? extends BaseEntity> _class
-    )
+    ) throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         OracleConnection oracleConnection = null;
         try
@@ -82,6 +88,7 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
+            throw ErrorHandler.createSQLException(Errors.ser_7);
         }
 
         finally
@@ -225,6 +232,7 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity getEntity(long id, Class<? extends BaseEntity> _class)
+            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         OracleCallableStatement callStat;
         ResultSet resultSet;
@@ -245,7 +253,8 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            return null;
+            //return null;
+            throw ErrorHandler.createSQLException(Errors.ser_4);
         }
 
         finally
@@ -264,6 +273,7 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity[] getTypedEntities(Class<? extends BaseEntity> _class)
+            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
 
         String objectTypeID = _class.getAnnotation(ObjectType.class).value();
@@ -288,7 +298,8 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            return null;
+            //return null;
+            throw ErrorHandler.createSQLException(Errors.ser_4);
         }
 
         finally
@@ -307,6 +318,7 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity getUserByPhone(String phoneNumber)
+            throws UsernameNotFoundException, ParserConfigurationException, SAXException, IOException
     {
         OracleCallableStatement callStat;
         ResultSet resultSet;
@@ -332,7 +344,8 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            return null;
+            //return null;
+            throw ErrorHandler.createUsernameNotFoundException(Errors.ser_4);
         }
 
         finally
@@ -351,6 +364,7 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity getUserByPhonePass(String phoneNumber, String password)
+            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         OracleCallableStatement callStat;
         ResultSet resultSet;
@@ -377,7 +391,8 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            return null;
+            //return null;
+            throw ErrorHandler.createSQLException(Errors.ser_2);
         }
 
         finally
@@ -396,6 +411,7 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity[] getUserOrders(long id, int userType)
+            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         OracleCallableStatement callStat;
         OracleConnection connection = null;
@@ -434,7 +450,8 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            return null;
+            //return null;
+            throw ErrorHandler.createSQLException(Errors.ser_2);
         }
 
         finally
@@ -453,6 +470,7 @@ public class ManagerImpl implements Manager
     }
 
     public PersistenceEntity[] getOrdersByProfession(String profession)
+            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         OracleCallableStatement callStat;
         PersistenceEntity sqcPE[];
@@ -478,7 +496,8 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
-            return null;
+            //return null;
+            throw ErrorHandler.createSQLException(Errors.ser_6);
         }
 
         finally
@@ -497,6 +516,7 @@ public class ManagerImpl implements Manager
     }
 
     public void deleteEntity(long id)
+            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         OracleConnection oracleConnection = null;
         try
@@ -512,6 +532,7 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
+            throw ErrorHandler.createSQLException(Errors.ser_4);
         }
 
         finally
@@ -530,6 +551,7 @@ public class ManagerImpl implements Manager
     }
 
     public void updateEntity(long id, Object ... sqcParam)
+            throws SQLException, ParserConfigurationException, SAXException, IOException
     {
         OracleConnection oracleConnection = null;
         try
@@ -566,6 +588,7 @@ public class ManagerImpl implements Manager
         {
             log.error(exc.getMessage(), exc);
             //exc.printStackTrace();
+            ErrorHandler.createSQLException(Errors.ser_4);
         }
 
         finally

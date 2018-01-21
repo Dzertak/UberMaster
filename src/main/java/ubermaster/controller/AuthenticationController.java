@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 import ubermaster.entity.security.JwtAuthenticationRequest;
 import ubermaster.entity.security.JwtAuthenticationResponse;
 import ubermaster.entity.security.JwtUser;
+import ubermaster.errorHandler.ErrorHandler;
+import ubermaster.errorHandler.Errors;
 import ubermaster.persistence.facade.Facade;
 import ubermaster.security.service.JwtAuthenticationProvider;
 import ubermaster.security.service.JwtTokenUtil;
@@ -36,9 +38,9 @@ public class AuthenticationController {
     private JwtUserDetailsServiceImpl userDetailsService;
 
     @RequestMapping(value = "/auth", method = RequestMethod.POST)
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws AuthenticationException {
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtAuthenticationRequest authenticationRequest) throws Exception {//} throws AuthenticationException {
         if (authenticationRequest == null || authenticationRequest.getPhoneNumber() == null || authenticationRequest.getPassword() == null) {
-            return ResponseEntity.badRequest().body("Wrong request!");
+            return ResponseEntity.badRequest().body(ErrorHandler.createException(Errors.ser_8).getMessage());//"Wrong request!");
         }
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -56,14 +58,14 @@ public class AuthenticationController {
 
     //Coming soon
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
-    public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) {
+    public ResponseEntity<?> refreshAndGetAuthenticationToken(HttpServletRequest request) throws Exception {
         String token = request.getHeader(tokenHeader);
 
         if (jwtTokenUtil.canTokenBeRefreshed(token)) {
             String refreshedToken = jwtTokenUtil.refreshToken(token);
             return ResponseEntity.ok(new JwtAuthenticationResponse(refreshedToken));
         } else {
-            return ResponseEntity.badRequest().body("Token cannot be refreshed!");
+            return ResponseEntity.badRequest().body(ErrorHandler.createException(Errors.ser_9).getMessage());//"Token cannot be refreshed!");
         }
     }
 
