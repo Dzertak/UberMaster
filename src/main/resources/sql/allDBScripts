@@ -278,7 +278,7 @@ is
         where attr.attr_id in result.attr_id and attr.object_id = innerId
         union all
         select
-            to_char(objRef.object_id),
+            to_char(objRef.refer_id),
             to_char(objRef.attr_id)
         from ObjReference objRef, result
         where objRef.attr_id in result.attr_id and objRef.object_id = innerId;
@@ -852,5 +852,25 @@ is
         end if;
 
         return(averMark);
+    end;
+/
+
+/*
+===================================================================================================================
+				GET MASTER NAME
+===================================================================================================================
+*/
+
+create or replace function getMasterName(orderID in number)
+    return varchar
+is
+    masterName varchar(4000);
+    begin
+        select name
+        into masterName
+        from Objects obj join ObjReference objRef on obj.object_id = objRef.refer_id
+        where objRef.object_id = orderID;
+
+        return(masterName);
     end;
 /

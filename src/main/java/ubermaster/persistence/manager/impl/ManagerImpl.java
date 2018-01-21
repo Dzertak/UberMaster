@@ -534,6 +534,12 @@ public class ManagerImpl implements Manager
 					statement = oracleConnection.prepareStatement(GET_MASTER_AVER_MARK);
 				break;
 
+                case CON_MASTER_NAME :
+                    statement = oracleConnection.prepareStatement(GET_MASTER_NAME);
+                break;
+
+                default :
+                    statement = null;
 			}
 
 			statement.setString(1, Long.toString(id));
