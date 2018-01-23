@@ -78,8 +78,11 @@ public class Facade
 
         else if (Order.class.isAssignableFrom(CLASS))
         {
-            String value = manager.simpleQuery(Manager.CON_MASTER_NAME, id);
-            ((Order) entity).setMasterName(value);
+            String masterName = manager.simpleQuery(Manager.CON_MASTER_NAME, id);
+            ((Order) entity).setMasterName(masterName);
+
+            String pokeID = manager.simpleQuery(Manager.CON_POKE_ID, id);
+            ((Order) entity).setPokeId(Long.parseLong(pokeID));
         }
 
         return entity;

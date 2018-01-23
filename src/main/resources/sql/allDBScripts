@@ -880,3 +880,23 @@ is
         return(masterName);
     end;
 /
+
+/*
+===================================================================================================================
+				GET ORDER PARENT ID
+===================================================================================================================
+*/
+
+create or replace function getOrderParentID(orderID in number)
+    return varchar
+is
+    pokeID Objects.parent_id%type;
+    begin
+        select parent_id
+        into pokeID
+        from Objects
+        where object_id = orderID;
+
+        return(pokeID);
+    end;
+/

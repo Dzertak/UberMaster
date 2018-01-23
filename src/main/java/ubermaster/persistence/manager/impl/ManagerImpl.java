@@ -560,6 +560,10 @@ public class ManagerImpl implements Manager
                     statement = oracleConnection.prepareStatement(GET_MASTER_NAME);
                 break;
 
+                case CON_POKE_ID :
+                    statement = oracleConnection.prepareStatement(GET_POKE_ID);
+                break;
+
                 default :
                     statement = null;
 			}
