@@ -35,6 +35,25 @@ public class ManagerImpl implements Manager
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    private boolean isValid(Object object)
+    {
+        if (object == null)
+            return false;
+
+        try
+        {
+            if (((Number)object).longValue() == -1)
+                return false;
+        }
+
+        catch (ClassCastException exc)
+        {
+            exc.printStackTrace();
+        }
+
+        return true;
+    }
+
     public void createEntity
     (
         PersistenceEntity persistenceEntity,
@@ -57,10 +76,13 @@ public class ManagerImpl implements Manager
             while (iterator.hasNext())
             {
                 String attrID = iterator.next();
-                elements[i] = attrID;
-                ++i;
-                elements[i] = ConverterImpl.convertObjectToString(hashMap.get(attrID));
-                ++i;
+                if (isValid(hashMap.get(attrID)))
+                {
+                    elements[i] = attrID;
+                    ++i;
+                    elements[i] = ConverterImpl.convertObjectToString(hashMap.get(attrID));
+                    ++i;
+                }
             }
 
             oracleConnection = getConnection();
