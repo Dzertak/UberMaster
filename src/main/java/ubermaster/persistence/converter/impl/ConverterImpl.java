@@ -126,6 +126,5 @@ public class ConverterImpl implements Converter
             return Short.parseShort(VALUE);
 
         return VALUE;
-
     }
 }

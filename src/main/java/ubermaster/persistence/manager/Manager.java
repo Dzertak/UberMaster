@@ -21,6 +21,7 @@ public interface Manager
     String GET_ORDER_BY_STATUS = "call getOrdersByStatus(?, ?)";
     String GET_MASTER_AVER_MARK = "select getMasterAverMark(?) from dual";
     String GET_MASTER_NAME = "select getMasterName(?) from dual";
+    String GET_POKE_ID = "select getOrderParentID(?) from dual";
 
     String ATTR_OBJECT_ID = "-1";
     String ATTR_OBJECT_TYPE_ID = "-2";
@@ -38,6 +39,7 @@ public interface Manager
     byte CON_MASTER_AVER = 1;
     byte CON_DELETE = 2;
     byte CON_MASTER_NAME = 3;
+    byte CON_POKE_ID = 4;
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     /**
