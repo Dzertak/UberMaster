@@ -71,6 +71,9 @@ public class ConverterImpl implements Converter
 
     public static String convertObjectToString(Object value)
     {
+        if (value == null)
+            return null;
+
         final Class CLASS = value.getClass();
 
         if (String.class.isAssignableFrom(CLASS))
