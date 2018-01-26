@@ -26,8 +26,10 @@ import ubermaster.security.service.JwtUserDetailsServiceImpl;
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+
     @Autowired
     private UserDetailsService userDetailsService;
+
     @Autowired
     private AuthenticationEntryPoint unauthorizedHandler;
 
@@ -63,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/entities/**", "/refresh").authenticated()
-                .antMatchers("/auth", "/login", "/register").permitAll()
+                .antMatchers("/auth", "/login", "/registerPoke","/registerMaster").permitAll()
                 .anyRequest().authenticated();
 
         // Custom JWT based security filter
