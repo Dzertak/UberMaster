@@ -365,7 +365,7 @@ public class EntityController<T extends BaseEntity>
 	@RequestMapping
 	(
 		value = "/getOrdersByStatus",
-		method = RequestMethod.POST,
+		method = RequestMethod.GET,
 		produces = "application/json"
 	)
 	public BaseEntity[] getOrdersByStatus
