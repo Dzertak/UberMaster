@@ -16,6 +16,8 @@ import ubermaster.persistence.manager.Manager;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
 
@@ -299,8 +301,14 @@ public class EntityController<T extends BaseEntity>
 	public String addOrder
 	(
 		@RequestBody Order order
-	) throws SQLException, ParserConfigurationException, SAXException, IOException
-	{
+	) throws SQLException, ParserConfigurationException, SAXException, IOException, ParseException {
+
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		Date dt = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(dateFormat.format(order.getStartDate()));
+		order.setStartDate(dt);
+		dt = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(dateFormat.format(order.getDueDate()));
+		order.setDueDate(dt);
+
 		facade.createEntity(order);
 
 		return "DONE";
