@@ -226,7 +226,7 @@ public class Facade
 
     private <T extends BaseEntity> T[] getOrdersByList(byte condition, String value)
     {
-        //--:   DB
+    //--:   DB
         PersistenceEntity sqcPE[] = manager.getOrdersByList(condition, value);
 
         if (sqcPE == null)

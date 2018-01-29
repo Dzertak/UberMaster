@@ -42,7 +42,7 @@ public class ManagerImpl implements Manager
 
         try
         {
-            if (((Number)object).longValue() == -1)
+            if (object instanceof Number && ((Number)object).longValue() == -1)
                 return false;
         }
 
