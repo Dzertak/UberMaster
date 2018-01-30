@@ -789,6 +789,7 @@ as
                     delete from ObjReference where object_id = obID;
                 else
                     if (innerArray(itera + 1) > 0) then
+                        delete from ObjReference where object_id = obID;
                         insert into ObjReference (attr_id, refer_id, object_id) values (14, to_number(innerArray(itera + 1), '9999999999'), obID);
                     end if;
                 end if;
