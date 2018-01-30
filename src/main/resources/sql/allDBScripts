@@ -199,6 +199,7 @@ into Lists (attr_id, list_value_id, value) values (22, 25, '2')
 into Lists (attr_id, list_value_id, value) values (22, 26, '3')
 into Lists (attr_id, list_value_id, value) values (22, 27, '4')
 into Lists (attr_id, list_value_id, value) values (22, 28, '5')
+into Lists (attr_id, list_value_id, value) values (22, 30, '0')
 select * from dual;
 /*
 ===================================================================================================================
@@ -751,7 +752,7 @@ as
             end if;
 
             --	Attributes -> value
-            if (attrID in (2, 3, 4, 7, 8, 9, 11, 12, 13, 15, 16)) then
+            if (attrID in (2, 3, 4, 7, 8, 9, 11, 12, 13, 15, 16, 23)) then
                 update Attributes
                 set value = innerArray(itera + 1)
                 where attr_id = attrID and object_id = obID;
@@ -851,10 +852,10 @@ is
         into averMark
         from Attributes attr join Lists lst on attr.list_value_id = lst.list_value_id
             join Orders ord on ord.object_id = attr.object_id
-        where attr.attr_id = 22 and lst.value <> '-1';
+        where attr.attr_id = 22 and lst.value <> '0';
 
         if (averMark is null) then
-            averMark := 0;
+            averMark := -1;
         end if;
 
         return(averMark);
