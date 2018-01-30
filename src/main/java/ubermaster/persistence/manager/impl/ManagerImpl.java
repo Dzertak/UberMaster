@@ -616,10 +616,20 @@ public class ManagerImpl implements Manager
             elements[0] = Long.toString(id);
             for (int i = 1; i < LEN_ELEMENTS;)
             {
-                elements[i] = (String)sqcParam[i - 1];
+                if (isValid(sqcParam[i]))
+                {
+                    elements[i] = (String)sqcParam[i - 1];
+                    ++i;
+                    elements[i] = ConverterImpl.convertObjectToString(sqcParam[i - 1]);
+                    ++i;
+                }
+
+                else
+                    i += 2;
+               /* elements[i] = (String)sqcParam[i - 1];
                 ++i;
                 elements[i] = ConverterImpl.convertObjectToString(sqcParam[i - 1]);
-                ++i;
+                ++i;*/
             }
 
             oracleConnection = getConnection();
