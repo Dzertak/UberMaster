@@ -170,6 +170,7 @@ public class Order extends BaseEntity {
         hashmap.put(Model.COMMENT, comment);
         hashmap.put(Model.MASTER_END_DATE, masterEndDate);
         hashmap.put(Model.POKE_ID, pokeId);
+        hashmap.put(Model.MASTER_REF, master);
 
         return hashmap;
     }
