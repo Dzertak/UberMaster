@@ -769,7 +769,7 @@ as
             end if;
 
             --	Attributes -> list_value_id
-            if (attrID in (5, 6, 10, 19, 20, 21)) then
+            if (attrID in (5, 6, 10, 19, 20, 21, 22)) then
                 select list_value_id
                 into lst_id
                 from Lists
