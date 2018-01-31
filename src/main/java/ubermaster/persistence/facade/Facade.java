@@ -50,8 +50,8 @@ public class Facade
         final Class<? extends BaseEntity> CLASS
     )
     {
-        /*if (CACHE.containsKey(id))
-            return converter.convertToModel(CACHE.get(id), CLASS);*/
+        if (CACHE.containsKey(id))
+            return converter.convertToModel(CACHE.get(id), CLASS);
 
         PersistenceEntity persistenceEntity = manager.getEntity(id, CLASS);
 
@@ -98,7 +98,7 @@ public class Facade
     public <T extends User> T getUser(String phoneNumber, String password)
     {
     //--:   Checking for presenting entity in the CACHE
-       /* final byte NOT_FOUND = 0;
+        final byte NOT_FOUND = 0;
         final byte PHONE_NUMBER_EQUALS = 1;
         final byte PASS_EQUALS = 2;
         final byte ALL_EQUALS = 3;
@@ -128,7 +128,7 @@ public class Facade
                 if (condition == ALL_EQUALS)
                     return converter.convertToModel(persistenceEntity);
             }
-        }*/
+        }
 
         PersistenceEntity persistenceEntity =
                 manager.getUserByPhonePass(phoneNumber, password);
@@ -147,6 +147,24 @@ public class Facade
      */
     public <T extends User> T getUserByPhone(String phoneNumber)
     {
+    //==:   CACHE
+        for (long id : CACHE.keySet())
+        {
+            PersistenceEntity persistenceEntity = CACHE.get(id);
+            HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
+            for (String attrID : attributes.keySet())
+            {
+                if
+                (
+                    attrID.equals(User.Model.PHONE_NUMBER)
+                        &&
+                    attributes.get(attrID).equals(phoneNumber)
+                )
+                    return converter.convertToModel(persistenceEntity);
+            }
+        }
+
+    //==:   DB
         PersistenceEntity persistenceEntity = manager.getUserByPhone(phoneNumber);
 
         if (persistenceEntity == null)
@@ -243,16 +261,15 @@ public class Facade
 
     public void setBlocked(long id, boolean isBlocked)
     {
-        /*PersistenceEntity persistenceEntity = CACHE.get(id);
-
+    //==:CACHE
+        PersistenceEntity persistenceEntity = CACHE.get(id);
         if (persistenceEntity != null)
         {
-            HashMap<String, Object> attributes = (HashMap<String, Object>)persistenceEntity.getAttributes();
-
-            attributes.remove(BlockedUser.Model.IS_BLOCKED);
+            HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
             attributes.put(BlockedUser.Model.IS_BLOCKED, isBlocked);
-        }*/
+        }
 
+    //--:   DB
         manager.updateEntity(id, BlockedUser.Model.IS_BLOCKED, isBlocked);
     }
 
@@ -267,6 +284,16 @@ public class Facade
      * */
     public void setOrderStatus(long id, long mid, String status)
     {
+    //==:CACHE
+        PersistenceEntity persistenceEntity = CACHE.get(id);
+        if (persistenceEntity != null)
+        {
+            HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
+            attributes.put(Order.Model.MASTER_REF, mid);
+            attributes.put(Order.Model.STATUS, status);
+        }
+
+    //--:   DB
         manager.updateEntity
             (
                 id,
@@ -285,6 +312,15 @@ public class Facade
      * */
     public void setUserPicture(long id, String picture)
     {
+    //==:CACHE
+        PersistenceEntity persistenceEntity = CACHE.get(id);
+        if (persistenceEntity != null)
+        {
+            HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
+            attributes.put(User.Model.PICTURE, picture);
+        }
+
+    //--:   DB
         manager.updateEntity(id, User.Model.PICTURE, picture);
     }
 
@@ -292,6 +328,9 @@ public class Facade
     {
         PersistenceEntity persistenceEntity = converter.convertToEntity(entity);
 
+        CACHE.put(persistenceEntity.getObject_id(), persistenceEntity);
+
+    //--:   DB
         HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
         Object sqcParam[] = new Object[4 + (attributes.size() << 1)];
 

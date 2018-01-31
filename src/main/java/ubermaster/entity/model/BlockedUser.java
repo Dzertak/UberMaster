@@ -39,6 +39,7 @@ public abstract class BlockedUser extends User
 		return hashmap;
 	}
 
+	@Override
 	public String toString()
 	{
 		return super.toString() + "\nIs blocked : " + isBlocked;

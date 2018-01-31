@@ -46,7 +46,7 @@ public abstract class BaseEntity
          * child classes
          *
          * @param attr_id — the {@code Attribute} annotation value,
- *       *         that indicates what exactly field type need
+         *         that indicates what exactly field type need
          *
          * @param CLASS — type of entity
          *
