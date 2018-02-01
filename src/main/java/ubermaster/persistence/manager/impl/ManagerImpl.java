@@ -88,14 +88,14 @@ public class ManagerImpl implements Manager
             oracleConnection = getConnection();
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
                     (
-                            "ARRAY",
-                            oracleConnection
+                        "ARRAY",
+                        oracleConnection
                     );
             ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
 
             oraCallStat = (OracleCallableStatement) oracleConnection.prepareCall
                     (
-                            INSERT_ENTITY
+                        INSERT_ENTITY
                     );
             oraCallStat.setARRAY(1, array);
             oraCallStat.execute();
