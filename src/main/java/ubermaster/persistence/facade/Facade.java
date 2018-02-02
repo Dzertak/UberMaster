@@ -8,8 +8,6 @@ import ubermaster.persistence.manager.Manager;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
 /**
@@ -63,27 +61,10 @@ public class Facade
         T entity = converter.convertToModel(persistenceEntity, CLASS);
 
         if (Master.class.isAssignableFrom(CLASS))
-        {
-            String value = manager.simpleQuery(Manager.CON_MASTER_AVER, id);
-            try
-            {
-                ((Master) entity).setAverMark((byte)ConverterImpl.convertStringToObject(value, byte.class));
-            }
-
-            catch (ParseException exc)
-            {
-                exc.printStackTrace();
-            }
-        }
+            addParamsToMaster((Master)entity);
 
         else if (Order.class.isAssignableFrom(CLASS))
-        {
-            String masterName = manager.simpleQuery(Manager.CON_MASTER_NAME, id);
-            ((Order) entity).setMasterName(masterName);
-
-            String pokeID = manager.simpleQuery(Manager.CON_POKE_ID, id);
-            ((Order) entity).setPokeId(Long.parseLong(pokeID));
-        }
+           addParamsToOrder((Order)entity);
 
         return entity;
     }
@@ -136,7 +117,12 @@ public class Facade
         if (persistenceEntity == null)
             return null;
 
-        return converter.convertToModel(persistenceEntity);
+        T entity = converter.convertToModel(persistenceEntity);
+
+        if (entity instanceof Master)
+            addParamsToMaster((Master) entity);
+
+        return entity;
     }
 
     /**
@@ -170,7 +156,12 @@ public class Facade
         if (persistenceEntity == null)
             return null;
 
-        return converter.convertToModel(persistenceEntity);
+        T entity = converter.convertToModel(persistenceEntity);
+
+        if (entity instanceof Master)
+            addParamsToMaster((Master)entity);
+
+        return entity;
     }
 
     /**
@@ -202,7 +193,15 @@ public class Facade
         T sqcT[] = (T[])new BaseEntity[length];
 
         for (int itera = 0; itera < length; ++itera)
+        {
             sqcT[itera] = converter.convertToModel(sqcPE[itera], _class);
+
+            if (sqcT[itera] instanceof Master)
+                addParamsToMaster((Master)sqcT[itera]);
+
+            else if (sqcT[itera] instanceof Order)
+                addParamsToOrder((Order)sqcT[itera]);
+        }
 
         return sqcT;
     }
@@ -227,7 +226,10 @@ public class Facade
         T sqcT[] = (T[])new BaseEntity[length];
 
         for (int itera = 0; itera < length; ++itera)
+        {
             sqcT[itera] = converter.convertToModel(sqcPE[itera], Order.class);
+            addParamsToOrder((Order)sqcT[itera]);
+        }
 
         return sqcT;
     }
@@ -254,7 +256,10 @@ public class Facade
         T sqcT[] = (T[])new BaseEntity[length];
 
         for (int itera = 0; itera < length; ++itera)
+        {
             sqcT[itera] = converter.convertToModel(sqcPE[itera], Order.class);
+            addParamsToOrder((Order) sqcT[itera]);
+        }
 
         return sqcT;
     }
@@ -352,5 +357,30 @@ public class Facade
         sqcParam[itera] = persistenceEntity.getDescription();
 
         manager.updateEntity(persistenceEntity.getObject_id(), sqcParam);
+    }
+
+    private void addParamsToMaster(Master master)
+    {
+        String value = manager.simpleQuery(Manager.CON_MASTER_AVER, master.getObject_id());
+        try
+        {
+            master.setAverMark((byte)ConverterImpl.convertStringToObject(value, byte.class));
+        }
+
+        catch (ParseException exc)
+        {
+            exc.printStackTrace();
+        }
+    }
+
+    private void addParamsToOrder(Order order)
+    {
+        long id = order.getObject_id();
+
+        String masterName = manager.simpleQuery(Manager.CON_MASTER_NAME, id);
+        order.setMasterName(masterName);
+
+        String pokeID = manager.simpleQuery(Manager.CON_POKE_ID, id);
+        order.setPokeId(Long.parseLong(pokeID));
     }
 }
