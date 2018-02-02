@@ -308,6 +308,12 @@ public class EntityController<T extends BaseEntity>
 		order.setStartDate(dt);
 		dt = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(dateFormat.format(order.getDueDate()));
 		order.setDueDate(dt);
+		if(order.getMasterEndDate()!=null){
+			System.out.println(order.getMasterEndDate());
+			dt = new SimpleDateFormat("dd/MM/yyyy HH:mm").parse(dateFormat.format(order.getMasterEndDate()));
+			order.setMasterEndDate(dt);
+		}
+		System.out.println(order.getMasterEndDate());
 
 		facade.createEntity(order);
 
