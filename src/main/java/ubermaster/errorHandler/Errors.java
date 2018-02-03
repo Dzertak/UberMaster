@@ -9,7 +9,8 @@ public enum Errors {
     ser_6("SER-6"),
     ser_7("SER-7"),
     ser_8("SER-8"),
-    ser_9("SER-9");
+    ser_9("SER-9"),
+    ser_10("SER-10");
 
     private String fullName;
     Errors (String fullName) {this.fullName = fullName;}
