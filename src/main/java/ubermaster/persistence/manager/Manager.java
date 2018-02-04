@@ -142,4 +142,14 @@ public interface Manager
      *      of attribute and second one is value
      * */
     void updateEntity(long id, Object ... sqcParam);
+
+    /**
+     * Get master comments from DB
+     *
+     * @param id — master id
+     * @param count — count of master comments
+     *
+     * @return an array of master comments
+     * */
+    String[] getMasterComments(long id, int count);
 }
