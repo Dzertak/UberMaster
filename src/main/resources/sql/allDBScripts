@@ -936,3 +936,20 @@ as
         end loop;
     end;
 /
+/*
+===================================================================================================================
+				GET MASTER COMMENTS
+===================================================================================================================
+*/
+create or replace procedure getMasterComments(id in number, commCount in number, innerArray out array)
+as
+    retArray array := array();
+    begin
+        select value
+        bulk collect into retArray
+        from Attributes attr join ObjReference ref on attr.object_id = ref.object_id
+        where refer_id = id and attr.attr_id = 23 and rownum <= commCount;
+
+        innerArray := retArray;
+    end;
+/

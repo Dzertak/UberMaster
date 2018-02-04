@@ -417,4 +417,19 @@ public class EntityController<T extends BaseEntity>
 	{
 		return facade.getSortOrders(isASC);
 	}
+
+	@RequestMapping
+	(
+		value = "/getMasterComments",
+		method = RequestMethod.GET,
+		produces = "application/json"
+	)
+	public String[] getMasterComments
+	(
+		@RequestParam("id") long id,
+		@RequestParam("count") int count
+	)
+	{
+		return facade.getMasterComments(id, count);
+	}
 }

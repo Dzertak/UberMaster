@@ -88,7 +88,7 @@ public class ManagerImpl implements Manager
             oracleConnection = getConnection();
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
                     (
-                        "ARRAY",
+                        ARRAY,
                         oracleConnection
                     );
             ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
@@ -643,7 +643,7 @@ public class ManagerImpl implements Manager
             oracleConnection = getConnection();
             ArrayDescriptor descriptor = ArrayDescriptor.createDescriptor
                     (
-                            "ARRAY",
+                            ARRAY,
                             oracleConnection
                     );
             ARRAY array = new ARRAY(descriptor, oracleConnection, elements);
@@ -668,6 +668,45 @@ public class ManagerImpl implements Manager
             {
                 callStat.close();
                 oracleConnection.close();
+            }
+
+            catch (SQLException exc)
+            {
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
+            }
+        }
+    }
+
+    public String[] getMasterComments(long id, int count)
+    {
+        OracleConnection connection = null;
+        OracleCallableStatement callStat = null;
+        try
+        {
+            connection = getConnection();
+            callStat = (OracleCallableStatement) connection.prepareCall(GET_MASTER_COMMENTS);
+            callStat.registerOutParameter(3, OracleTypes.ARRAY, ARRAY);
+            callStat.setLong(1, id);
+            callStat.setInt(2, count);
+            callStat.execute();
+
+            return (String[])callStat.getARRAY(3).getArray();
+        }
+
+        catch (SQLException exc)
+        {
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
+            return null;
+        }
+
+        finally
+        {
+            try
+            {
+                callStat.close();
+                connection.close();
             }
 
             catch (SQLException exc)

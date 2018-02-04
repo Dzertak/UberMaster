@@ -28,6 +28,7 @@ public interface Manager
             "from Lists lst join Attributes attr " +
             "on lst.list_value_id = attr.list_value_id " +
             "where lst.attr_id = 20 and object_id = ?";
+	String GET_MASTER_COMMENTS = "call getMasterComments(?, ?, ?)";
 
     String ATTR_OBJECT_ID = "-1";
     String ATTR_OBJECT_TYPE_ID = "-2";
@@ -35,6 +36,8 @@ public interface Manager
     String ATTR_DESCR = "-4";
 
     String ARRAY_ENTITIES = "ARRAYENTITES";
+    String ARRAY_FIELD = "ARRAYFILED";
+    String ARRAY = "ARRAY";
 
     byte MASTER_TYPE_ORDERS = 1;
     byte POKE_TYPE_ORDERS = 2;

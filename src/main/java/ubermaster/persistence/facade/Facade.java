@@ -236,24 +236,24 @@ public class Facade
 
     public <T extends BaseEntity> T[] getOrdersByProfession(String profession)
     {
-        return getOrdersByList(Manager.CON_LST_PROFESSION, profession);
+        return getOrdersByLParam(Manager.CON_LST_PROFESSION, profession);
     }
 
     public <T extends BaseEntity> T[] getOrdersByStatus(String status)
     {
-        return getOrdersByList(Manager.CON_LST_STATUS, status);
+        return getOrdersByLParam(Manager.CON_LST_STATUS, status);
     }
 
     public <T extends BaseEntity> T[] getSortOrders(boolean isASC)
     {
-        return getOrdersByList
+        return getOrdersByLParam
             (
                 Manager.CON_ATTR_SORT,
                 Boolean.toString(isASC)
             );
     }
 
-    private <T extends BaseEntity> T[] getOrdersByList(byte condition, String value)
+    private <T extends BaseEntity> T[] getOrdersByLParam(byte condition, String value)
     {
     //--:   DB
         PersistenceEntity sqcPE[] = manager.getOrdersByParam(condition, value);
@@ -396,5 +396,10 @@ public class Facade
     public boolean getBUserStatus(long id)
     {
         return Boolean.parseBoolean(manager.simpleQuery(Manager.CON_BUSER_STATUS, id));
+    }
+
+    public String[] getMasterComments(long id, int count)
+    {
+        return manager.getMasterComments(id, count);
     }
 }
