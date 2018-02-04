@@ -11,6 +11,8 @@ import ubermaster.entity.model.Poke;
 import ubermaster.entity.model.User;
 import ubermaster.entity.security.JwtAuthenticationRequest;
 import ubermaster.entity.security.JwtUser;
+import ubermaster.errorHandler.ErrorHandler;
+import ubermaster.errorHandler.Errors;
 import ubermaster.persistence.facade.Facade;
 import ubermaster.security.service.JwtAuthenticationProvider;
 import ubermaster.security.service.JwtTokenUtil;
@@ -30,7 +32,7 @@ public class SignController<T extends User> {
 
     @RequestMapping(value = "/login",
             method = RequestMethod.POST)
-    public T logInUser(@RequestBody JwtAuthenticationRequest loginUser) throws ServletException {
+    public T logInUser(@RequestBody JwtAuthenticationRequest loginUser) throws SQLException, ParserConfigurationException, SAXException, IOException, ClassNotFoundException, ServletException {
         if (loginUser == null || loginUser.getPhoneNumber() == null || loginUser.getPassword() == null) {
             throw new ServletException("Please fill in username and password");
         }
@@ -43,9 +45,10 @@ public class SignController<T extends User> {
             if (user.getPassword().equals(password)) {
                 return user;
             }
-            throw new ServletException("Wrong password");
+            //throw new ServletException("Wrong password");
+            throw ErrorHandler.createServletException(Errors.ser_10);
         }
-        throw new ServletException("There is no such user");
+        throw ErrorHandler.createServletException(Errors.ser_2);
     }
 
     /*@RequestMapping(value = "/register",
