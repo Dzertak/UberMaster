@@ -902,3 +902,37 @@ is
         return(pokeID);
     end;
 /
+/*
+===================================================================================================================
+				GET ORDERS BY SORT DATE
+===================================================================================================================
+*/
+create or replace procedure getOrdersBySortDate(isASC in varchar, innerArray out arrayEntites)
+as
+    idsArray dbms_sql.number_table;
+    fileds arrayFiled := arrayFiled();
+    masterName type_attributes;
+    begin
+        if (isASC = 'true') then
+            select obj.object_id
+            bulk collect into idsArray
+            from Objects obj join Attributes attr on obj.object_id = attr.object_id
+            where attr_id = 17
+            order by (date_value) asc;
+        else
+            select obj.object_id
+            bulk collect into idsArray
+            from Objects obj join Attributes attr on obj.object_id = attr.object_id
+            where attr_id = 17
+            order by (date_value) desc;
+        end if;
+
+        innerArray := arrayEntites();
+
+        for itera in 1..idsArray.last loop
+            innerArray.extend();
+            getEntities(idsArray(itera), fileds);
+            innerArray(itera) := fileds;
+        end loop;
+    end;
+/
