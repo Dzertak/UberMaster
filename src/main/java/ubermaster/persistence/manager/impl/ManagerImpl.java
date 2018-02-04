@@ -8,11 +8,16 @@ import oracle.sql.ArrayDescriptor;
 import oracle.sql.STRUCT;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.*;
+import ubermaster.errorHandler.ErrorHandler;
+import ubermaster.errorHandler.Errors;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,8 +63,7 @@ public class ManagerImpl implements Manager
     (
         PersistenceEntity persistenceEntity,
         Class<? extends BaseEntity> _class
-    )
-    {
+    ) throws IOException, SAXException, ParserConfigurationException, SQLException {
         OracleConnection oracleConnection = null;
         OracleCallableStatement oraCallStat = null;
         try
@@ -104,6 +108,7 @@ public class ManagerImpl implements Manager
         catch (SQLException exc)
         {
             log.error(exc.getMessage(), exc);
+            throw ErrorHandler.createSQLException(Errors.ser_1);
             //exc.printStackTrace();
         }
 
@@ -118,6 +123,7 @@ public class ManagerImpl implements Manager
             catch (SQLException exc)
             {
                 log.error(exc.getMessage(), exc);
+
                 //exc.printStackTrace();
             }
         }

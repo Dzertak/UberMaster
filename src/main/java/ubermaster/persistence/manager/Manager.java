@@ -1,8 +1,11 @@
 package ubermaster.persistence.manager;
 
+import org.xml.sax.SAXException;
 import ubermaster.entity.model.BaseEntity;
 import ubermaster.entity.model.PersistenceEntity;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.sql.SQLException;
 
 public interface Manager
@@ -61,7 +64,7 @@ public interface Manager
      *
      * @param _class — a type of instance
      * */
-    void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class);
+    void createEntity(PersistenceEntity persistenceEntity, Class<? extends BaseEntity> _class) throws IOException, SAXException, ParserConfigurationException, SQLException;
 
     /**
      * Get an entity from data base by entity id
