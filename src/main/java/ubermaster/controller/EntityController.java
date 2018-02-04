@@ -153,7 +153,7 @@ public class EntityController<T extends BaseEntity>
                     0.5f,
                     20,
                     10,
-                    10
+                    50
                 );
         generator.init();
 

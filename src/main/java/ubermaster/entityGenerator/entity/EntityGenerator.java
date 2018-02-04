@@ -381,7 +381,12 @@ public class EntityGenerator implements SQC_DATA, _SQL
 							Integer.toString(RANDOM.nextInt(5) + 1)
 						);
 					controller.addParam(ATTR_ORDER_COMMENT, "SOME COMMENT " + ID);
-					controller.addParam(ATTR_ORDER_MASTER_END_DATE, new SimpleDateFormat("dd/MM/yyyy HH:mm").format(new Date()));
+					controller.addParam
+						(
+							ATTR_ORDER_MASTER_END_DATE,
+							new SimpleDateFormat("dd/MM/yyyy HH:mm")
+								.format(DUE_DATE)
+						);
 				}
 			}
 
