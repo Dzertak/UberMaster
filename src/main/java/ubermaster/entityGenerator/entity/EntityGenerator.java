@@ -312,17 +312,23 @@ public class EntityGenerator implements SQC_DATA, _SQL
 		controller.addParam(ATTR_BIG_DESCR, NAME);
 
 	//--:	START DATE
+		final int MIN_DUE_DAYS = 1;
+		final int MAX_DUE_DAYS = 366;
 		final Date DATE = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(DATE);
+		calendar.add
+				(
+					Calendar.DATE,
+					RANDOM.nextInt(MAX_DUE_DAYS) - (MAX_DUE_DAYS >> 1)
+				);
+
 		controller.addParam
 				(
 					ATTR_START_DATE,
-					new SimpleDateFormat("dd/MM/yyyy HH:mm").format(DATE)
+					new SimpleDateFormat("dd/MM/yyyy HH:mm").format(calendar.getTime())
 				);
 	//--:	DUE DATE
-		final int MIN_DUE_DAYS = 1;
-		final int MAX_DUE_DAYS = 30;
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(DATE);
 		calendar.add
 				(
 					Calendar.DATE,
