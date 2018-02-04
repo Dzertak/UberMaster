@@ -390,4 +390,17 @@ public class EntityController<T extends BaseEntity>
 		return facade.getOrdersByStatus(status);
 	}
 
+	@RequestMapping
+	(
+		value = "/getBUserStatus",
+		method = RequestMethod.GET,
+		produces = "application/json"
+	)
+	public boolean getBUserStatus
+	(
+		@RequestParam("id") long id
+	)
+	{
+		return facade.getBUserStatus(id);
+	}
 }

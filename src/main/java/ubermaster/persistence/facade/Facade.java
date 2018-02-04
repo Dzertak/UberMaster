@@ -383,4 +383,9 @@ public class Facade
         String pokeID = manager.simpleQuery(Manager.CON_POKE_ID, id);
         order.setPokeId(Long.parseLong(pokeID));
     }
+
+    public boolean getBUserStatus(long id)
+    {
+        return Boolean.parseBoolean(manager.simpleQuery(Manager.CON_BUSER_STATUS, id));
+    }
 }

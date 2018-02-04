@@ -22,6 +22,11 @@ public interface Manager
     String GET_MASTER_AVER_MARK = "select getMasterAverMark(?) from dual";
     String GET_MASTER_NAME = "select getMasterName(?) from dual";
     String GET_POKE_ID = "select getOrderParentID(?) from dual";
+    String GET_BUSER_STATUS =
+            "select lst.value " +
+            "from Lists lst join Attributes attr " +
+            "on lst.list_value_id = attr.list_value_id " +
+            "where lst.attr_id = 20 and object_id = ?";
 
     String ATTR_OBJECT_ID = "-1";
     String ATTR_OBJECT_TYPE_ID = "-2";
@@ -36,10 +41,12 @@ public interface Manager
     byte CON_LST_PROFESSION = 1;
     byte CON_LST_STATUS = 2;
 
+//==:   Simple queries const
     byte CON_MASTER_AVER = 1;
     byte CON_DELETE = 2;
     byte CON_MASTER_NAME = 3;
     byte CON_POKE_ID = 4;
+    byte CON_BUSER_STATUS = 5;
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     /**

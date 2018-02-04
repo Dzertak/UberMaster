@@ -564,6 +564,10 @@ public class ManagerImpl implements Manager
                     statement = oracleConnection.prepareStatement(GET_POKE_ID);
                 break;
 
+                case CON_BUSER_STATUS :
+                    statement = oracleConnection.prepareStatement(GET_BUSER_STATUS);
+                break;
+
                 default :
                     statement = null;
 			}
