@@ -947,15 +947,15 @@ as
     begin
         with sortIDs as
         (
-            select attr.object_id
+            select attr.object_id, date_value
             from Attributes attr join ObjReference ref on attr.object_id = ref.object_id
             where refer_id = id and attr.attr_id = 24 and rownum <= commCount
-            order by (date_value) desc
         )
         select value
         bulk collect into retArray
         from Attributes attr join sortIDs sid on sid.object_id = attr.object_id
-        where attr.attr_id = 23;
+        where attr.attr_id = 23
+        order by (sid.date_value) desc;
 
         innerArray := retArray;
     end;
