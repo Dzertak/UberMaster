@@ -481,7 +481,7 @@ public class ManagerImpl implements Manager
         }
     }
 
-    public PersistenceEntity[] getOrdersByList(final byte CON_LST_VAL, String value)
+    public PersistenceEntity[] getOrdersByParam(final byte CON_LST_VAL, String value)
     {
         OracleCallableStatement callStat = null;
         OracleConnection connection = null;
@@ -493,11 +493,15 @@ public class ManagerImpl implements Manager
             {
                 case CON_LST_PROFESSION :
                     callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_PROFESSION);
-                    break;
+                break;
 
                 case CON_LST_STATUS :
                     callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_BY_STATUS);
-                    break;
+                break;
+
+                case CON_ATTR_SORT :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_ORDER_SORT);
+                break;
 
                 default :
                     callStat = null;

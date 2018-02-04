@@ -403,4 +403,18 @@ public class EntityController<T extends BaseEntity>
 	{
 		return facade.getBUserStatus(id);
 	}
+
+	@RequestMapping
+	(
+		value = "/getSortOrders",
+		method = RequestMethod.GET,
+		produces = "application/json"
+	)
+	public BaseEntity[] getSortOrders
+	(
+		@RequestParam("asc") boolean isASC
+	)
+	{
+		return facade.getSortOrders(isASC);
+	}
 }

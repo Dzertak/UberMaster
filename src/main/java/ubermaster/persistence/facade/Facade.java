@@ -244,10 +244,19 @@ public class Facade
         return getOrdersByList(Manager.CON_LST_STATUS, status);
     }
 
+    public <T extends BaseEntity> T[] getSortOrders(boolean isASC)
+    {
+        return getOrdersByList
+            (
+                Manager.CON_ATTR_SORT,
+                Boolean.toString(isASC)
+            );
+    }
+
     private <T extends BaseEntity> T[] getOrdersByList(byte condition, String value)
     {
     //--:   DB
-        PersistenceEntity sqcPE[] = manager.getOrdersByList(condition, value);
+        PersistenceEntity sqcPE[] = manager.getOrdersByParam(condition, value);
 
         if (sqcPE == null)
             return null;

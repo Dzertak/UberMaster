@@ -19,6 +19,7 @@ public interface Manager
     String UPDATE_ENTITY = "{call updateEntity(?)}";
     String GET_ORDER_BY_PROFESSION = "call getOrdersByProfession(?, ?)";
     String GET_ORDER_BY_STATUS = "call getOrdersByStatus(?, ?)";
+    String GET_ORDER_SORT = "call getOrdersBySortDate(?, ?)";
     String GET_MASTER_AVER_MARK = "select getMasterAverMark(?) from dual";
     String GET_MASTER_NAME = "select getMasterName(?) from dual";
     String GET_POKE_ID = "select getOrderParentID(?) from dual";
@@ -40,6 +41,7 @@ public interface Manager
 
     byte CON_LST_PROFESSION = 1;
     byte CON_LST_STATUS = 2;
+    byte CON_ATTR_SORT = 3;
 
 //==:   Simple queries const
     byte CON_MASTER_AVER = 1;
@@ -109,14 +111,14 @@ public interface Manager
     PersistenceEntity[] getUserOrders(long id, int userType);
 
     /**
-     * Get the order instances by some list value
+     * Get the order instances by some order value
      *
-     * @param condition — a byte value that identifies list value type
-     * @param value — value of list_value
+     * @param condition — a byte value that identifies order value type
+     * @param value
      *
      * @return an instance of array of {@code PersistenceEntity} instances
      * */
-    PersistenceEntity[] getOrdersByList(byte condition, String value);
+    PersistenceEntity[] getOrdersByParam(byte condition, String value);
 
     /**
      * Returns a string value from entity by condition
