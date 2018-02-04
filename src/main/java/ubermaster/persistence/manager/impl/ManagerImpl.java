@@ -35,7 +35,7 @@ public class ManagerImpl implements Manager
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-    private boolean isValid(Object object)
+    /*private boolean isValid(Object object)
     {
         if (object == null)
             return false;
@@ -52,7 +52,7 @@ public class ManagerImpl implements Manager
         }
 
         return true;
-    }
+    }*/
 
     public void createEntity
     (
@@ -76,7 +76,7 @@ public class ManagerImpl implements Manager
             while (iterator.hasNext())
             {
                 String attrID = iterator.next();
-                if (isValid(hashMap.get(attrID)))
+                //if (isValid(hashMap.get(attrID)))
                 {
                     elements[i] = attrID;
                     ++i;
@@ -616,7 +616,7 @@ public class ManagerImpl implements Manager
             elements[0] = Long.toString(id);
             for (int i = 1; i < LEN_ELEMENTS;)
             {
-                if (isValid(sqcParam[i]))
+                //if (isValid(sqcParam[i]))
                 {
                     elements[i] = (String)sqcParam[i - 1];
                     ++i;
@@ -624,8 +624,8 @@ public class ManagerImpl implements Manager
                     ++i;
                 }
 
-                else
-                    i += 2;
+                /*else
+                    i += 2;*/
                /* elements[i] = (String)sqcParam[i - 1];
                 ++i;
                 elements[i] = ConverterImpl.convertObjectToString(sqcParam[i - 1]);
