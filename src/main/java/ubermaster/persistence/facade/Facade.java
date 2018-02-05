@@ -2,11 +2,15 @@ package ubermaster.persistence.facade;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.xml.sax.SAXException;
 import ubermaster.entity.model.*;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 import ubermaster.persistence.manager.impl.ManagerImpl;
 
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.HashMap;
 
@@ -30,7 +34,7 @@ public class Facade
      *
      * @param baseEntity an entity that will be inserted to the database
      */
-    public void createEntity(BaseEntity baseEntity)
+    public void createEntity(BaseEntity baseEntity) throws IOException, SAXException, ParserConfigurationException, SQLException
     {
         PersistenceEntity persistenceEntity = converter.convertToEntity(baseEntity);
         manager.createEntity(persistenceEntity, baseEntity.getClass());
