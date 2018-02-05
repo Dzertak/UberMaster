@@ -960,3 +960,29 @@ as
         innerArray := retArray;
     end;
 /
+/*
+===================================================================================================================
+				DELETE ORDERS BY TIME
+===================================================================================================================
+*/
+create or replace procedure deleteOrderaByTime(time in number, sleepCount in number)
+as
+    begin
+        <<label>>
+        delete from Objects
+        where object_id in
+              (
+                  select object_id
+                  from Attributes
+                  where sysdate > date_value and attr_id = 18
+              );
+        commit;
+
+        --because sleep can take 1 day delay at miliseconds, its too large number for it
+        for itera in 1..sleepCount loop
+            DBMS_LOCK.SLEEP(time);
+        end loop;
+
+        goto label;
+    end;
+/
