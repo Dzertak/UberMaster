@@ -978,7 +978,7 @@ as
               );
         commit;
 
-        --because sleep can take 1 day delay at miliseconds, its too large number for it
+        --because sleep can take 1 day delay at milliseconds, its too large number for it
         for itera in 1..sleepCount loop
             DBMS_LOCK.SLEEP(time);
         end loop;
