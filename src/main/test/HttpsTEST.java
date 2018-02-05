@@ -24,7 +24,7 @@ public class HttpsTEST
 	static final String HEADER_AUTH = "Authorization";
 	static String headerAuthVal = "UberToken ";
 
-	private static String GET_ENTITY_URL = "http://localhost:8090/entities/getEntity?id=▼&class=▼";
+	private static final String GET_ENTITY_URL = "http://localhost:8090/entities/getEntity?id=▼&class=▼";
 
 	@BeforeClass
 	public static void beforeClassMethod()
