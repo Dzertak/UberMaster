@@ -66,8 +66,7 @@ public class ManagerImpl implements Manager
     ) throws IOException, SAXException, ParserConfigurationException, SQLException {
         OracleConnection oracleConnection = null;
         OracleCallableStatement oraCallStat = null;
-        try
-        {
+
             HashMap<String, Object> hashMap =
                     (HashMap<String, Object>) persistenceEntity.getAttributes();
             String[] elements = new String[3     + (hashMap.size() << 1)];
@@ -103,17 +102,10 @@ public class ManagerImpl implements Manager
                     );
             oraCallStat.setARRAY(1, array);
             oraCallStat.execute();
-        }
 
-        catch (SQLException exc)
-        {
-            log.error(exc.getMessage(), exc);
-            throw ErrorHandler.createSQLException(Errors.ser_1);
-            //exc.printStackTrace();
-        }
 
-        finally
-        {
+
+
             try
             {
                 oraCallStat.close();
@@ -126,7 +118,7 @@ public class ManagerImpl implements Manager
 
                 //exc.printStackTrace();
             }
-        }
+
     }
 
     private PersistenceEntity getPersistanceEntity(ResultSet resultSet)

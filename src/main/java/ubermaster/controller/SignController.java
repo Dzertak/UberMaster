@@ -75,9 +75,14 @@ public class SignController<T extends User> {
     public String addPoke
             (
                     @RequestBody Poke poke
-            ) throws SQLException, ParserConfigurationException, SAXException, IOException
-    {
-        facade.createEntity(poke);
+            ) throws SQLException, ParserConfigurationException, SAXException, IOException, ServletException {
+        try{
+            facade.createEntity(poke);
+        }
+        catch(SQLException exc){
+            throw ErrorHandler.createServletException(Errors.ser_1);
+        }
+
 
         return "DONE";
     }
@@ -91,9 +96,13 @@ public class SignController<T extends User> {
     public String addMaster
             (
                     @RequestBody Master master
-            ) throws SQLException, ParserConfigurationException, SAXException, IOException
-    {
-        facade.createEntity(master);
+            ) throws SQLException, ParserConfigurationException, SAXException, IOException, ServletException {
+        try{
+            facade.createEntity(master);
+        }
+        catch(SQLException exc){
+            throw ErrorHandler.createServletException(Errors.ser_1);
+        }
 
         return "DONE";
     }
