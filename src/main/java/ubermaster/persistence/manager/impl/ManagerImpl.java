@@ -722,4 +722,50 @@ public class ManagerImpl implements Manager
             }
         }
     }
+
+    public static void launchOrderCleaner()
+    {
+        Thread thread = new Thread()
+        {
+            public void run()
+            {
+                OracleCallableStatement callStat = null;
+                ResultSet resultSet;
+                OracleConnection oracleConnection = null;
+                try
+                {
+                    oracleConnection = getConnection();
+                    callStat = (OracleCallableStatement) oracleConnection.prepareCall(ORDER_CLEANER);
+
+                    final int TIME = 60*1000;
+                    final int SLEEP_COUNT = 24*60;
+                    callStat.setString(1, Long.toString(TIME));
+                    callStat.setString(2, Long.toString(SLEEP_COUNT));
+                    callStat.execute();
+                }
+
+                catch (SQLException exc)
+                {
+                    log.error(exc.getMessage(), exc);
+                    //exc.printStackTrace();
+                }
+
+                finally
+                {
+                    try
+                    {
+                        callStat.close();
+                        oracleConnection.close();
+                    }
+
+                    catch (SQLException exc)
+                    {
+                        log.error(exc.getMessage(), exc);
+                        //exc.printStackTrace();
+                    }
+                }
+            }
+        };
+        thread.start();
+    }
 }
