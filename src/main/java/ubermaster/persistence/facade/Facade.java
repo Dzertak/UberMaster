@@ -27,7 +27,13 @@ public class Facade
     private ConverterImpl converter;
     @Autowired
     private ManagerImpl manager;
-    private final HashMap<Long, PersistenceEntity> CACHE = new HashMap<>();
+
+    private final PE_Cache CACHE;
+    public Facade()
+    {
+        CACHE = new PE_Cache(0, 1, 60000);
+        //CACHE.autoCleanCache();
+    }
 
     /**
      * Method that inserts entity to database
@@ -82,42 +88,11 @@ public class Facade
      */
     public <T extends User> T getUser(String phoneNumber, String password)
     {
-    //--:   Checking for presenting entity in the CACHE
-        final byte NOT_FOUND = 0;
-        final byte PHONE_NUMBER_EQUALS = 1;
-        final byte PASS_EQUALS = 2;
-        final byte ALL_EQUALS = 3;
-        for (long id : CACHE.keySet())
-        {
-            PersistenceEntity persistenceEntity = CACHE.get(id);
-            HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
-            byte condition = NOT_FOUND;
-            for (String attrID : attributes.keySet())
-            {
-                if
-                (
-                    attrID.equals(User.Model.PHONE_NUMBER)
-                        &&
-                    attributes.get(attrID).equals(phoneNumber)
-                )
-                    condition |= PHONE_NUMBER_EQUALS;
+        PersistenceEntity persistenceEntity = CACHE.getUser(phoneNumber, password);
+        if (persistenceEntity != null)
+            return converter.convertToModel(persistenceEntity);
 
-                else if
-                (
-                    attrID.equals(User.Model.PASSWORD)
-                        &&
-                    attributes.get(attrID).equals(password)
-                )
-                    condition |= PASS_EQUALS;
-
-                if (condition == ALL_EQUALS)
-                    return converter.convertToModel(persistenceEntity);
-            }
-        }
-
-        PersistenceEntity persistenceEntity =
-                manager.getUserByPhonePass(phoneNumber, password);
-
+        persistenceEntity = manager.getUserByPhonePass(phoneNumber, password);
         if (persistenceEntity == null)
             return null;
 
@@ -137,26 +112,12 @@ public class Facade
      */
     public <T extends User> T getUserByPhone(String phoneNumber)
     {
-    //==:   CACHE
-        for (long id : CACHE.keySet())
-        {
-            PersistenceEntity persistenceEntity = CACHE.get(id);
-            HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
-            for (String attrID : attributes.keySet())
-            {
-                if
-                (
-                    attrID.equals(User.Model.PHONE_NUMBER)
-                        &&
-                    attributes.get(attrID).equals(phoneNumber)
-                )
-                    return converter.convertToModel(persistenceEntity);
-            }
-        }
+        PersistenceEntity persistenceEntity = CACHE.getUser(phoneNumber);
+        if (persistenceEntity != null)
+            return converter.convertToModel(persistenceEntity);
 
     //==:   DB
-        PersistenceEntity persistenceEntity = manager.getUserByPhone(phoneNumber);
-
+        persistenceEntity = manager.getUserByPhone(phoneNumber);
         if (persistenceEntity == null)
             return null;
 

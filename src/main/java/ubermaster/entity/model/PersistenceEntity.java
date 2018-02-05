@@ -1,6 +1,7 @@
 package ubermaster.entity.model;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +21,8 @@ public class PersistenceEntity
     protected Map<String, Object> attributes;
     protected Map<BigInteger, Long> references;
     protected Class<? extends BaseEntity> classType;
+
+    protected Date lifeSpan;
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
     public PersistenceEntity()
     {
@@ -28,6 +31,16 @@ public class PersistenceEntity
     }
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
+    public void setLifeSpan(Date lifeSpan)
+    {
+        this.lifeSpan = lifeSpan;
+    }
+
+    public Date getLifeSpan()
+    {
+        return lifeSpan;
+    }
+
     public void setClassType(final Class<? extends BaseEntity> CLASS) {
         classType = CLASS;
     }
