@@ -14,6 +14,7 @@ public interface Manager
     String GET_ENTITY = "{call getEntity(?, ?)}";
     String GET_TYPED_ENTITIES = "{call getTypedEntities(?, ?)}";
     String GET_POKE_ORDERS = "{call getPokeOrders(?, ?)}";
+    String GET_LAST_MASTER_COMMENTED_ORDERS = "{call getLastMasterCommentedOrders(?, ?, ?)}";
     String GET_MASTER_ORDERS = "{call getMasterOrders(?, ?)}";
     String GET_USER = "{call getUser(?, ?, ?)}";
     String GET_USER_BY_PHONE = "{call getUserByPhone(?, ?)}";
@@ -45,6 +46,7 @@ public interface Manager
 
     byte MASTER_TYPE_ORDERS = 1;
     byte POKE_TYPE_ORDERS = 2;
+    byte LAST_MASTER_COMMENTED_ORDERS = 3;
 
     byte CON_LST_PROFESSION = 1;
     byte CON_LST_STATUS = 2;
@@ -115,7 +117,7 @@ public interface Manager
      *
      * @return an instance of array of {@code PersistenceEntity} instances
      * */
-    PersistenceEntity[] getUserOrders(long id, int userType);
+    PersistenceEntity[] getUserOrders(long id, byte userType, Object value);
 
     /**
      * Get the order instances by some order value
@@ -146,14 +148,4 @@ public interface Manager
      *      of attribute and second one is value
      * */
     void updateEntity(long id, Object ... sqcParam);
-
-    /**
-     * Get master comments from DB
-     *
-     * @param id — master id
-     * @param count — count of master comments
-     *
-     * @return an array of master comments
-     * */
-    String[] getMasterComments(long id, int count);
 }

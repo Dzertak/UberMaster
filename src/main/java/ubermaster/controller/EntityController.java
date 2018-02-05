@@ -424,7 +424,7 @@ public class EntityController<T extends BaseEntity>
 		method = RequestMethod.GET,
 		produces = "application/json"
 	)
-	public String[] getMasterComments
+	public BaseEntity[] getMasterComments
 	(
 		@RequestParam("id") long id,
 		@RequestParam(value = "count", required = false) Integer count

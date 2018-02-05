@@ -941,9 +941,10 @@ as
 				GET MASTER COMMENTS
 ===================================================================================================================
 */
-create or replace procedure getMasterComments(id in number, commCount in number, innerArray out array)
+create or replace procedure getLastMasterCommentedOrders(id in number, innerArray out arrayEntites, commCount in number)
 as
-    retArray array := array();
+    idsArray dbms_sql.number_table;
+    fileds arrayFiled := arrayFiled();
     begin
         with sortIDs as
         (
@@ -951,13 +952,18 @@ as
             from Attributes attr join ObjReference ref on attr.object_id = ref.object_id
             where refer_id = id and attr.attr_id = 24 and rownum <= commCount
         )
-        select value
-        bulk collect into retArray
+        select attr.object_id
+        bulk collect into idsArray
         from Attributes attr join sortIDs sid on sid.object_id = attr.object_id
         where attr.attr_id = 23
         order by (sid.date_value) desc;
 
-        innerArray := retArray;
+        innerArray := arrayEntites();
+        for itera in 1..idsArray.last loop
+            innerArray.extend();
+            getEntities(idsArray(itera), fileds);
+            innerArray(itera) := fileds;
+        end loop;
     end;
 /
 /*

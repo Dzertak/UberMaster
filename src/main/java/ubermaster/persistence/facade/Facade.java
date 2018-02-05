@@ -179,10 +179,10 @@ public class Facade
      * @param userType — a constant param of user from {@code Manager} class
      * @return an array of {@code Order} instances
      */
-    public <T extends BaseEntity> T[] getUserOrders(long id, int userType)
+    public <T extends BaseEntity> T[] getUserOrders(long id, byte userType)
     {
     //--:   DB
-        PersistenceEntity sqcPE[] = manager.getUserOrders(id, userType);
+        PersistenceEntity sqcPE[] = manager.getUserOrders(id, userType, null);
 
         if (sqcPE == null)
             return null;
@@ -363,8 +363,23 @@ public class Facade
         return Boolean.parseBoolean(manager.simpleQuery(Manager.CON_BUSER_STATUS, id));
     }
 
-    public String[] getMasterComments(long id, int count)
+    public <T extends BaseEntity> T[] getMasterComments(long id, int count)
     {
-        return manager.getMasterComments(id, count);
+    //--:   DB
+        PersistenceEntity sqcPE[] = manager.getUserOrders(id, Manager.LAST_MASTER_COMMENTED_ORDERS, count);
+
+        if (sqcPE == null)
+            return null;
+
+        int length = sqcPE.length;
+        T sqcT[] = (T[])new BaseEntity[length];
+
+        for (int itera = 0; itera < length; ++itera)
+        {
+            sqcT[itera] = converter.convertToModel(sqcPE[itera], Order.class);
+            addParamsToOrder((Order) sqcT[itera]);
+        }
+
+        return sqcT;
     }
 }

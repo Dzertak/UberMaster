@@ -5,6 +5,7 @@ import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
+import oracle.sql.NUMBER;
 import oracle.sql.STRUCT;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
@@ -421,7 +422,7 @@ public class ManagerImpl implements Manager
         }
     }
 
-    public PersistenceEntity[] getUserOrders(long id, int userType)
+    public PersistenceEntity[] getUserOrders(long id, byte userType, Object value)
     {
         OracleCallableStatement callStat = null;
         OracleConnection connection = null;
@@ -439,6 +440,11 @@ public class ManagerImpl implements Manager
                 case POKE_TYPE_ORDERS :
                     callStat = (OracleCallableStatement) connection.prepareCall(GET_POKE_ORDERS);
                 break;
+
+                case LAST_MASTER_COMMENTED_ORDERS :
+                    callStat = (OracleCallableStatement) connection.prepareCall(GET_LAST_MASTER_COMMENTED_ORDERS);
+                    callStat.setInt(3, (int)value);
+                break;
                 
                 default :
                     callStat = null;
@@ -446,7 +452,7 @@ public class ManagerImpl implements Manager
 
             callStat.registerOutParameter(2, OracleTypes.ARRAY, ARRAY_ENTITIES);
 
-            callStat.setString(1, Long.toString(id));
+            callStat.setLong(1, id);
             callStat.execute();
 
             return getPersistanceEntities
@@ -666,45 +672,6 @@ public class ManagerImpl implements Manager
             {
                 callStat.close();
                 oracleConnection.close();
-            }
-
-            catch (SQLException exc)
-            {
-                log.error(exc.getMessage(), exc);
-                //exc.printStackTrace();
-            }
-        }
-    }
-
-    public String[] getMasterComments(long id, int count)
-    {
-        OracleConnection connection = null;
-        OracleCallableStatement callStat = null;
-        try
-        {
-            connection = getConnection();
-            callStat = (OracleCallableStatement) connection.prepareCall(GET_MASTER_COMMENTS);
-            callStat.registerOutParameter(3, OracleTypes.ARRAY, ARRAY);
-            callStat.setLong(1, id);
-            callStat.setInt(2, count);
-            callStat.execute();
-
-            return (String[])callStat.getARRAY(3).getArray();
-        }
-
-        catch (SQLException exc)
-        {
-            log.error(exc.getMessage(), exc);
-            //exc.printStackTrace();
-            return null;
-        }
-
-        finally
-        {
-            try
-            {
-                callStat.close();
-                connection.close();
             }
 
             catch (SQLException exc)
