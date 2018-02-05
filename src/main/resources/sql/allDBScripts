@@ -941,9 +941,20 @@ as
 				GET MASTER COMMENTS
 ===================================================================================================================
 */
-create or replace procedure getMasterComments(id in number, commCount in number, innerArray out array)
+create or replace type commentType AS Object
+(
+    comm varchar(4000),
+    order_id number(20),
+    poke_id number(20)
+)
+/
+
+create or replace type arrayComment as table of commentType;
+/
+
+create or replace procedure getMasterComments(id in number, commCount in number, innerArray out arrayComment)
 as
-    retArray array := array();
+    retArray arrayComment := arrayComment();
     begin
         with sortIDs as
         (
@@ -951,9 +962,10 @@ as
             from Attributes attr join ObjReference ref on attr.object_id = ref.object_id
             where refer_id = id and attr.attr_id = 24 and rownum <= commCount
         )
-        select value
+        select commentType(value, attr.object_id, parent_id)
         bulk collect into retArray
         from Attributes attr join sortIDs sid on sid.object_id = attr.object_id
+            join Objects obj on obj.object_id = attr.object_id
         where attr.attr_id = 23
         order by (sid.date_value) desc;
 

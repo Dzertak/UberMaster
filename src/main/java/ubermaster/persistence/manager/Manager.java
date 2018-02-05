@@ -42,6 +42,7 @@ public interface Manager
     String ARRAY_ENTITIES = "ARRAYENTITES";
     String ARRAY_FIELD = "ARRAYFILED";
     String ARRAY = "ARRAY";
+    String ARRAY_COMMENT = "ARRAYCOMMENT";
 
     byte MASTER_TYPE_ORDERS = 1;
     byte POKE_TYPE_ORDERS = 2;
