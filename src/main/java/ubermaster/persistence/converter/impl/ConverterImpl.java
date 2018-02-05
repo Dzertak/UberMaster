@@ -100,7 +100,11 @@ public class ConverterImpl implements Converter
         return null;
     }
 
-    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException {
+    public static Object convertStringToObject(final String VALUE, final Class CLASS) throws ParseException
+    {
+        if (VALUE == null)
+            return null;
+
         if (int.class.isAssignableFrom(CLASS))
             return Integer.parseInt(VALUE);
 
