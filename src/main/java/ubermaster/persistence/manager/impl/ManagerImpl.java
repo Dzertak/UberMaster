@@ -684,12 +684,10 @@ public class ManagerImpl implements Manager
         {
             connection = getConnection();
             callStat = (OracleCallableStatement) connection.prepareCall(GET_MASTER_COMMENTS);
-            callStat.registerOutParameter(3, OracleTypes.ARRAY, ARRAY_COMMENT);
+            callStat.registerOutParameter(3, OracleTypes.ARRAY, ARRAY);
             callStat.setLong(1, id);
             callStat.setInt(2, count);
             callStat.execute();
-
-            Object sqcO[] = (Object[]) callStat.getARRAY(3).getArray();
 
             return (String[])callStat.getARRAY(3).getArray();
         }

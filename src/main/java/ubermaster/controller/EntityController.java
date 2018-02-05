@@ -427,9 +427,12 @@ public class EntityController<T extends BaseEntity>
 	public String[] getMasterComments
 	(
 		@RequestParam("id") long id,
-		@RequestParam("count") int count
+		@RequestParam(value = "count", required = false) Integer count
 	)
 	{
+		if (count == null)
+			return facade.getMasterComments(id, 10);
+
 		return facade.getMasterComments(id, count);
 	}
 }
