@@ -5,15 +5,12 @@ import oracle.jdbc.OracleConnection;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
-import oracle.sql.NUMBER;
 import oracle.sql.STRUCT;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 import org.xml.sax.SAXException;
 import ubermaster.annotation.ObjectType;
 import ubermaster.entity.model.*;
-import ubermaster.errorHandler.ErrorHandler;
-import ubermaster.errorHandler.Errors;
 import ubermaster.persistence.converter.impl.ConverterImpl;
 import ubermaster.persistence.manager.Manager;
 
@@ -256,7 +253,7 @@ public class ManagerImpl implements Manager
         {
             oracleConnection = getConnection();
             callStat = (OracleCallableStatement) oracleConnection.prepareCall(GET_ENTITY);
-            callStat.setString(1, Long.toString(id));
+            callStat.setLong(1, id);
             callStat.registerOutParameter(2, oracle.jdbc.OracleTypes.CURSOR);
             callStat.execute();
             resultSet = callStat.getCursor(2);
@@ -303,8 +300,8 @@ public class ManagerImpl implements Manager
 
             return getPersistanceEntities
                     (
-                            (Object[]) callStat.getARRAY(2).getArray(),
-                            _class
+                        (Object[]) callStat.getARRAY(2).getArray(),
+                        _class
                     );
         }
 
@@ -580,7 +577,7 @@ public class ManagerImpl implements Manager
                     statement = null;
 			}
 
-			statement.setString(1, Long.toString(id));
+			statement.setLong(1, id);
 			statement.execute();
 
 			ResultSet resultSet = statement.getResultSet();
@@ -698,8 +695,8 @@ public class ManagerImpl implements Manager
 
                     final int TIME = 60*1000;
                     final int SLEEP_COUNT = 24*60;
-                    callStat.setString(1, Long.toString(TIME));
-                    callStat.setString(2, Long.toString(SLEEP_COUNT));
+                    callStat.setLong(1, TIME);
+                    callStat.setLong(2, SLEEP_COUNT);
                     callStat.execute();
                 }
 
