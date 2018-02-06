@@ -19,7 +19,7 @@ public class Application {
     public static void main(String[] args) throws IOException {
         Locale.setDefault(new Locale("en","EN"));
         SpringApplication.run(Application.class,args);
-        ManagerImpl.launchOrderCleaner();
+        //ManagerImpl.launchOrderCleaner();
     }
 
     @Bean

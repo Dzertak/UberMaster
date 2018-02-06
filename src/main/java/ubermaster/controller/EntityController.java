@@ -47,6 +47,9 @@ public class EntityController<T extends BaseEntity>
         if (entityClass.equals(Order.class.getSimpleName())) {
             return facade.getEntity(id, Order.class);
         }
+		if (entityClass.equals(Admin.class.getSimpleName()))
+			return facade.getEntity(id, Admin.class);
+
         return null;
     }
 
