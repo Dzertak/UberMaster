@@ -1,6 +1,7 @@
 package ubermaster.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,11 +39,11 @@ public class SignController<T extends User> {
         }
 
         String phoneNumber = loginUser.getPhoneNumber();
-        String password = loginUser.getPassword();
+        String password = new String(Base64Utils.decode(loginUser.getPassword().getBytes()));
 
         T user = facade.getUserByPhone(phoneNumber);
         if (user != null) {
-            if (user.getPassword().equals(password)) {
+            if (new String(Base64Utils.decode(user.getPassword().getBytes())).equals(password)) {
                 return user;
             }
             //throw new ServletException("Wrong password");

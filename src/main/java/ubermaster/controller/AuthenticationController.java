@@ -3,6 +3,7 @@ package ubermaster.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,8 +43,11 @@ public class AuthenticationController {
             return ResponseEntity.badRequest().body("Wrong request!");
             //throw ErrorHandler.createUsernameNotFoundException(Errors.ser_3);
         }
+        String password =
+                new String(Base64Utils.decode(authenticationRequest.getPassword().getBytes()));
+
         final String token = userAuthService
-                .authUser(authenticationRequest.getPhoneNumber(),authenticationRequest.getPassword());
+                .authUser(authenticationRequest.getPhoneNumber(),password);
 
         return ResponseEntity.ok(new JwtAuthenticationResponse(token));
     }
