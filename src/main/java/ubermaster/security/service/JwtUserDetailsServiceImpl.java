@@ -21,10 +21,7 @@ public class JwtUserDetailsServiceImpl<T extends User> implements UserDetailsSer
 
         if (user != null) {
             if (BlockedUser.class.isAssignableFrom(user.getClass())) {
-                if (((BlockedUser) user).getBlocked()) {
-                    throw new UsernameNotFoundException("User is blocked ");
-                }
-                return new JwtUser(user);
+                return new JwtUser((BlockedUser) user);
             }
             return new JwtUser(user);
         }

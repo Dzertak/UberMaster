@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import ubermaster.entity.model.User;
+import ubermaster.entity.security.JwtUser;
 
 @Service
 public class UserAuthService<T extends User> {
@@ -28,6 +29,12 @@ public class UserAuthService<T extends User> {
         );
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        return jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername(phoneNumber));
+        JwtUser jwtUser = userDetailsService.loadUserByUsername(phoneNumber);
+
+        if (!jwtUser.isEnabled()) {
+            throw new IllegalArgumentException("User is Blocked");
+        }
+
+        return jwtTokenUtil.generateToken(jwtUser);
     }
 }

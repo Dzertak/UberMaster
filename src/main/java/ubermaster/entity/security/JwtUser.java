@@ -4,14 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import ubermaster.entity.model.BlockedUser;
 import ubermaster.entity.model.User;
 
 import java.util.Collection;
 
-/**
- * Created by stephan on 20.03.16.
- */
-public class JwtUser<T extends User> implements UserDetails {
+public class JwtUser<T extends BlockedUser, K extends User> implements UserDetails {
 
     private Long id;
     private String phone;
@@ -32,12 +30,20 @@ public class JwtUser<T extends User> implements UserDetails {
         this.enabled = enabled;
     }
 
-    public JwtUser(T user) {
+    public JwtUser(K user) {
         this.id = user.getObject_id();
         this.phone = user.getPhoneNumber();
         this.password = user.getPassword();
         this.authorities = (AuthorityUtils.commaSeparatedStringToAuthorityList(user.getClassType().toUpperCase()));
         this.enabled = true;
+    }
+
+    public JwtUser(T user) {
+        this.id = user.getObject_id();
+        this.phone = user.getPhoneNumber();
+        this.password = user.getPassword();
+        this.authorities = (AuthorityUtils.commaSeparatedStringToAuthorityList(user.getClassType().toUpperCase()));
+        this.enabled = !user.getBlocked();
     }
 
     @JsonIgnore
