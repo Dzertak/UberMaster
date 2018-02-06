@@ -25,14 +25,15 @@ public class ConverterImpl implements Converter
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       SUB_CLASS       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
-    public PersistenceEntity convertToEntity(BaseEntity baseEntity)
+    public PersistenceEntity convertToEntity(BaseEntity entity)
     {
         PersistenceEntity persistenceEntity = new PersistenceEntity();
 
-        persistenceEntity.setName(baseEntity.getName());
-        persistenceEntity.setObject_id(baseEntity.getObject_id());
-        persistenceEntity.setDescription(baseEntity.getDescription());
-        persistenceEntity.setAttributes(baseEntity.getAllFields());
+        persistenceEntity.setName(entity.getName());
+        persistenceEntity.setObject_id(entity.getObject_id());
+        persistenceEntity.setDescription(entity.getDescription());
+        persistenceEntity.setAttributes(entity.getAllFields());
+        persistenceEntity.setClassType(entity.getClass());
 
         return persistenceEntity;
     }
