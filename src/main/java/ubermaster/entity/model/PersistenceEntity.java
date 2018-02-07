@@ -96,4 +96,10 @@ public class PersistenceEntity
     public void setReferences(Map references) {
         this.references = references;
     }
+
+    public String toString()
+    {
+        return "ClassType : " + classType + "\tID : " + object_id
+                + "\tName : " + name + "\tDescription : " + description;
+    }
 }

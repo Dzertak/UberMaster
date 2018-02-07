@@ -17,6 +17,9 @@ public class PE_Cache
 	private final int CLEANER_DELAY;
 
 	private volatile boolean cleanerWorks = true;
+	private Object mutex = new Object();
+
+	private PE_Cleaner cleaner;
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
 	PE_Cache(int hours, int minutes, int cleanerDelay)
 	{
@@ -48,6 +51,7 @@ public class PE_Cache
 			}
 
 			this.persistenceEntity = persistenceEntity;
+			System.out.println("Lastest is : " + persistenceEntity);
 		}
 
 		public PersistenceEntity getPersistenceEntity()
@@ -59,10 +63,27 @@ public class PE_Cache
 		{
 			setLatestPE();
 
+			if (persistenceEntity == null)
+				return null;
+
 			do
 			{
 				try
 				{
+					synchronized (mutex)
+					{
+						Date date = new Date();
+						System.out.println("Date : " + date.toString());
+						System.out.println("PerDate : " + persistenceEntity.getLifeSpan().toString());
+						System.out.println(persistenceEntity.getLifeSpan().before(new Date()));
+
+						if (!persistenceEntity.getLifeSpan().after(date))
+							break;
+
+						if (!cleanerWorks)
+							return "Stooped";
+					}
+
 					Thread.sleep(CLEANER_DELAY);
 				}
 
@@ -71,11 +92,13 @@ public class PE_Cache
 					exc.printStackTrace();
 				}
 			}
-			while (persistenceEntity.getLifeSpan().before(new Date()));
+			while (true);
 
 		//--:	delete and return info
+			CACHE.remove(persistenceEntity.getObject_id());
+			System.out.println("Cleared : " + persistenceEntity);
 
-			return null;
+			return persistenceEntity.toString();
 		}
 	}
 /*::|       F / P       :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
@@ -86,12 +109,12 @@ public class PE_Cache
 			public void run()
 			{
 				ExecutorService exeService = Executors.newSingleThreadExecutor();
-				PE_Cleaner callCleaner = new PE_Cleaner();
+				cleaner = new PE_Cleaner();
 				Future<String> futureCleaner;
 
 				do
 				{
-					futureCleaner = exeService.submit(callCleaner);
+					futureCleaner = exeService.submit(cleaner);
 
 					try
 					{
@@ -105,7 +128,15 @@ public class PE_Cache
 					}
 
 				//==:	Add info to logger about delete entity
+					try
+					{
+						System.out.println(futureCleaner.get());
+					}
 
+					catch (ExecutionException | InterruptedException exc)
+					{
+						exc.printStackTrace();
+					}
 				}
 				while(cleanerWorks);
 			}
@@ -114,19 +145,17 @@ public class PE_Cache
 		thread.start();
 	}
 
-	public void put(long id, PersistenceEntity persistenceEntity)
+	public void put(PersistenceEntity persistenceEntity)
 	{
-		Calendar calendar = Calendar.getInstance();
-		calendar.setTime(new Date());
-		calendar.add(Calendar.MINUTE, LIFE_SPAN_MINUTE);
-		calendar.add(Calendar.HOUR, LIFE_SPAN_HOUR);
-		persistenceEntity.setLifeSpan(calendar.getTime());
+		addTime(persistenceEntity);
 
-		CACHE.put(id, persistenceEntity);
+		CACHE.put(persistenceEntity.getObject_id(), persistenceEntity);
 	}
 
 	public PersistenceEntity get(long id)
 	{
+		addTime(CACHE.get(id));
+
 		return CACHE.get(id);
 	}
 
@@ -193,5 +222,38 @@ public class PE_Cache
 		}
 
 		return null;
+	}
+
+	public void stopCleaner()
+	{
+		cleanerWorks = false;
+	}
+
+	private boolean isThatDeletes(long id)
+	{
+		if
+		(
+			cleaner.getPersistenceEntity() != null
+				&&
+			cleaner.persistenceEntity.getObject_id() == id
+		)
+			return true;
+
+		return false;
+	}
+
+	private void addTime(PersistenceEntity persistenceEntity)
+	{
+		synchronized (mutex)
+		{
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(new Date());
+			calendar.add(Calendar.MINUTE, LIFE_SPAN_MINUTE);
+			calendar.add(Calendar.HOUR, LIFE_SPAN_HOUR);
+			persistenceEntity.setLifeSpan(calendar.getTime());
+
+			if (isThatDeletes(persistenceEntity.getObject_id()))
+				cleaner.setLatestPE();
+		}
 	}
 }

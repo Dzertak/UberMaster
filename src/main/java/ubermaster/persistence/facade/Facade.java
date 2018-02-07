@@ -31,8 +31,8 @@ public class Facade
     private final PE_Cache CACHE;
     public Facade()
     {
-        CACHE = new PE_Cache(0, 1, 60000);
-        //CACHE.autoCleanCache();
+        CACHE = new PE_Cache(0, 1, 10000);
+        CACHE.autoCleanCache();
     }
 
     /**
@@ -66,7 +66,7 @@ public class Facade
         if (persistenceEntity == null)
             return null;
 
-        CACHE.put(id, persistenceEntity);
+        CACHE.put(persistenceEntity);
 
         T entity = converter.convertToModel(persistenceEntity, CLASS);
 
@@ -307,7 +307,7 @@ public class Facade
     {
         PersistenceEntity persistenceEntity = converter.convertToEntity(entity);
 
-        CACHE.put(persistenceEntity.getObject_id(), persistenceEntity);
+        CACHE.put(persistenceEntity);
 
     //--:   DB
         HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
