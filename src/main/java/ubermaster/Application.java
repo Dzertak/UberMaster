@@ -20,8 +20,8 @@ public class Application {
         Locale.setDefault(new Locale("en","EN"));
         SpringApplication.run(Application.class,args);
 
-        DB_Cleaner db_cleaner = new DB_Cleaner(10000);
-        db_cleaner.start();
+        /*DB_Cleaner db_cleaner = new DB_Cleaner(10000);
+        db_cleaner.start();*/
     }
 
     @Bean
