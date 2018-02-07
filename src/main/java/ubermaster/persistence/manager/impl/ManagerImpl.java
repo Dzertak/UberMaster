@@ -679,49 +679,40 @@ public class ManagerImpl implements Manager
         }
     }
 
-    public static void launchOrderCleaner()
+    public static void cleanOrders()
     {
-        Thread thread = new Thread()
+        OracleCallableStatement callStat = null;
+        ResultSet resultSet;
+        OracleConnection oracleConnection = null;
+        try
         {
-            public void run()
+            oracleConnection = getConnection();
+            callStat = (OracleCallableStatement) oracleConnection.prepareStatement(ORDER_CLEANER);
+            callStat.execute();
+
+            callStat = (OracleCallableStatement) oracleConnection.prepareStatement(COMMIT);
+            callStat.execute();
+        }
+
+        catch (SQLException exc)
+        {
+            log.error(exc.getMessage(), exc);
+            //exc.printStackTrace();
+        }
+
+        finally
+        {
+            try
             {
-                OracleCallableStatement callStat = null;
-                ResultSet resultSet;
-                OracleConnection oracleConnection = null;
-                try
-                {
-                    oracleConnection = getConnection();
-                    callStat = (OracleCallableStatement) oracleConnection.prepareCall(ORDER_CLEANER);
-
-                    final int TIME = 60*1000;
-                    final int SLEEP_COUNT = 24*60;
-                    callStat.setLong(1, TIME);
-                    callStat.setLong(2, SLEEP_COUNT);
-                    callStat.execute();
-                }
-
-                catch (SQLException exc)
-                {
-                    log.error(exc.getMessage(), exc);
-                    //exc.printStackTrace();
-                }
-
-                finally
-                {
-                    try
-                    {
-                        callStat.close();
-                        oracleConnection.close();
-                    }
-
-                    catch (SQLException exc)
-                    {
-                        log.error(exc.getMessage(), exc);
-                        //exc.printStackTrace();
-                    }
-                }
+                callStat.close();
+                oracleConnection.close();
             }
-        };
-        thread.start();
+
+            catch (SQLException exc)
+            {
+                log.error(exc.getMessage(), exc);
+                //exc.printStackTrace();
+            }
+        }
     }
 }

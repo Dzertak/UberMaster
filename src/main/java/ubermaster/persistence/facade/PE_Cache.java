@@ -18,6 +18,7 @@ public class PE_Cache
 
 	private volatile boolean cleanerWorks = true;
 	private Object mutex = new Object();
+	private Object persMutex = new Object();
 
 	private PE_Cleaner cleaner;
 /*::|       CONSTRUCTOR     :~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~:~*/
@@ -38,7 +39,11 @@ public class PE_Cache
 			PersistenceEntity persistenceEntity = null;
 			for (long id : CACHE.keySet())
 			{
-				PersistenceEntity pe = CACHE.get(id);
+				PersistenceEntity pe;
+				synchronized (persMutex)
+				{
+					pe = CACHE.get(id);
+				}
 
 				if (persistenceEntity != null)
 				{
@@ -51,7 +56,8 @@ public class PE_Cache
 			}
 
 			this.persistenceEntity = persistenceEntity;
-			System.out.println("Lastest is : " + persistenceEntity);
+			if (this.persistenceEntity != null)
+				System.out.println("Lastest is : " + this.persistenceEntity);
 		}
 
 		public PersistenceEntity getPersistenceEntity()
@@ -95,7 +101,11 @@ public class PE_Cache
 			while (true);
 
 		//--:	delete and return info
-			CACHE.remove(persistenceEntity.getObject_id());
+			synchronized (persMutex)
+			{
+				CACHE.remove(persistenceEntity.getObject_id());
+			}
+
 			System.out.println("Cleared : " + persistenceEntity);
 
 			return persistenceEntity.toString();
@@ -130,7 +140,8 @@ public class PE_Cache
 				//==:	Add info to logger about delete entity
 					try
 					{
-						System.out.println(futureCleaner.get());
+						if (futureCleaner.get() != null)
+							System.out.println(futureCleaner.get());
 					}
 
 					catch (ExecutionException | InterruptedException exc)
@@ -149,14 +160,20 @@ public class PE_Cache
 	{
 		addTime(persistenceEntity);
 
-		CACHE.put(persistenceEntity.getObject_id(), persistenceEntity);
+		synchronized (persMutex)
+		{
+			CACHE.put(persistenceEntity.getObject_id(), persistenceEntity);
+		}
 	}
 
 	public PersistenceEntity get(long id)
 	{
-		addTime(CACHE.get(id));
+		synchronized (persMutex)
+		{
+			addTime(CACHE.get(id));
 
-		return CACHE.get(id);
+			return CACHE.get(id);
+		}
 	}
 
 	public boolean containsKey(long id)
@@ -173,7 +190,12 @@ public class PE_Cache
 		final byte ALL_EQUALS = 3;
 		for (long id : CACHE.keySet())
 		{
-			PersistenceEntity persistenceEntity = CACHE.get(id);
+			PersistenceEntity persistenceEntity;
+			synchronized (persMutex)
+			{
+				persistenceEntity = CACHE.get(id);
+			}
+
 			HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
 			byte condition = NOT_FOUND;
 			for (String attrID : attributes.keySet())
@@ -207,7 +229,12 @@ public class PE_Cache
 		//==:   CACHE
 		for (long id : CACHE.keySet())
 		{
-			PersistenceEntity persistenceEntity = CACHE.get(id);
+			PersistenceEntity persistenceEntity;
+			synchronized (persMutex)
+			{
+				persistenceEntity = CACHE.get(id);
+			}
+
 			HashMap<String, Object> attributes = (HashMap<String, Object>) persistenceEntity.getAttributes();
 			for (String attrID : attributes.keySet())
 			{

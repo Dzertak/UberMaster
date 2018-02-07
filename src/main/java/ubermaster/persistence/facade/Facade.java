@@ -29,6 +29,7 @@ public class Facade
     private ManagerImpl manager;
 
     private final PE_Cache CACHE;
+
     public Facade()
     {
         CACHE = new PE_Cache(0, 1, 10000);

@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import ubermaster.persistence.manager.impl.ManagerImpl;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -19,7 +18,9 @@ public class Application {
     public static void main(String[] args) throws IOException {
         Locale.setDefault(new Locale("en","EN"));
         SpringApplication.run(Application.class,args);
-        //ManagerImpl.launchOrderCleaner();
+
+       /* DB_Cleaner db_cleaner = new DB_Cleaner(10000);
+        db_cleaner.start();*/
     }
 
     @Bean
