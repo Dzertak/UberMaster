@@ -983,8 +983,14 @@ as
         delete from Objects
         where object_id in
               (
-                  select object_id
-                  from Attributes
+                  select attr.object_id
+                  from Attributes attr join
+                      (
+                          select object_id
+                          from Attributes attr join Lists lst
+                                  on lst.list_value_id = attr.list_value_id
+                          where lst.attr_id = 19 and (lst.value = 'New' or lst.value = 'Master done')
+                      ) subTable on subTable.object_id = attr.object_id
                   where sysdate > date_value and attr_id = val
               );
         commit work;
