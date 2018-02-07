@@ -2,6 +2,7 @@ package ubermaster.persistence.manager.impl;
 
 import oracle.jdbc.OracleCallableStatement;
 import oracle.jdbc.OracleConnection;
+import oracle.jdbc.OraclePreparedStatement;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.ARRAY;
 import oracle.sql.ArrayDescriptor;
@@ -681,17 +682,14 @@ public class ManagerImpl implements Manager
 
     public static void cleanOrders()
     {
-        OracleCallableStatement callStat = null;
-        ResultSet resultSet;
         OracleConnection oracleConnection = null;
+        PreparedStatement statement = null;
         try
         {
             oracleConnection = getConnection();
-            callStat = (OracleCallableStatement) oracleConnection.prepareStatement(ORDER_CLEANER);
-            callStat.execute();
-
-            callStat = (OracleCallableStatement) oracleConnection.prepareStatement(COMMIT);
-            callStat.execute();
+            statement = oracleConnection.prepareStatement(ORDER_CLEANER);
+            statement.setInt(1, 18);
+            statement.execute();
         }
 
         catch (SQLException exc)
@@ -704,7 +702,7 @@ public class ManagerImpl implements Manager
         {
             try
             {
-                callStat.close();
+                statement.close();
                 oracleConnection.close();
             }
 

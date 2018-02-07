@@ -971,24 +971,16 @@ as
 				DELETE ORDERS BY TIME
 ===================================================================================================================
 */
-create or replace procedure deleteOrderaByTime(time in number, sleepCount in number)
+create or replace procedure deleteOrderaByTime(val in number)
 as
     begin
-        <<label>>
         delete from Objects
         where object_id in
               (
                   select object_id
                   from Attributes
-                  where sysdate > date_value and attr_id = 18
+                  where sysdate > date_value and attr_id = val
               );
-        commit;
-
-        --because sleep can take 1 day delay at milliseconds, its too large number for it
-        for itera in 1..sleepCount loop
-            DBMS_LOCK.SLEEP(time);
-        end loop;
-
-        goto label;
+        commit work;
     end;
 /

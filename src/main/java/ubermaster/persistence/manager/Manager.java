@@ -33,15 +33,7 @@ public interface Manager
             "on lst.list_value_id = attr.list_value_id " +
             "where lst.attr_id = 20 and object_id = ?";
 	String GET_MASTER_COMMENTS = "call getMasterComments(?, ?, ?)";
-    String ORDER_CLEANER =
-            "delete from Objects " +
-            "where object_id in" +
-            "(" +
-                "select object_id" +
-                "from Attributes" +
-                "where sysdate > date_value and attr_id = 18" +
-            ")";
-    String COMMIT = "commit";
+    String ORDER_CLEANER = "call deleteOrderaByTime(?)";
 
     String ATTR_OBJECT_ID = "-1";
     String ATTR_OBJECT_TYPE_ID = "-2";
